@@ -14,37 +14,33 @@ package wildinter.net.mergesort;
  * @version 2018.02.18
  * @since 1.7
  */
-public final class DualPivotQuicksort2018 implements Sorter {
+public final class DualPivotQuicksort2018Ext implements Sorter {
 
     // avoid alloc
-    private int[] aux = null;
+    // fake B (ancillary data ie indices)
+    private int[] B = null;
+    private int[] auxA = null;
+    private int[] auxB = null;
     private int[] run = null;
 
     @Override
     public void sort(final int[] A, final int low, final int high) {
         final int length = high - low + 1;
-        if (aux == null || aux.length < length) {
-            aux = new int[length];
+        if (auxA == null || auxA.length < length) {
+            auxA = new int[length];
         }
-        int max = SortingAlgorithms2018.getMaxRunCount(length) + 1;
+        if (auxB == null || auxB.length < A.length) {
+            auxB = new int[A.length];
+        }
+        if (B == null || B.length < A.length) {
+            B = new int[A.length];
+        }
+        int max = SortingAlgorithms2018Ext.getMaxRunCount(length) + 1;
         if (run == null || run.length < max) {
             run = new int[max];
         }
-        
-        sort(A, LEFTMOST_BITS, low, high + 1, aux, run);
+        sort(A, B, LEFTMOST_BITS, low, high + 1, auxA, auxB, run);
     }
-    
-    /**
-     * Sorts the specified range of the array.
-     *
-     * @param a the array to be sorted
-     * @param low the index of the first element, inclusive, to be sorted
-     * @param high the index of the last element, exclusive, to be sorted
-     */
-    static void sortORIG(int[] a, int low, int high) {
-        sort(a, LEFTMOST_BITS, low, high, null, null); // FAIL
-    }
-
 
     @Override
     public String toString() {
@@ -57,7 +53,7 @@ public final class DualPivotQuicksort2018 implements Sorter {
     /**
      * Prevents instantiation.
      */
-    public DualPivotQuicksort2018() {
+    public DualPivotQuicksort2018Ext() {
     }
 
     /**
@@ -90,7 +86,18 @@ public final class DualPivotQuicksort2018 implements Sorter {
      * array is considered as the leftmost part.
      */
     private static final int LEFTMOST_BITS = MAX_RECURSION_DEPTH << 1;
-
+    
+    /**
+     * Sorts the specified range of the array.
+     *
+     * @param a the array to be sorted
+     * @param low the index of the first element, inclusive, to be sorted
+     * @param high the index of the last element, exclusive, to be sorted
+     */
+    static void sort(int[] a, int[] b, int low, int high, int[] auxA, int[] auxB, int[] run) {
+        sort(a, b, LEFTMOST_BITS, low, high, auxA, auxB, run);
+    }
+    
     /**
      * Sorts the specified range of the array by the Dual-Pivot Quicksort.
      *
@@ -99,7 +106,10 @@ public final class DualPivotQuicksort2018 implements Sorter {
      * @param low the index of the first element, inclusive, to be sorted
      * @param high the index of the last element, exclusive, to be sorted
      */
-    private static void sort(int[] a, int bits, int low, int high, int[] buffer, int[] run) {
+    private static void sort(int[] a, int[] b, int bits, int low, int high, int[] auxA, int[] auxB, int[] run) {
+        if (b.length < a.length) {
+            throw new IllegalStateException("Invalid size for b !");
+        }
         int end = high - 1, length = high - low;
 
         /*
@@ -111,7 +121,7 @@ public final class DualPivotQuicksort2018 implements Sorter {
              * Use nano insertion sort on tiny part.
              */
             if (length < NANO_INSERTION_SORT_THRESHOLD) {
-                SortingAlgorithms2018.nanoInsertionSort(a, low, high);
+                SortingAlgorithms2018Ext.nanoInsertionSort(a, b, low, high);
                 return;
             }
 
@@ -119,7 +129,7 @@ public final class DualPivotQuicksort2018 implements Sorter {
              * Use pair insertion sort on small part.
              */
             if (length < PAIR_INSERTION_SORT_THRESHOLD) {
-                SortingAlgorithms2018.pairInsertionSort(a, low, end);
+                SortingAlgorithms2018Ext.pairInsertionSort(a, b, low, end);
                 return;
             }
         }
@@ -129,7 +139,7 @@ public final class DualPivotQuicksort2018 implements Sorter {
          * if the execution time is becoming quadratic.
          */
         if (length < HEAP_SORT_THRESHOLD || (bits -= 2) < 0) {
-            SortingAlgorithms2018.heapSort(a, low, end);
+            SortingAlgorithms2018Ext.heapSort(a, b, low, end);
             return;
         }
 
@@ -137,7 +147,7 @@ public final class DualPivotQuicksort2018 implements Sorter {
          * Check if the array is nearly sorted
          * and then try to sort it by Merging sort.
          */
-        if (SortingAlgorithms2018.mergingSort(a, low, high, buffer, run)) {
+        if (SortingAlgorithms2018Ext.mergingSort(a, b, low, high, auxA, auxB, run)) {
             return;
         }
 
@@ -219,8 +229,10 @@ public final class DualPivotQuicksort2018 implements Sorter {
              * These values are inexpensive approximation of tertiles.
              * Note, that pivot1 < pivot2.
              */
-            int pivot1 = a[e1];
-            int pivot2 = a[e5];
+            int pivotA1 = a[e1];
+            int pivotA2 = a[e5];
+            int pivotB1 = b[e1];
+            int pivotB2 = b[e5];
 
             /*
              * The first and the last elements to be sorted are moved to the
@@ -230,12 +242,14 @@ public final class DualPivotQuicksort2018 implements Sorter {
              */
             a[e1] = a[lower];
             a[e5] = a[upper];
+            b[e1] = b[lower];
+            b[e5] = b[upper];
 
             /*
              * Skip elements, which are less or greater than the pivots.
              */
-            while (a[++lower] < pivot1);
-            while (a[--upper] > pivot2);
+            while (a[++lower] < pivotA1);
+            while (a[--upper] > pivotA2);
 
             /*
              * Backwards 3-interval partitioning
@@ -258,24 +272,30 @@ public final class DualPivotQuicksort2018 implements Sorter {
              */
             for (int $ = --lower, k = ++upper; --k > lower;) {
                 int ak = a[k];
+                int bk = b[k];
 
-                if (ak < pivot1) { // Move a[k] to the left side
-                    while (a[++lower] < pivot1);
+                if (ak < pivotA1) { // Move a[k] to the left side
+                    while (a[++lower] < pivotA1);
 
                     if (lower > k) {
                         lower = k;
                         break;
                     }
-                    if (a[lower] > pivot2) { // a[lower] >= pivot1
+                    if (a[lower] > pivotA2) { // a[lower] >= pivot1
                         a[k] = a[--upper];
                         a[upper] = a[lower];
+                        b[k] = b[  upper];
+                        b[upper] = b[lower];
                     } else { // pivot1 <= a[lower] <= pivot2
                         a[k] = a[lower];
+                        b[k] = b[lower];
                     }
                     a[lower] = ak;
-                } else if (ak > pivot2) { // Move a[k] to the right side
+                    b[lower] = bk;
+                } else if (ak > pivotA2) { // Move a[k] to the right side
                     a[k] = a[--upper];
                     a[upper] = ak;
+                    b[upper] = bk;
                 }
             }
 
@@ -283,23 +303,28 @@ public final class DualPivotQuicksort2018 implements Sorter {
              * Swap the pivots into their final positions.
              */
             a[low] = a[lower];
-            a[lower] = pivot1;
+            a[lower] = pivotA1;
             a[end] = a[upper];
-            a[upper] = pivot2;
+            a[upper] = pivotA2;
+            b[low] = b[lower];
+            b[lower] = pivotB1;
+            b[end] = b[upper];
+            b[upper] = pivotB2;
 
             /*
              * Sort all parts recursively, excluding known pivots.
              */
-            sort(a, bits | 1, upper + 1, high, buffer, run);
-            sort(a, bits, low, lower, buffer, run);
-            sort(a, bits | 1, lower + 1, upper, buffer, run);
+            sort(a, b, bits | 1, upper + 1, high, auxA, auxB, run);
+            sort(a, b, bits, low, lower, auxA, auxB, run);
+            sort(a, b, bits | 1, lower + 1, upper, auxA, auxB, run);
         } else { // Partitioning with one pivot
 
             /*
              * Use the third element as the pivot. This value
              * is inexpensive approximation of the median.
              */
-            int pivot = a[e3];
+            int pivotA = a[e3];
+            int pivotB = b[e3];
 
             /*
              * The first element to be sorted is moved to the location
@@ -308,6 +333,7 @@ public final class DualPivotQuicksort2018 implements Sorter {
              * position, and excluded from subsequent sorting.
              */
             a[e3] = a[lower];
+            b[e3] = b[lower];
 
             /*
              * Traditional 3-way (Dutch National Flag) partitioning
@@ -329,27 +355,33 @@ public final class DualPivotQuicksort2018 implements Sorter {
              * Pointer k is the last index of ?-part
              */
             for (int k = ++upper; --k > lower;) {
-                if (a[k] == pivot) {
+                if (a[k] == pivotA) {
                     continue;
                 }
                 int ak = a[k];
+                int bk = b[k];
 
-                if (ak < pivot) { // Move a[k] to the left side
-                    while (a[++lower] < pivot);
+                if (ak < pivotA) { // Move a[k] to the left side
+                    while (a[++lower] < pivotA);
 
                     if (lower > k) {
                         lower = k;
                         break;
                     }
-                    a[k] = pivot;
+                    a[k] = pivotA;
+                    b[k] = pivotB;
 
-                    if (a[lower] > pivot) {
+                    if (a[lower] > pivotA) {
                         a[--upper] = a[lower];
+                        b[  upper] = b[lower];
                     }
                     a[lower] = ak;
+                    b[lower] = bk;
                 } else { // ak > pivot - Move a[k] to the right side
-                    a[k] = pivot;
+                    a[k] = pivotA;
                     a[--upper] = ak;
+                    b[k] = pivotB;
+                    b[  upper] = bk;
                 }
             }
 
@@ -357,15 +389,17 @@ public final class DualPivotQuicksort2018 implements Sorter {
              * Swap the pivot into its final position.
              */
             a[low] = a[lower];
-            a[lower] = pivot;
+            a[lower] = pivotA;
+            b[low] = b[lower];
+            b[lower] = pivotB;
 
             /*
              * Sort the left and the right parts recursively, excluding
              * known pivot. All elements from the central part are equal
              * and, therefore, already sorted.
              */
-            sort(a, bits | 1, upper, high, buffer, run);
-            sort(a, bits, low, lower, buffer, run);
+            sort(a, b, bits | 1, upper, high, auxA, auxB, run);
+            sort(a, b, bits, low, lower, auxA, auxB, run);
         }
     }
 }

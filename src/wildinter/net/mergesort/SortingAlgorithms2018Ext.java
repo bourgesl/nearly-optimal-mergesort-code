@@ -10,12 +10,12 @@ package wildinter.net.mergesort;
  * @version 2018.02.18
  * @since 10
  */
-final class SortingAlgorithms {
+final class SortingAlgorithms2018Ext {
 
     /**
      * Prevents instantiation.
      */
-    private SortingAlgorithms() {
+    private SortingAlgorithms2018Ext() {
     }
 
     /**
@@ -42,7 +42,7 @@ final class SortingAlgorithms {
      * @param high the index of the last element, exclusive, to be sorted
      * @return true if the given array is finally sorted, false otherwise
      */
-    static boolean mergingSort(int[] a, int low, int high, int[] buffer, int[] run) {
+    static boolean mergingSort(int[] a, int[] b, int low, int high, int[] _auxA, int[] _auxB, int[] _run) {
         int length = high - low;
 
         if (length < MERGING_SORT_THRESHOLD) {
@@ -55,7 +55,7 @@ final class SortingAlgorithms {
          * in ascending or descending order.
          */
         int max = getMaxRunCount(length);
-//        int[] run = new int[max + 1]; // LBO: FIX ALLOC
+        int[] run = (_run.length < max + 1) ? new int[max + 1] : _run; // LBO: FIX ALLOC
         int count = 0, last = low;
         run[0] = low;
 
@@ -75,9 +75,12 @@ final class SortingAlgorithms {
 
                 // Reverse the run into ascending order
                 for (int i = last - 1, j = k; ++i < --j && a[i] > a[j];) {
-                    int ai = a[i];
+                    int t = a[i];
                     a[i] = a[j];
-                    a[j] = ai;
+                    a[j] = t;
+                    t = b[i];
+                    b[i] = b[j];
+                    b[j] = t;
                 }
             } else { // Sequence with equal elements
                 for (int ak = a[k]; ++k < high && ak == a[k];);
@@ -97,7 +100,9 @@ final class SortingAlgorithms {
             /*
              * The array is highly structured, therefore merge all runs.
              */
-            merge(a, buffer, true, low, run, 0, count);
+            int[] auxA = (_auxA.length < a.length) ? new int[length] : _auxA;
+            int[] auxB = (_auxB.length < b.length) ? new int[length] : _auxB;
+            merge(a, auxA, b, auxB, true, low, run, 0, count);
         }
         return count < max;
     }
@@ -105,8 +110,8 @@ final class SortingAlgorithms {
     /**
      * Merges the specified runs.
      *
-     * @param a the source array
-     * @param b the temporary buffer
+     * @param srcA the source array
+     * @param dstA the temporary buffer
      * @param src specifies the type of the target: source or buffer
      * @param offset the start index of the source, inclusive
      * @param run the start indexes of the runs, inclusive
@@ -114,39 +119,42 @@ final class SortingAlgorithms {
      * @param hi the start index of the last run, inclusive
      * @return the target where runs are merged
      */
-    private static int[] merge(int[] a, int[] b, boolean src,
+    private static int[] merge(int[] srcA, int[] dstA, int[] srcB, int[] dstB, boolean src,
                                int offset, int[] run, int lo, int hi) {
 
         if (hi - lo == 1) {
             if (src) {
-                return a;
+                return srcA;
             }
             for (int i = run[hi], j = i - offset, low = run[lo]; i > low;
-                    b[--j] = a[--i]);
-            return b;
+                    --j, --i, dstA[j] = srcA[i], dstB[j] = srcB[i]);
+            return dstA;
         }
         int mi = (lo + hi) >>> 1;
 
         int[] a1, a2; // the left and the right halves to be merged
 
-        a1 = merge(a, b, !src, offset, run, lo, mi);
-        a2 = merge(a, b, true, offset, run, mi, hi);
+        a1 = merge(srcA, dstA, srcB, dstB, !src, offset, run, lo, mi);
+        a2 = merge(srcA, dstA, srcB, dstB, true, offset, run, mi, hi);
 
         return merge(
-                a1 == a ? b : a,
-                a1 == a ? run[lo] - offset : run[lo],
+                a1 == srcA ? dstA : srcA,
+                a1 == srcA ? dstB : srcB,
+                a1 == srcA ? run[lo] - offset : run[lo],
                 a1,
-                a1 == b ? run[lo] - offset : run[lo],
-                a1 == b ? run[mi] - offset : run[mi],
+                a1 == srcA ? srcB : dstB,
+                a1 == dstA ? run[lo] - offset : run[lo],
+                a1 == dstA ? run[mi] - offset : run[mi],
                 a2,
-                a2 == b ? run[mi] - offset : run[mi],
-                a2 == b ? run[hi] - offset : run[hi]);
+                a2 == srcA ? srcB : dstB,
+                a2 == dstA ? run[mi] - offset : run[mi],
+                a2 == dstA ? run[hi] - offset : run[hi]);
     }
 
     /**
      * Merges the sorted halves.
      *
-     * @param dst the destination where halves are merged
+     * @param dstA the destination where halves are merged
      * @param k the start index of the destination, inclusive
      * @param a1 the first half
      * @param i the start index of the first half, inclusive
@@ -156,23 +164,35 @@ final class SortingAlgorithms {
      * @param hj the end index of the second half, exclusive
      * @return the merged halves
      */
-    private static int[] merge(int[] dst, int k,
-                               int[] a1, int i, int hi, int[] a2, int j, int hj) {
+    private static int[] merge(int[] dstA, int[] dstB, int k,
+                               int[] a1, int[] b1, int i, int hi, int[] a2, int[] b2, int j, int hj) {
 
         while (true) {
-            dst[k++] = a1[i] < a2[j] ? a1[i++] : a2[j++];
+            if (a1[i] < a2[j]) {
+                dstA[k] = a1[i];
+                dstB[k] = b1[i];
+                k++; i++;
+            } else {
+                dstA[k] = a2[j];
+                dstB[k] = b2[j];
+                k++; j++;
+            }
 
             if (i == hi) {
                 while (j < hj) {
-                    dst[k++] = a2[j++];
+                    dstA[k] = a2[j];
+                    dstB[k] = b2[j];
+                    k++; j++;
                 }
-                return dst;
+                return dstA;
             }
             if (j == hj) {
                 while (i < hi) {
-                    dst[k++] = a1[i++];
+                    dstA[k] = a1[i];
+                    dstB[k] = b1[j];
+                    k++; i++;
                 }
-                return dst;
+                return dstA;
             }
         }
     }
@@ -184,7 +204,7 @@ final class SortingAlgorithms {
      * @param low the index of the first element, inclusive, to be sorted
      * @param high the index of the last element, exclusive, to be sorted
      */
-    static void nanoInsertionSort(int[] a, int low, int high) {
+    static void nanoInsertionSort(int[] a, int[] b, int low, int high) {
         /*
          * In the context of Quicksort, the elements from the left part
          * play the role of sentinels. Therefore expensive check of the
@@ -192,11 +212,14 @@ final class SortingAlgorithms {
          */
         for (int k; ++low < high;) {
             int ak = a[k = low];
+            int bk = b[k];
 
             while (ak < a[--k]) {
                 a[k + 1] = a[k];
+                b[k + 1] = b[k];
             }
             a[k + 1] = ak;
+            b[k + 1] = bk;
         }
     }
 
@@ -207,9 +230,9 @@ final class SortingAlgorithms {
      * @param left the index of the first element, inclusive, to be sorted
      * @param right the index of the last element, inclusive, to be sorted
      */
-    static void pairInsertionSort(int[] a, int left, int right) {
+    static void pairInsertionSort(int[] a, int[] b, int left, int right) {
         /*
-         * Allign the left boundary.
+         * Align the left boundary.
          */
         left -= (left ^ right) & 1;
 
@@ -224,23 +247,31 @@ final class SortingAlgorithms {
          */
         for (int k; ++left < right;) {
             int a1 = a[k = ++left];
+            int b1 = b[k];
 
             if (a[k - 2] > a[k - 1]) {
                 int a2 = a[--k];
+                int b2 = b[  k];
 
                 if (a1 > a2) {
                     a2 = a1;
                     a1 = a[k];
+                    b2 = b1;
+                    b1 = b[k];
                 }
                 while (a2 < a[--k]) {
                     a[k + 2] = a[k];
+                    b[k + 2] = b[k];
                 }
                 a[++k + 1] = a2;
+                b[  k + 1] = b2;
             }
             while (a1 < a[--k]) {
                 a[k + 1] = a[k];
+                b[k + 1] = b[k];
             }
             a[k + 1] = a1;
+            b[k + 1] = b1;
         }
     }
 
@@ -251,14 +282,16 @@ final class SortingAlgorithms {
      * @param left the index of the first element, inclusive, to be sorted
      * @param right the index of the last element, inclusive, to be sorted
      */
-    static void heapSort(int[] a, int left, int right) {
+    static void heapSort(int[] a, int b[], int left, int right) {
         for (int k = (left + 1 + right) >>> 1; k > left;) {
-            pushDown(a, --k, a[k], left, right);
+            pushDown(a, b, --k, a[k], b[k], left, right);
         }
         for (int k = right; k > left; --k) {
-            int max = a[left];
-            pushDown(a, left, a[k], left, k);
-            a[k] = max;
+            int maxA = a[left];
+            int maxB = b[left];
+            pushDown(a, b, left, a[k], b[k], left, k);
+            a[k] = maxA;
+            b[k] = maxB;
         }
     }
 
@@ -267,19 +300,20 @@ final class SortingAlgorithms {
      *
      * @param a the given array
      * @param p the start index
-     * @param value the given element
+     * @param valueA the given element
      * @param left the index of the first element, inclusive, to be sorted
      * @param right the index of the last element, inclusive, to be sorted
      */
-    private static void pushDown(int[] a, int p, int value, int left, int right) {
-        for (int k;; a[p] = a[p = k]) {
+    private static void pushDown(int[] a, int b[], int p, int valueA, int valueB, int left, int right) {
+        for (int k;; a[p] = a[k], b[p] = b[k], p = k) {
             k = (p << 1) - left + 2; // the index of the right child
 
             if (k > right || a[k - 1] > a[k]) {
                 --k;
             }
-            if (k > right || a[k] <= value) {
-                a[p] = value;
+            if (k > right || a[k] <= valueA) {
+                a[p] = valueA;
+                b[p] = valueB;
                 return;
             }
         }

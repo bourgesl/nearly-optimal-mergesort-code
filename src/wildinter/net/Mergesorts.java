@@ -18,8 +18,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import wildinter.net.mergesort.DualPivotQuickSort;
 import wildinter.net.mergesort.DualPivotQuicksort2018;
+import wildinter.net.mergesort.DualPivotQuicksort2018Ext;
+import wildinter.net.mergesort.MarlinMergeSort;
 import wildinter.net.mergesort.MarlinSort;
 import wildinter.net.mergesort.PeekSort;
 
@@ -58,13 +59,16 @@ public class Mergesorts {
          */
 //   		algos.add(Timsort.INSTANCE);
         algos.add(new MarlinSort());
+        algos.add(new MarlinMergeSort());
+        
 //        algos.add(new Qsorte());
 //        algos.add(new DynPivotSort());
 
-        algos.add(new DualPivotQuickSort());
+//        algos.add(new DualPivotQuickSort());
         algos.add(new DualPivotQuicksort2018());
+        algos.add(new DualPivotQuicksort2018Ext());
 
-        algos.add(Sorter.SYSTEMSORT);
+//        algos.add(Sorter.SYSTEMSORT);
 
         /*
 	    algos.add(new Nop());
