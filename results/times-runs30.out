@@ -1,9 +1,11 @@
-algos  = [PeekSort+iscutoff=24+onlyIncRuns=false, TopDownMergesort+iscutoff=24+checkSorted=true, BottomUpMergesort+minRunLen=24+checkSorted=true, MarlinSort, DualPivotQuickSort, DualPivotQuicksort2018, Arrays.sort(int[])]
+CHECK_SORTED: false
+USE_BOTTOM_UP: false
+algos  = [PeekSort+iscutoff=24+onlyIncRuns=false, TopDownMergesort+iscutoff=24+checkSorted=true, BottomUpMergesort+minRunLen=24+checkSorted=true, MarlinSort, MarlinMergeSort, DualPivotQuicksort2018, DualPivotQuicksort2018Ext]
 sizes  = [1000, 5000, 10000, 50000, 100000]
 reps   = 200
 seed   = 248442268
 inputs = runs-with-exp-len-30
-Writing to /home/bourgesl/libs/nearly-optimal-mergesort-code/times-runs30-2018-11-08_23-01-55-reps200-ns-1000-5000-10000-50000-100000-seed248442268.csv
+Writing to /home/bourgesl/libs/nearly-optimal-mergesort-code/times-runs30-2018-11-09_22-48-30-reps200-ns-1000-5000-10000-50000-100000-seed248442268.csv
 Not counting merge costs.
 Doing warmup (10000 rounds)
 Warmup [00%] ...
@@ -21,42 +23,42 @@ Warmup finished! (420210000)
 
 Runs with individual timing (skips first 10 runs):
 adjusted reps: 210 + inner loop: 101
-avg-ms=0.045556813(+/- 1 %),	 algo=PeekSort+iscutoff=24+onlyIncRuns=false, n=1000     (10626210)	(n=200, µ=0.045556813, σ=6.310882E-4)
-avg-ms=0.05106687(+/- 1 %),	 algo=TopDownMergesort+iscutoff=24+checkSorted=true, n=1000     (10626210)	(n=200, µ=0.05106687, σ=6.3176395E-4)
-avg-ms=0.06353935(+/- 58 %),	 algo=BottomUpMergesort+minRunLen=24+checkSorted=true, n=1000     (10626210)	(n=200, µ=0.06353935, σ=0.036759254)
-avg-ms=0.058026686(+/- 7 %),	 algo=MarlinSort, n=1000     (10626210)	(n=200, µ=0.058026686, σ=0.0043099485)
-avg-ms=0.05042855(+/- 2 %),	 algo=DualPivotQuickSort, n=1000     (10626210)	(n=200, µ=0.05042855, σ=8.050991E-4)
-avg-ms=0.053197872(+/- 13 %),	 algo=DualPivotQuicksort2018, n=1000     (10626210)	(n=200, µ=0.053197872, σ=0.0067689735)
-avg-ms=0.050502136(+/- 1 %),	 algo=Arrays.sort(int[]), n=1000     (10626210)	(n=200, µ=0.050502136, σ=6.13705E-4)
+avg-ms=0.04424807(+/- 1 %),	 algo=PeekSort+iscutoff=24+onlyIncRuns=false, n=1000     (10626210)	(n=200, µ=0.04424807, σ=4.6087278E-4)
+avg-ms=0.0512025(+/- 8 %),	 algo=TopDownMergesort+iscutoff=24+checkSorted=true, n=1000     (10626210)	(n=200, µ=0.0512025, σ=0.004289095)
+avg-ms=0.06718364(+/- 64 %),	 algo=BottomUpMergesort+minRunLen=24+checkSorted=true, n=1000     (10626210)	(n=200, µ=0.06718364, σ=0.04268584)
+avg-ms=0.053810023(+/- 8 %),	 algo=MarlinSort, n=1000     (10626210)	(n=200, µ=0.053810023, σ=0.0042824666)
+avg-ms=0.064777374(+/- 1 %),	 algo=MarlinMergeSort, n=1000     (10626210)	(n=200, µ=0.064777374, σ=5.336494E-4)
+avg-ms=0.053282373(+/- 23 %),	 algo=DualPivotQuicksort2018, n=1000     (10626210)	(n=200, µ=0.053282373, σ=0.012399432)
+avg-ms=0.06107396(+/- 1 %),	 algo=DualPivotQuicksort2018Ext, n=1000     (10626210)	(n=200, µ=0.06107396, σ=5.1722425E-4)
 adjusted reps: 210 + inner loop: 21
-avg-ms=0.32120147(+/- 1 %),	 algo=PeekSort+iscutoff=24+onlyIncRuns=false, n=5000     (11029410)	(n=200, µ=0.32120147, σ=0.0037921905)
-avg-ms=0.3526679(+/- 6 %),	 algo=TopDownMergesort+iscutoff=24+checkSorted=true, n=5000     (11029410)	(n=200, µ=0.3526679, σ=0.020397289)
-avg-ms=0.3705735(+/- 2 %),	 algo=BottomUpMergesort+minRunLen=24+checkSorted=true, n=5000     (11029410)	(n=200, µ=0.3705735, σ=0.007309867)
-avg-ms=0.3933632(+/- 1 %),	 algo=MarlinSort, n=5000     (11029410)	(n=200, µ=0.3933632, σ=0.003296653)
-avg-ms=0.32319826(+/- 3 %),	 algo=DualPivotQuickSort, n=5000     (11029410)	(n=200, µ=0.32319826, σ=0.008301785)
-avg-ms=0.33917928(+/- 1 %),	 algo=DualPivotQuicksort2018, n=5000     (11029410)	(n=200, µ=0.33917928, σ=0.0030062501)
-avg-ms=0.32741264(+/- 1 %),	 algo=Arrays.sort(int[]), n=5000     (11029410)	(n=200, µ=0.32741264, σ=0.002750911)
+avg-ms=0.31589186(+/- 1 %),	 algo=PeekSort+iscutoff=24+onlyIncRuns=false, n=5000     (11029410)	(n=200, µ=0.31589186, σ=0.0037966508)
+avg-ms=0.3516395(+/- 1 %),	 algo=TopDownMergesort+iscutoff=24+checkSorted=true, n=5000     (11029410)	(n=200, µ=0.3516395, σ=0.0028861659)
+avg-ms=0.36602274(+/- 1 %),	 algo=BottomUpMergesort+minRunLen=24+checkSorted=true, n=5000     (11029410)	(n=200, µ=0.36602274, σ=0.0028106952)
+avg-ms=0.363369(+/- 1 %),	 algo=MarlinSort, n=5000     (11029410)	(n=200, µ=0.363369, σ=0.0026811135)
+avg-ms=0.44489333(+/- 1 %),	 algo=MarlinMergeSort, n=5000     (11029410)	(n=200, µ=0.44489333, σ=0.0031666195)
+avg-ms=0.33884615(+/- 1 %),	 algo=DualPivotQuicksort2018, n=5000     (11029410)	(n=200, µ=0.33884615, σ=0.0028346225)
+avg-ms=0.38268974(+/- 1 %),	 algo=DualPivotQuicksort2018Ext, n=5000     (11029410)	(n=200, µ=0.38268974, σ=0.0027662688)
 adjusted reps: 210 + inner loop: 11
-avg-ms=0.72251374(+/- 1 %),	 algo=PeekSort+iscutoff=24+onlyIncRuns=false, n=10000     (11552310)	(n=200, µ=0.72251374, σ=0.00711203)
-avg-ms=0.7912022(+/- 1 %),	 algo=TopDownMergesort+iscutoff=24+checkSorted=true, n=10000     (11552310)	(n=200, µ=0.7912022, σ=0.007341275)
-avg-ms=0.82440853(+/- 1 %),	 algo=BottomUpMergesort+minRunLen=24+checkSorted=true, n=10000     (11552310)	(n=200, µ=0.82440853, σ=0.007175836)
-avg-ms=0.88144547(+/- 1 %),	 algo=MarlinSort, n=10000     (11552310)	(n=200, µ=0.88144547, σ=0.008072174)
-avg-ms=0.7037401(+/- 1 %),	 algo=DualPivotQuickSort, n=10000     (11552310)	(n=200, µ=0.7037401, σ=0.0070459424)
-avg-ms=0.7462278(+/- 1 %),	 algo=DualPivotQuicksort2018, n=10000     (11552310)	(n=200, µ=0.7462278, σ=0.007840352)
-avg-ms=0.7188839(+/- 4 %),	 algo=Arrays.sort(int[]), n=10000     (11552310)	(n=200, µ=0.7188839, σ=0.027700704)
+avg-ms=0.71042365(+/- 1 %),	 algo=PeekSort+iscutoff=24+onlyIncRuns=false, n=10000     (11552310)	(n=200, µ=0.71042365, σ=0.0059601166)
+avg-ms=0.7946687(+/- 1 %),	 algo=TopDownMergesort+iscutoff=24+checkSorted=true, n=10000     (11552310)	(n=200, µ=0.7946687, σ=0.005722546)
+avg-ms=0.81724685(+/- 1 %),	 algo=BottomUpMergesort+minRunLen=24+checkSorted=true, n=10000     (11552310)	(n=200, µ=0.81724685, σ=0.0058143237)
+avg-ms=0.80878675(+/- 1 %),	 algo=MarlinSort, n=10000     (11552310)	(n=200, µ=0.80878675, σ=0.0051888353)
+avg-ms=0.98472804(+/- 1 %),	 algo=MarlinMergeSort, n=10000     (11552310)	(n=200, µ=0.98472804, σ=0.006352335)
+avg-ms=0.7443415(+/- 1 %),	 algo=DualPivotQuicksort2018, n=10000     (11552310)	(n=200, µ=0.7443415, σ=0.005972293)
+avg-ms=0.835021(+/- 3 %),	 algo=DualPivotQuicksort2018Ext, n=10000     (11552310)	(n=200, µ=0.835021, σ=0.021706464)
 adjusted reps: 210 + inner loop: 1
-avg-ms=4.5464387(+/- 2 %),	 algo=PeekSort+iscutoff=24+onlyIncRuns=false, n=50000     (5250210)	(n=200, µ=4.5464387, σ=0.07795964)
-avg-ms=4.912094(+/- 1 %),	 algo=TopDownMergesort+iscutoff=24+checkSorted=true, n=50000     (5250210)	(n=200, µ=4.912094, σ=0.06917076)
-avg-ms=5.311387(+/- 2 %),	 algo=BottomUpMergesort+minRunLen=24+checkSorted=true, n=50000     (5250210)	(n=200, µ=5.311387, σ=0.080809616)
-avg-ms=5.398683(+/- 1 %),	 algo=MarlinSort, n=50000     (5250210)	(n=200, µ=5.398683, σ=0.06818533)
-avg-ms=4.2064962(+/- 2 %),	 algo=DualPivotQuickSort, n=50000     (5250210)	(n=200, µ=4.2064962, σ=0.06584348)
-avg-ms=4.520286(+/- 2 %),	 algo=DualPivotQuicksort2018, n=50000     (5250210)	(n=200, µ=4.520286, σ=0.093553565)
-avg-ms=4.308557(+/- 2 %),	 algo=Arrays.sort(int[]), n=50000     (5250210)	(n=200, µ=4.308557, σ=0.0712056)
+avg-ms=4.480995(+/- 1 %),	 algo=PeekSort+iscutoff=24+onlyIncRuns=false, n=50000     (5250210)	(n=200, µ=4.480995, σ=0.06052882)
+avg-ms=4.915233(+/- 1 %),	 algo=TopDownMergesort+iscutoff=24+checkSorted=true, n=50000     (5250210)	(n=200, µ=4.915233, σ=0.068345934)
+avg-ms=5.265368(+/- 1 %),	 algo=BottomUpMergesort+minRunLen=24+checkSorted=true, n=50000     (5250210)	(n=200, µ=5.265368, σ=0.06605176)
+avg-ms=4.921916(+/- 1 %),	 algo=MarlinSort, n=50000     (5250210)	(n=200, µ=4.921916, σ=0.05959527)
+avg-ms=6.0586195(+/- 7 %),	 algo=MarlinMergeSort, n=50000     (5250210)	(n=200, µ=6.0586195, σ=0.43799606)
+avg-ms=4.5060334(+/- 2 %),	 algo=DualPivotQuicksort2018, n=50000     (5250210)	(n=200, µ=4.5060334, σ=0.078592464)
+avg-ms=4.974061(+/- 2 %),	 algo=DualPivotQuicksort2018Ext, n=50000     (5250210)	(n=200, µ=4.974061, σ=0.09647726)
 adjusted reps: 210 + inner loop: 1
-avg-ms=9.892554(+/- 1 %),	 algo=PeekSort+iscutoff=24+onlyIncRuns=false, n=100000     (10500210)	(n=200, µ=9.892554, σ=0.07088208)
-avg-ms=10.663811(+/- 1 %),	 algo=TopDownMergesort+iscutoff=24+checkSorted=true, n=100000     (10500210)	(n=200, µ=10.663811, σ=0.07528759)
-avg-ms=11.593419(+/- 8 %),	 algo=BottomUpMergesort+minRunLen=24+checkSorted=true, n=100000     (10500210)	(n=200, µ=11.593419, σ=0.8956693)
-avg-ms=11.673415(+/- 1 %),	 algo=MarlinSort, n=100000     (10500210)	(n=200, µ=11.673415, σ=0.076151915)
-avg-ms=9.020587(+/- 1 %),	 algo=DualPivotQuickSort, n=100000     (10500210)	(n=200, µ=9.020587, σ=0.08232292)
-avg-ms=9.670667(+/- 1 %),	 algo=DualPivotQuicksort2018, n=100000     (10500210)	(n=200, µ=9.670667, σ=0.118944235)
-avg-ms=9.228206(+/- 1 %),	 algo=Arrays.sort(int[]), n=100000     (10500210)	(n=200, µ=9.228206, σ=0.11636248)
+avg-ms=9.863466(+/- 11 %),	 algo=PeekSort+iscutoff=24+onlyIncRuns=false, n=100000     (10500210)	(n=200, µ=9.863466, σ=1.0610733)
+avg-ms=10.637576(+/- 1 %),	 algo=TopDownMergesort+iscutoff=24+checkSorted=true, n=100000     (10500210)	(n=200, µ=10.637576, σ=0.064607635)
+avg-ms=11.471006(+/- 1 %),	 algo=BottomUpMergesort+minRunLen=24+checkSorted=true, n=100000     (10500210)	(n=200, µ=11.471006, σ=0.08076731)
+avg-ms=10.659529(+/- 1 %),	 algo=MarlinSort, n=100000     (10500210)	(n=200, µ=10.659529, σ=0.06857115)
+avg-ms=13.033392(+/- 0 %),	 algo=MarlinMergeSort, n=100000     (10500210)	(n=200, µ=13.033392, σ=0.059749357)
+avg-ms=9.663764(+/- 1 %),	 algo=DualPivotQuicksort2018, n=100000     (10500210)	(n=200, µ=9.663764, σ=0.121222325)
+avg-ms=10.613465(+/- 1 %),	 algo=DualPivotQuicksort2018Ext, n=100000     (10500210)	(n=200, µ=10.613465, σ=0.1164263)
