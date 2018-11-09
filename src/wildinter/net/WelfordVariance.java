@@ -34,6 +34,10 @@ public class WelfordVariance {
 	public double stdev() {
 		return Math.sqrt(variance());
 	}
+    
+    public int errorPercent() {
+        return (int)Math.round(Math.abs(100.0 * stdev() / mean()));
+    }
 
 	@Override
 	public String toString() {

@@ -3,6 +3,10 @@
 
 # Log file
 *.log
+*.csv
+*.out
+
+nbproject/*
 
 # BlueJ files
 *.ctxt
