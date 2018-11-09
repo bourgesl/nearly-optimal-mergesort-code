@@ -178,41 +178,65 @@ public final class DualPivotQuicksort2018Ext implements Sorter {
             int t = a[e5];
             a[e5] = a[e3];
             a[e3] = t;
+            t = b[e5];
+            b[e5] = b[e3];
+            b[e3] = t;
         }
         if (a[e4] < a[e2]) {
             int t = a[e4];
             a[e4] = a[e2];
             a[e2] = t;
+            t = b[e4];
+            b[e4] = b[e2];
+            b[e2] = t;
         }
         if (a[e5] < a[e4]) {
             int t = a[e5];
             a[e5] = a[e4];
             a[e4] = t;
+            t = b[e5];
+            b[e5] = b[e4];
+            b[e4] = t;
         }
         if (a[e3] < a[e2]) {
             int t = a[e3];
             a[e3] = a[e2];
             a[e2] = t;
+            t = b[e3];
+            b[e3] = b[e2];
+            b[e2] = t;
         }
         if (a[e4] < a[e3]) {
             int t = a[e4];
             a[e4] = a[e3];
             a[e3] = t;
+            t = b[e4];
+            b[e4] = b[e3];
+            b[e3] = t;
         }
 
         if (a[e1] > a[e2]) {
-            int t = a[e1];
+            final int ta = a[e1];
             a[e1] = a[e2];
-            a[e2] = t;
-            if (t > a[e3]) {
+            a[e2] = ta;
+            final int tb = b[e1];
+            b[e1] = b[e2];
+            b[e2] = tb;
+            if (ta > a[e3]) {
                 a[e2] = a[e3];
-                a[e3] = t;
-                if (t > a[e4]) {
+                a[e3] = ta;
+                b[e2] = b[e3];
+                b[e3] = tb;
+                if (ta > a[e4]) {
                     a[e3] = a[e4];
-                    a[e4] = t;
-                    if (t > a[e5]) {
+                    a[e4] = ta;
+                    b[e3] = b[e4];
+                    b[e4] = tb;
+                    if (ta > a[e5]) {
                         a[e4] = a[e5];
-                        a[e5] = t;
+                        a[e5] = ta;
+                        b[e4] = b[e5];
+                        b[e5] = tb;
                     }
                 }
             }
@@ -229,10 +253,10 @@ public final class DualPivotQuicksort2018Ext implements Sorter {
              * These values are inexpensive approximation of tertiles.
              * Note, that pivot1 < pivot2.
              */
-            int pivotA1 = a[e1];
-            int pivotA2 = a[e5];
-            int pivotB1 = b[e1];
-            int pivotB2 = b[e5];
+            final int pivotA1 = a[e1];
+            final int pivotA2 = a[e5];
+            final int pivotB1 = b[e1];
+            final int pivotB2 = b[e5];
 
             /*
              * The first and the last elements to be sorted are moved to the
@@ -295,6 +319,7 @@ public final class DualPivotQuicksort2018Ext implements Sorter {
                 } else if (ak > pivotA2) { // Move a[k] to the right side
                     a[k] = a[--upper];
                     a[upper] = ak;
+                    b[k] = b[  upper];
                     b[upper] = bk;
                 }
             }
@@ -323,8 +348,8 @@ public final class DualPivotQuicksort2018Ext implements Sorter {
              * Use the third element as the pivot. This value
              * is inexpensive approximation of the median.
              */
-            int pivotA = a[e3];
-            int pivotB = b[e3];
+            final int pivotA = a[e3];
+            final int pivotB = b[e3];
 
             /*
              * The first element to be sorted is moved to the location
