@@ -3,8 +3,8 @@
 
 # Log file
 *.log
-*.csv
-*.out
+/*.csv
+/*.out
 
 nbproject/*
 
