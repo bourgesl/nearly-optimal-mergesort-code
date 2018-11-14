@@ -3,6 +3,7 @@ package wildinter.net;
 import wildinter.net.mergesort.BottomUpMergesort;
 import wildinter.net.mergesort.Inputs;
 import wildinter.net.mergesort.MergesAndRuns;
+import wildinter.net.mergesort.RadixSort;
 import wildinter.net.mergesort.Sorter;
 import wildinter.net.mergesort.TopDownMergesort;
 import wildinter.net.mergesort.Util;
@@ -70,6 +71,8 @@ public class Mergesorts {
 
 //        algos.add(Sorter.SYSTEMSORT);
 
+        algos.add(new RadixSort());
+        
         /*
 	    algos.add(new Nop());
 	    algos.add(new Shuffle());
