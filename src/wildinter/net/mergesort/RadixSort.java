@@ -2,7 +2,8 @@ package wildinter.net.mergesort;
 
 import java.util.Arrays;
 
-public class RadixSort implements Sorter {
+public final class RadixSort implements Sorter {
+
     private static final int INSERTION_SORT_THRESHOLD = 64;
     /**
      * The maximum number of runs in merge sort.
@@ -28,9 +29,10 @@ public class RadixSort implements Sorter {
         }
 
         int pref = array[offset] & 0xFFFFFF00;
-        for (int x=0; x<0x100; x++) {
-            for(int c = buf[x]; c > 0; c--) 
+        for (int x = 0; x < 0x100; x++) {
+            for (int c = buf[x]; c > 0; c--) {
                 array[offset++] = pref | x;
+            }
             if (offset == end) {
                 return;
             }
@@ -58,7 +60,7 @@ public class RadixSort implements Sorter {
             while (off != buf[x]) {
                 int value = array[off];
                 int y = (value >> 8) & 0xff;
-                if(x == y) {
+                if (x == y) {
                     off++;
                 } else {
                     while (x != y) {
@@ -104,7 +106,7 @@ public class RadixSort implements Sorter {
             while (off != buf[x]) {
                 int value = array[off];
                 int y = (value >> 16) & 0xff;
-                if(x == y) {
+                if (x == y) {
                     off++;
                 } else {
                     while (x != y) {
@@ -132,7 +134,7 @@ public class RadixSort implements Sorter {
     // Sorts byte#3 (most significant byte), taking sign into account
     // uses buf[0..0x1FF]
     private static void sort0(int[] array, int offset, int end, int[] buf) {
-        Arrays.fill(buf, 0, MAX_RUN_COUNT+1, 0);
+        Arrays.fill(buf, 0, MAX_RUN_COUNT + 1, 0);
         for (int x = offset; x < end; ++x) {
             ++buf[(array[x] >> 24) + 0x80];
         }
@@ -150,7 +152,7 @@ public class RadixSort implements Sorter {
             while (off != buf[x]) {
                 int value = array[off];
                 int y = (value >> 24) + 0x80;
-                if(x == y) {
+                if (x == y) {
                     off++;
                 } else {
                     while (x != y) {
@@ -175,20 +177,24 @@ public class RadixSort implements Sorter {
         }
     }
 
-    private static void tryMerge(int[] a, int left, int right) {
+    private static void tryMerge(int[] a, final int left, int right, final int[] aux, final int[] run) {
         /*
          * Index run[i] is the start of i-th run
          * (ascending or descending sequence).
          */
-        int[] run = new int[0x400];
-        int count = 0; run[0] = left;
+//        int[] run = new int[0x400];
+//        run[0] = left;
+        Arrays.fill(run, 0);
+        int count = 0;
 
         // Check if the array is nearly sorted
         for (int k = left; k < right; run[count] = k) {
-            while (k < right && a[k] == a[k + 1]) k++;
+            while (k < right && a[k] == a[k + 1]) {
+                k++;
+            }
             if (a[k] > a[k + 1]) { // descending
                 while (++k <= right && a[k - 1] >= a[k]) ;
-                for (int lo = run[count] - 1, hi = k; ++lo < --hi && a[lo] != a[hi]; ) {
+                for (int lo = run[count] - 1, hi = k; ++lo < --hi && a[lo] != a[hi];) {
                     int t = a[lo];
                     a[lo] = a[hi];
                     a[hi] = t;
@@ -202,7 +208,7 @@ public class RadixSort implements Sorter {
              * use Radixsort instead of merge sort.
              */
             if (++count == MAX_RUN_COUNT) {
-                sort0(a, left, right+1, run);
+                sort0(a, left, right + 1, run);
                 return;
             }
         }
@@ -223,7 +229,8 @@ public class RadixSort implements Sorter {
         int[] b;                 // temp array; alternates with a
         int ao, bo;              // array offsets from 'left'
         int blen = right - left; // space needed for b
-        int[] work = new int[blen];
+
+        final int[] work = (aux.length < blen) ? new int[blen] : aux; // LBO: avoid alloc
         int workBase = 0;
         if (odd == 0) {
             System.arraycopy(a, left, work, workBase, blen);
@@ -252,24 +259,34 @@ public class RadixSort implements Sorter {
             }
             if ((count & 1) != 0) {
                 for (int i = right, lo = run[count - 1]; --i >= lo;
-                    b[i + bo] = a[i + ao]
-                );
+                        b[i + bo] = a[i + ao]);
                 run[++last] = right;
             }
-            int[] t = a; a = b; b = t;
-            int o = ao; ao = bo; bo = o;
+            int[] t = a;
+            a = b;
+            b = t;
+            int o = ao;
+            ao = bo;
+            bo = o;
         }
     }
 
+    // avoid alloc
+    private int[] aux = null;
+    private final int[] run = new int[0x400];
+
+    @Override
     public void sort(int[] array, int offset, int end) {
         if (offset < 0 || end < offset || end >= array.length) {
             throw new IllegalArgumentException();
         }
-        tryMerge(array, offset, end);
-    }
+        final int bLen = end - offset + 1;
+        /* extra right increment ? */
+        if (aux == null || aux.length < bLen) {
+            aux = new int[bLen];
+        }
 
-    public void sort(int[] array) {
-        tryMerge(array, 0, array.length-1);
+        tryMerge(array, offset, end, aux, run);
     }
 
     @Override
@@ -277,7 +294,4 @@ public class RadixSort implements Sorter {
         return "RadixSort";
     }
 
-    public static void main(String[] args) {
-        
-    }
 }

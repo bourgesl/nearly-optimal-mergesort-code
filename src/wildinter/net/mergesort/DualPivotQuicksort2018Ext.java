@@ -18,7 +18,7 @@ import wildinter.net.HarnessSort;
  */
 public final class DualPivotQuicksort2018Ext implements Sorter {
 
-    private final static boolean DO_CHECK = true;
+    private final static boolean DO_CHECK = false;
 
     public static void main(String[] args) {
         HarnessSort.harness(new DualPivotQuicksort2018Ext());
