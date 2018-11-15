@@ -9,11 +9,14 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import wildinter.net.WelfordVariance;
 
 /**
  * @author Vladimir Yaroslavskiy
  */
 public class Statistic {
+
+    private final static double MIN_PREC = 1e-5; // nanosecond
 
     public static void main(String[] args) {
         if (args.length == 0) {
@@ -24,8 +27,9 @@ public class Statistic {
 
     protected void doAfter(String number, String name) {
         System.out.println();
-        System.out.println("winners: " + myWinners[0] + " / " + myWinners[1]);
-        System.out.println("    avg: " + round(mult() * 100.0));
+        System.out.println("winners  : " + myWinners[0] + " / " + myWinners[1]);
+        System.out.println("avg   (%): " + round(mult() * 100.0));
+        System.out.println("stats (%): " + ratioStats());
     }
 
     protected void processFile(String file, String number, String name) {
@@ -44,18 +48,30 @@ public class Statistic {
 
         int count = 0;
         for (int i = 0; i < length; i++) {
-            if (myTime[0][i] > 0.0 && myTime[1][i] > 0.0) {
+            if (myTime[0][i] > MIN_PREC && myTime[1][i] > MIN_PREC) {
                 count++;
-                if (Math.pow(mult * (myTime[0][i] / myTime[1][i]), 1.0 / (i + 1)) == 0.0) {
-                    return Math.pow(mult, 1.0 / i);
+                if (Math.pow(mult * (myTime[0][i] / myTime[1][i]), 1.0 / (count + 1)) == 0.0) {
+                    break;
                 }
-                mult *= myTime[0][i] / myTime[1][i];
+                mult *= (myTime[0][i] / myTime[1][i]);
             }
         }
         if (count < 2) {
-            return 0.0;
+            return Double.NaN;
         }
         return Math.pow(mult, 1.0 / count);
+    }
+
+    protected WelfordVariance ratioStats() {
+        final WelfordVariance samples = new WelfordVariance();
+        final int length = myTime[0].length;
+
+        for (int i = 0; i < length; i++) {
+            if (myTime[0][i] > MIN_PREC && myTime[1][i] > MIN_PREC) {
+                samples.addSample(100.0 * myTime[0][i] / myTime[1][i]);
+            }
+        }
+        return samples;
     }
 
     protected List<String> getLines(String file) {
@@ -126,11 +142,14 @@ public class Statistic {
     }
 
     private static String round(double value) {
-        String s = "" + (((long) Math.round(value * 10000.0)) / 10000.0);
+        if (Double.isNaN(value)) {
+            return "NaN";
+        }
+        String s = String.valueOf(Math.round(value * 10000.0) / 10000.0);
         int k = s.length() - s.indexOf(".");
 
         for (int i = k; i <= 4; ++i) {
-            s = s + "0";
+            s += "0";
         }
         return s;
     }
