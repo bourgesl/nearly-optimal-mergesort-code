@@ -1,8 +1,40 @@
-package wildinter.net.mergesort;
+package edu.sorting;
 
 import java.util.Arrays;
+import wildinter.net.mergesort.Sorter;
 
 public final class RadixSort implements Sorter {
+
+    public final static Sorter INSTANCE = new RadixSort();
+
+    /**
+     * Prevents instantiation.
+     */
+    private RadixSort() {
+    }
+
+    // avoid alloc
+    private int[] aux = null;
+    private final int[] run = new int[0x400];
+
+    @Override
+    public void sort(int[] array, int offset, int end) {
+        if (offset < 0 || end < offset || end >= array.length) {
+            throw new IllegalArgumentException();
+        }
+        final int bLen = end - offset + 1;
+        /* extra right increment ? */
+        if (aux == null || aux.length < bLen) {
+            aux = new int[bLen];
+        }
+
+        tryMerge(array, offset, end, aux, run);
+    }
+
+    @Override
+    public String toString() {
+        return "RadixSort";
+    }
 
     private static final int INSERTION_SORT_THRESHOLD = 64;
     /**
@@ -270,28 +302,4 @@ public final class RadixSort implements Sorter {
             bo = o;
         }
     }
-
-    // avoid alloc
-    private int[] aux = null;
-    private final int[] run = new int[0x400];
-
-    @Override
-    public void sort(int[] array, int offset, int end) {
-        if (offset < 0 || end < offset || end >= array.length) {
-            throw new IllegalArgumentException();
-        }
-        final int bLen = end - offset + 1;
-        /* extra right increment ? */
-        if (aux == null || aux.length < bLen) {
-            aux = new int[bLen];
-        }
-
-        tryMerge(array, offset, end, aux, run);
-    }
-
-    @Override
-    public String toString() {
-        return "RadixSort";
-    }
-
 }

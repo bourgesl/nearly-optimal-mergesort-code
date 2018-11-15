@@ -2,6 +2,9 @@ package edu.sorting.perf;
 
 import java.util.Arrays;
 
+/**
+ * @author Jon Bentley
+ */
 public enum IntArrayTweaker {
 
     IDENT_____ { public int[] tweak(int[] a) { int[] result = a.clone();                                                               return result; }},

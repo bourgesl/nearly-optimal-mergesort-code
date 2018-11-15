@@ -3,10 +3,11 @@ package wildinter.net;
 import edu.sorting.DualPivotQuickSort2011;
 import edu.sorting.DualPivotQuicksort201802;
 import edu.sorting.DualPivotQuicksort201802Ext;
+import edu.sorting.DualPivotQuicksort201811;
 import wildinter.net.mergesort.BottomUpMergesort;
 import wildinter.net.mergesort.Inputs;
 import wildinter.net.mergesort.MergesAndRuns;
-import wildinter.net.mergesort.RadixSort;
+import edu.sorting.RadixSort;
 import wildinter.net.mergesort.Sorter;
 import wildinter.net.mergesort.TopDownMergesort;
 import wildinter.net.mergesort.Util;
@@ -41,34 +42,35 @@ public class Mergesorts {
             System.out.println("Usage: Mergesorts [reps] [n1,n2,n3] [seed] [inputs] [outfile]");
         }
 
-        List<Sorter> algos = new ArrayList<>();
+        final ArrayList<Sorter> algos = new ArrayList<Sorter>();
 
 //        algos.add(new PowerSort(true, false, 24));
         algos.add(new PeekSort(24, false));
 
-//   		algos.add(new PowerSort(true, false, 2));
-//   		algos.add(new PeekSort(2, false));
+//   	  algos.add(new PowerSort(true, false, 2));
+//   	  algos.add(new PeekSort(2, false));
         algos.add(new TopDownMergesort(24, true));
-//   		algos.add(new TopDownMergesort(2, true));
+//   	  algos.add(new TopDownMergesort(2, true));
 
         algos.add(new BottomUpMergesort(24, true));
-//   		algos.add(new BottomUpMergesort(2, true));
+//   	  algos.add(new BottomUpMergesort(2, true));
 
-//   		algos.add(TimsortTrot.INSTANCE);
-//   		algos.add(TimsortStrippedDown.INSTANCE);
-//   		algos.add(Timsort.INSTANCE);
-        algos.add(new MarlinSort());
-        algos.add(new MarlinMergeSort());
-//        algos.add(new DynPivotSort());
-//        algos.add(new Qsorte());
+//   	  algos.add(TimsortTrot.INSTANCE);
+//   	  algos.add(TimsortStrippedDown.INSTANCE);
+//   	  algos.add(Timsort.INSTANCE);
 
-        algos.add(new DualPivotQuicksort201802());
-        algos.add(new DualPivotQuicksort201802Ext());
+        algos.add(MarlinSort.INSTANCE);
+        algos.add(MarlinMergeSort.INSTANCE);
+//        algos.add(DynPivotSort.INSTANCE);
+//        algos.add(Qsorte.INSTANCE);
 
-        algos.add(new DualPivotQuickSort2011());
+        algos.add(DualPivotQuickSort2011.INSTANCE);
+        algos.add(DualPivotQuicksort201802.INSTANCE);
+        algos.add(DualPivotQuicksort201811.INSTANCE);
+        algos.add(DualPivotQuicksort201802Ext.INSTANCE);
 //        algos.add(Sorter.SYSTEMSORT);
 
-        algos.add(new RadixSort());
+        algos.add(RadixSort.INSTANCE);
 
 //	    algos.add(new Nop());
 //	    algos.add(new Shuffle());

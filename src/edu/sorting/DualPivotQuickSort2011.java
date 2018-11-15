@@ -47,8 +47,13 @@ import wildinter.net.mergesort.Sorter;
  * @since 1.7
  */
 public final class DualPivotQuickSort2011 implements Sorter {
+    
+    public final static Sorter INSTANCE = new DualPivotQuickSort2011();
 
-    public DualPivotQuickSort2011() {
+    /**
+     * Prevents instantiation.
+     */
+    private DualPivotQuickSort2011() {
     }
 
     // avoid alloc
@@ -70,8 +75,8 @@ public final class DualPivotQuickSort2011 implements Sorter {
      * @param low the index of the first element, inclusive, to be sorted
      * @param high the index of the last element, exclusive, to be sorted
      */
-    public static void sortORIG(int[] a, int low, int high) {
-        sort(a, low, high, null, 0, 0, null);
+    private static void sortORIG(int[] a, int low, int high) {
+        sort(a, low, high, null, 0, 0, null); // FAIL
     }
     
     @Override

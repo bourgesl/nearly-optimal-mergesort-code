@@ -8,7 +8,12 @@ import wildinter.net.mergesort.Sorter;
  */
 public final class DynPivotSort implements Sorter {
 
-    public DynPivotSort() {
+    public final static Sorter INSTANCE = new DynPivotSort();
+
+    /**
+     * Prevents instantiation.
+     */
+    private DynPivotSort() {
     }
 
     @Override

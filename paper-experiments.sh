@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/bash
 PREFIX="taskset -c 0 java -XX:+UnlockDiagnosticVMOptions -XX:-TieredCompilation -XX:+PrintCompilation -jar out/nearly-optimal-mergesort.jar "
 SEED=248442268
 

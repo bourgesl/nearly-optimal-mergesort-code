@@ -2,6 +2,9 @@ package edu.sorting.perf;
 
 import java.util.Random;
 
+/**
+ * @author Jon Bentley
+ */
 public enum ParamIntArrayBuilder {
 
     STAGGER { int element(int i, int m, int n) { return (i * m + i) % n; }},

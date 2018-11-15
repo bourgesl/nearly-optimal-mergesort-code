@@ -42,7 +42,15 @@ import wildinter.net.mergesort.Sorter;
  * @since 1.7
  */
 public final class DualPivotQuicksort201802 implements Sorter {
+    
+    public final static Sorter INSTANCE = new DualPivotQuicksort201802();
 
+    /**
+     * Prevents instantiation.
+     */
+    private DualPivotQuicksort201802() {
+    }
+    
     // avoid alloc
     private int[] aux = null;
     private int[] run = null;
@@ -53,7 +61,7 @@ public final class DualPivotQuicksort201802 implements Sorter {
         if (aux == null || aux.length < length) {
             aux = new int[length];
         }
-        int max = SortingAlgorithms2018.getMaxRunCount(length) + 1;
+        int max = SortingAlgorithms201802.getMaxRunCount(length) + 1;
         if (run == null || run.length < max) {
             run = new int[max];
         }
@@ -79,12 +87,6 @@ public final class DualPivotQuicksort201802 implements Sorter {
     /* 
     From OpenJDK12 source code
      */    
-
-    /**
-     * Prevents instantiation.
-     */
-    public DualPivotQuicksort201802() {
-    }
 
     /**
      * If the length of the leftmost part to be sorted is less than
@@ -137,7 +139,7 @@ public final class DualPivotQuicksort201802 implements Sorter {
              * Use nano insertion sort on tiny part.
              */
             if (length < NANO_INSERTION_SORT_THRESHOLD) {
-                SortingAlgorithms2018.nanoInsertionSort(a, low, high);
+                SortingAlgorithms201802.nanoInsertionSort(a, low, high);
                 return;
             }
 
@@ -145,7 +147,7 @@ public final class DualPivotQuicksort201802 implements Sorter {
              * Use pair insertion sort on small part.
              */
             if (length < PAIR_INSERTION_SORT_THRESHOLD) {
-                SortingAlgorithms2018.pairInsertionSort(a, low, end);
+                SortingAlgorithms201802.pairInsertionSort(a, low, end);
                 return;
             }
         }
@@ -155,7 +157,7 @@ public final class DualPivotQuicksort201802 implements Sorter {
          * if the execution time is becoming quadratic.
          */
         if (length < HEAP_SORT_THRESHOLD || (bits -= 2) < 0) {
-            SortingAlgorithms2018.heapSort(a, low, end);
+            SortingAlgorithms201802.heapSort(a, low, end);
             return;
         }
 
@@ -163,7 +165,7 @@ public final class DualPivotQuicksort201802 implements Sorter {
          * Check if the array is nearly sorted
          * and then try to sort it by Merging sort.
          */
-        if (SortingAlgorithms2018.mergingSort(a, low, high, buffer, run)) {
+        if (SortingAlgorithms201802.mergingSort(a, low, high, buffer, run)) {
             return;
         }
 

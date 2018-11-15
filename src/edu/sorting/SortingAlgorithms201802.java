@@ -34,12 +34,12 @@ package edu.sorting;
  * @version 2018.02.18
  * @since 10
  */
-final class SortingAlgorithms2018 {
+final class SortingAlgorithms201802 {
 
     /**
      * Prevents instantiation.
      */
-    private SortingAlgorithms2018() {
+    private SortingAlgorithms201802() {
     }
 
     /**

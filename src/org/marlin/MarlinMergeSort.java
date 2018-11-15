@@ -34,7 +34,12 @@ import wildinter.net.mergesort.Sorter;
  */
 public final class MarlinMergeSort implements Sorter {
 
-    public MarlinMergeSort() {
+    public final static Sorter INSTANCE = new MarlinMergeSort();
+
+    /**
+     * Prevents instantiation.
+     */
+    private MarlinMergeSort() {
     }
 
     @Override

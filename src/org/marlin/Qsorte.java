@@ -8,7 +8,12 @@ import wildinter.net.mergesort.Sorter;
  */
 public final class Qsorte implements Sorter {
 
-    public Qsorte() {
+    public final static Sorter INSTANCE = new Qsorte();
+
+    /**
+     * Prevents instantiation.
+     */
+    private Qsorte() {
     }
 
     @Override

@@ -25,7 +25,6 @@
 package edu.sorting;
 
 import wildinter.net.mergesort.Sorter;
-import wildinter.net.HarnessSort;
 
 /**
  * This class implements powerful and fully optimized versions, both
@@ -44,9 +43,13 @@ import wildinter.net.HarnessSort;
 public final class DualPivotQuicksort201802Ext implements Sorter {
 
     private final static boolean DO_CHECK = false;
+    
+    public final static Sorter INSTANCE = new DualPivotQuicksort201802Ext();
 
-    public static void main(String[] args) {
-        HarnessSort.harness(new DualPivotQuicksort201802Ext());
+    /**
+     * Prevents instantiation.
+     */
+    private DualPivotQuicksort201802Ext() {
     }
 
     // avoid alloc
@@ -119,11 +122,6 @@ public final class DualPivotQuicksort201802Ext implements Sorter {
     /* 
     From OpenJDK12 source code
      */
-    /**
-     * Prevents instantiation.
-     */
-    public DualPivotQuicksort201802Ext() {
-    }
 
     /**
      * If the length of the leftmost part to be sorted is less than

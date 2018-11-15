@@ -1,16 +1,23 @@
 package edu.sorting.perf;
 
-public class BentleyBasher {
+import java.util.Locale;
+
+/**
+ * @author Jon Bentley
+ */
+public final class BentleyBasher {
 
     private static final int MAX_N = 1000001;
 
-    private static final int[] lengths = { 10, 100, 1000, 10000, MAX_N };
+    private static final int[] lengths = {10, 100, 1000, 10000, MAX_N};
 
     private static int reps(int n) {
         return (int) (12000000 / (n * Math.log10(n)));
     }
 
     public static void main(String[] args) {
+        Locale.setDefault(Locale.US);
+        
         warmUp();
         sort();
     }
@@ -18,7 +25,10 @@ public class BentleyBasher {
     private static void sort() {
         System.out.print("                           ");
 
-        for (IntSorter sorter : IntSorter.values()) {
+        final IntSorter[] sorters = IntSorter.values();
+        final double[] times = new double[sorters.length];
+
+        for (IntSorter sorter : sorters) {
             System.out.print("         " + sorter);
         }
         System.out.println();
@@ -29,7 +39,11 @@ public class BentleyBasher {
         long minTime;
 
         for (int n : lengths) {
-            int reps = reps(n); if (reps < 3) reps = 3;
+            int reps = reps(n);
+            if (reps < 3) {
+                reps = 3;
+            }
+//            System.out.print("reps: " + reps + "\n");
 
             for (int m = 1; m < 2 * n; m *= 2) {
                 for (ParamIntArrayBuilder iab : ParamIntArrayBuilder.values()) {
@@ -39,10 +53,8 @@ public class BentleyBasher {
                         int[] proto2 = iat.tweak(proto1);
                         System.out.print(n + " " + m + "  " + iab + " " + iat + "  ");
 
-                        double[] times = new double[2];
-                        int i = 0;
-
-                        for (IntSorter sorter : IntSorter.values()) {
+                        for (int i = 0; i < sorters.length; i++) {
+                            final IntSorter sorter = sorters[i];
                             minTime = Long.MAX_VALUE;
                             int[] test = null;
 
@@ -55,13 +67,13 @@ public class BentleyBasher {
                             }
                             check(test, proto2);
                             System.out.print("\t" + round(minTime / 1000000.0));
-                            times[i++] = minTime;
+                            times[i] = minTime;
                         }
-                        double ratio = times[0]/times[1];
+                        double ratio = times[0] / times[1];
                         System.out.printf("\t  " + round(ratio));
                         String mark = "";
 
-                        if        (1.00 <= ratio && ratio < 1.05) {
+                        if (1.00 <= ratio && ratio < 1.05) {
                             mark = "..";
                         } else if (1.05 <= ratio && ratio < 1.10) {
                             mark = ".!.";

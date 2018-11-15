@@ -10,9 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+/**
+ * @author Vladimir Yaroslavskiy
+ */
 public class Statistic {
 
     public static void main(String[] args) {
+        if (args.length == 0) {
+            args = new String[]{"/home/bourgesl/libs/nearly-optimal-mergesort-code/basher-results.out"};
+        }
         new Statistic().processFile(args[0], null, null);
     }
 
@@ -34,15 +40,22 @@ public class Statistic {
 
     protected double mult() {
         double mult = 1.0d;
-        int length = myTime[0].length;
+        final int length = myTime[0].length;
 
+        int count = 0;
         for (int i = 0; i < length; i++) {
-            if (Math.pow(mult * (myTime[0][i] / myTime[1][i]), 1.0 / (i + 1)) == 0.0) {
-                return Math.pow(mult, 1.0 / (i));
+            if (myTime[0][i] > 0.0 && myTime[1][i] > 0.0) {
+                count++;
+                if (Math.pow(mult * (myTime[0][i] / myTime[1][i]), 1.0 / (i + 1)) == 0.0) {
+                    return Math.pow(mult, 1.0 / i);
+                }
+                mult *= myTime[0][i] / myTime[1][i];
             }
-            mult *= myTime[0][i] / myTime[1][i];
         }
-        return Math.pow(mult, 1.0 / length);
+        if (count < 2) {
+            return 0.0;
+        }
+        return Math.pow(mult, 1.0 / count);
     }
 
     protected List<String> getLines(String file) {
@@ -54,14 +67,12 @@ public class Statistic {
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
             while ((line = reader.readLine()) != null) {
-                if (
-                    line.contains("SAWTOTH") ||
-                    line.contains("_RANDOM") ||
-                    line.contains("STAGGER") ||
-                    line.contains("PLATEAU") ||
-                    line.contains("SHUFFLE")
-                ) {
-                    lines.add(line.replace(',', '.'));
+                if (line.contains("SAWTOTH")
+                        || line.contains("_RANDOM")
+                        || line.contains("STAGGER")
+                        || line.contains("PLATEAU")
+                        || line.contains("SHUFFLE")) {
+                    lines.add(line/*.replace(',', '.')*/);
                 }
             }
             is.close();
@@ -93,16 +104,16 @@ public class Statistic {
     }
 
     private int getWinner(int row) {
-        int winerIndex = 0;
-        double winer = myTime[0][row];
+        int winnerIndex = 0;
+        double winner = myTime[0][row];
 
         for (int k = 1; k < 2; k++) {
-            if (myTime[k][row] < winer) {
-                winerIndex = k;
-                winer = myTime[k][row];
+            if (myTime[k][row] < winner) {
+                winnerIndex = k;
+                winner = myTime[k][row];
             }
         }
-        return winerIndex;
+        return winnerIndex;
     }
 
     private double getDouble(String value) {

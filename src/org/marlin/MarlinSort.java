@@ -10,7 +10,12 @@ import wildinter.net.mergesort.Sorter;
  */
 public final class MarlinSort implements Sorter {
 
-    public MarlinSort() {
+    public final static Sorter INSTANCE = new MarlinSort();
+
+    /**
+     * Prevents instantiation.
+     */
+    private MarlinSort() {
     }
 
     @Override

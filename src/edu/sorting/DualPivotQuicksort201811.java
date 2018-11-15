@@ -47,13 +47,30 @@ import java.util.Arrays;
  *
  * @since 1.7 * 12
  */
-final class DualPivotQuicksort201811 {
+public final class DualPivotQuicksort201811 implements wildinter.net.mergesort.Sorter {
+
+    public final static wildinter.net.mergesort.Sorter INSTANCE = new DualPivotQuicksort201811();
 
     /**
      * Prevents instantiation.
      */
-    private DualPivotQuicksort201811() {}
+    private DualPivotQuicksort201811() {
+    }
 
+    @Override
+    public void sort(final int[] A, final int low, final int high) {
+        // TODO: LBO preallocation of any arrays into custom Sorter class
+        sort(null, A, 0, low, high + 1); // exclusive
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName();
+    }
+
+    /* 
+    From OpenJDK12 source code
+     */
     /**
      * Max array size to use insertion sort.
      */
@@ -138,7 +155,7 @@ final class DualPivotQuicksort201811 {
         sort(null, a, 0, low, high);
     }
 
-     public static void sort(Sorter sorter, int[] a, int low, int high) {
+    private static void sort(Sorter sorter, int[] a, int low, int high) {
         sort(sorter, a, 0, low, high);
     }
         
@@ -775,6 +792,7 @@ final class DualPivotQuicksort201811 {
     }
 // ...
     private class Sorter{
+        // TODO: prealloc
         int[] b;   /* b = new int[size]; size = array size */
         int[] run; /* run = new int[INITIAL_RUN_CAPACITY]; */
     }
