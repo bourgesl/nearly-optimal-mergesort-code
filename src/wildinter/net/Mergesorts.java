@@ -1,5 +1,8 @@
 package wildinter.net;
 
+import edu.sorting.DualPivotQuickSort2011;
+import edu.sorting.DualPivotQuicksort201802;
+import edu.sorting.DualPivotQuicksort201802Ext;
 import wildinter.net.mergesort.BottomUpMergesort;
 import wildinter.net.mergesort.Inputs;
 import wildinter.net.mergesort.MergesAndRuns;
@@ -19,10 +22,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import wildinter.net.mergesort.DualPivotQuicksort2018;
-import wildinter.net.mergesort.DualPivotQuicksort2018Ext;
-import wildinter.net.mergesort.MarlinMergeSort;
-import wildinter.net.mergesort.MarlinSort;
+import org.marlin.MarlinMergeSort;
+import org.marlin.MarlinSort;
 import wildinter.net.mergesort.PeekSort;
 
 import static wildinter.net.mergesort.Util.shuffle;
@@ -48,35 +49,29 @@ public class Mergesorts {
 //   		algos.add(new PowerSort(true, false, 2));
 //   		algos.add(new PeekSort(2, false));
         algos.add(new TopDownMergesort(24, true));
-//   		algos.add(new TopDownMergesort(2, false)); // like GDL
-
 //   		algos.add(new TopDownMergesort(2, true));
+
         algos.add(new BottomUpMergesort(24, true));
 //   		algos.add(new BottomUpMergesort(2, true));
 
-        /*
-   		algos.add(TimsortTrot.INSTANCE);
-   		algos.add(TimsortStrippedDown.INSTANCE);
-         */
+//   		algos.add(TimsortTrot.INSTANCE);
+//   		algos.add(TimsortStrippedDown.INSTANCE);
 //   		algos.add(Timsort.INSTANCE);
         algos.add(new MarlinSort());
         algos.add(new MarlinMergeSort());
-        
-//        algos.add(new Qsorte());
 //        algos.add(new DynPivotSort());
+//        algos.add(new Qsorte());
 
-//        algos.add(new DualPivotQuickSort());
-        algos.add(new DualPivotQuicksort2018());
-        algos.add(new DualPivotQuicksort2018Ext());
+        algos.add(new DualPivotQuicksort201802());
+        algos.add(new DualPivotQuicksort201802Ext());
 
+        algos.add(new DualPivotQuickSort2011());
 //        algos.add(Sorter.SYSTEMSORT);
 
         algos.add(new RadixSort());
-        
-        /*
-	    algos.add(new Nop());
-	    algos.add(new Shuffle());
-         */
+
+//	    algos.add(new Nop());
+//	    algos.add(new Shuffle());
         int reps = 100;
 
         if (args.length >= 1) {

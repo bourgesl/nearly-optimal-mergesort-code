@@ -1,4 +1,8 @@
-package wildinter.net.mergesort;
+package org.marlin;
+
+import wildinter.net.mergesort.Insertionsort;
+import wildinter.net.mergesort.MergesAndRuns;
+import wildinter.net.mergesort.Sorter;
 
 /**
  *

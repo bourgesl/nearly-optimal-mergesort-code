@@ -1,6 +1,6 @@
-package wildinter.net.mergesort;
+package org.marlin;
 
-import static wildinter.net.mergesort.MarlinSort.qsorte;
+import wildinter.net.mergesort.Sorter;
 
 /**
  *
@@ -21,7 +21,7 @@ public final class Qsorte implements Sorter {
 
     @Override
     public void sort(final int[] A, final int left, final int right) {
-        qsorte(A, left, right, (left + right) >> 1);
+        MarlinSort.qsorte(A, left, right, (left + right) >> 1);
     }
 
 }

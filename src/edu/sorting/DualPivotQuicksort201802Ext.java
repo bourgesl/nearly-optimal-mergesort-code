@@ -1,5 +1,30 @@
-package wildinter.net.mergesort;
+/*
+ * Copyright (c) 2009, 2018, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
+package edu.sorting;
 
+import wildinter.net.mergesort.Sorter;
 import wildinter.net.HarnessSort;
 
 /**
@@ -16,12 +41,12 @@ import wildinter.net.HarnessSort;
  * @version 2018.02.18
  * @since 1.7
  */
-public final class DualPivotQuicksort2018Ext implements Sorter {
+public final class DualPivotQuicksort201802Ext implements Sorter {
 
     private final static boolean DO_CHECK = false;
 
     public static void main(String[] args) {
-        HarnessSort.harness(new DualPivotQuicksort2018Ext());
+        HarnessSort.harness(new DualPivotQuicksort201802Ext());
     }
 
     // avoid alloc
@@ -57,7 +82,7 @@ public final class DualPivotQuicksort2018Ext implements Sorter {
             }
         }
 
-        final int max = SortingAlgorithms2018Ext.getMaxRunCount(length) + 1;
+        final int max = SortingAlgorithms201802Ext.getMaxRunCount(length) + 1;
         if (run == null || run.length < max) {
             run = new int[max];
         }
@@ -97,7 +122,7 @@ public final class DualPivotQuicksort2018Ext implements Sorter {
     /**
      * Prevents instantiation.
      */
-    public DualPivotQuicksort2018Ext() {
+    public DualPivotQuicksort201802Ext() {
     }
 
     /**
@@ -168,7 +193,7 @@ public final class DualPivotQuicksort2018Ext implements Sorter {
              * Use nano insertion sort on tiny part.
              */
             if (length < NANO_INSERTION_SORT_THRESHOLD) {
-                SortingAlgorithms2018Ext.nanoInsertionSort(a, b, low, high);
+                SortingAlgorithms201802Ext.nanoInsertionSort(a, b, low, high);
 
                 if (DO_CHECK) {
                     checkSorted("nanoInsertionSort", a, b, low, high);
@@ -180,7 +205,7 @@ public final class DualPivotQuicksort2018Ext implements Sorter {
              * Use pair insertion sort on small part.
              */
             if (length < PAIR_INSERTION_SORT_THRESHOLD) {
-                SortingAlgorithms2018Ext.pairInsertionSort(a, b, low, end);
+                SortingAlgorithms201802Ext.pairInsertionSort(a, b, low, end);
 
                 if (DO_CHECK) {
                     checkSorted("pairInsertionSort", a, b, low, high);
@@ -194,7 +219,7 @@ public final class DualPivotQuicksort2018Ext implements Sorter {
          * if the execution time is becoming quadratic.
          */
         if (length < HEAP_SORT_THRESHOLD || (bits -= 2) < 0) {
-            SortingAlgorithms2018Ext.heapSort(a, b, low, end);
+            SortingAlgorithms201802Ext.heapSort(a, b, low, end);
 
             if (DO_CHECK) {
                 checkSorted("heapSort", a, b, low, high);
@@ -206,7 +231,7 @@ public final class DualPivotQuicksort2018Ext implements Sorter {
          * Check if the array is nearly sorted
          * and then try to sort it by Merging sort.
          */
-        if (SortingAlgorithms2018Ext.mergingSort(a, b, low, high, auxA, auxB, run)) {
+        if (SortingAlgorithms201802Ext.mergingSort(a, b, low, high, auxA, auxB, run)) {
 
             if (DO_CHECK) {
                 checkSorted("mergingSort", a, b, low, high);

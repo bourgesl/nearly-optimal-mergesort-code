@@ -1,4 +1,31 @@
-package wildinter.net.mergesort;
+/*
+ * Copyright (c) 2009, 2018, Oracle and/or its affiliates. All rights reserved.
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+ *
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation. Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
+ */
+package edu.sorting;
+
+import wildinter.net.mergesort.Sorter;
+
 
 /**
  * This class implements powerful and fully optimized versions, both
@@ -14,7 +41,7 @@ package wildinter.net.mergesort;
  * @version 2018.02.18
  * @since 1.7
  */
-public final class DualPivotQuicksort2018 implements Sorter {
+public final class DualPivotQuicksort201802 implements Sorter {
 
     // avoid alloc
     private int[] aux = null;
@@ -41,10 +68,9 @@ public final class DualPivotQuicksort2018 implements Sorter {
      * @param low the index of the first element, inclusive, to be sorted
      * @param high the index of the last element, exclusive, to be sorted
      */
-    static void sortORIG(int[] a, int low, int high) {
+    public static void sortORIG(int[] a, int low, int high) {
         sort(a, LEFTMOST_BITS, low, high, null, null); // FAIL
     }
-
 
     @Override
     public String toString() {
@@ -57,7 +83,7 @@ public final class DualPivotQuicksort2018 implements Sorter {
     /**
      * Prevents instantiation.
      */
-    public DualPivotQuicksort2018() {
+    public DualPivotQuicksort201802() {
     }
 
     /**

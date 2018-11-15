@@ -1,6 +1,6 @@
-package wildinter.net.mergesort;
+package org.marlin;
 
-import static wildinter.net.mergesort.MarlinSort.mQuickSort;
+import wildinter.net.mergesort.Sorter;
 
 /**
  *
@@ -18,7 +18,7 @@ public final class DynPivotSort implements Sorter {
 
     @Override
     public void sort(final int[] A, final int left, final int right) {
-        mQuickSort(A, left, right, A[right]); // last key
+        MarlinSort.mQuickSort(A, left, right, A[right]); // last key
     }
 
 }

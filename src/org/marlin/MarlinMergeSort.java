@@ -22,9 +22,10 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-package wildinter.net.mergesort;
+package org.marlin;
 
 import java.util.Arrays;
+import wildinter.net.mergesort.Sorter;
 
 /**
  * MergeSort adapted from (OpenJDK 8) java.util.Array.legacyMergeSort(Object[])
