@@ -1,5 +1,6 @@
 package edu.sorting.perf;
 
+import static edu.sorting.perf.BentleyBasher.MIN_PREC;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,6 +10,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.StringTokenizer;
 import wildinter.net.WelfordVariance;
@@ -19,9 +21,11 @@ import wildinter.net.WelfordVariance;
 public class Statistic {
 
     private final static String HEADER_STATS = "--- STATS ---";
-    private final static double MIN_PREC = 1e-5; // nanosecond
 
     public static void main(String[] args) {
+        // Set the default locale to en-US locale (for Numerical Fields "." ",")
+        Locale.setDefault(Locale.US);
+
         if (args.length == 0) {
             args = new String[]{"/home/bourgesl/libs/nearly-optimal-mergesort-code/basher-results.out"};
         }

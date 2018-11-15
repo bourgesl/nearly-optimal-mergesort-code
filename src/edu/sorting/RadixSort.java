@@ -224,6 +224,10 @@ public final class RadixSort implements Sorter {
             while (k < right && a[k] == a[k + 1]) {
                 k++;
             }
+            // LBO: fix
+            if (k == right) {
+                break;
+            }
             if (a[k] > a[k + 1]) { // descending
                 while (++k <= right && a[k - 1] >= a[k]) ;
                 for (int lo = run[count] - 1, hi = k; ++lo < --hi && a[lo] != a[hi];) {
