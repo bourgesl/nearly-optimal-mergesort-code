@@ -58,7 +58,6 @@ public class Mergesorts {
 //   	  algos.add(TimsortTrot.INSTANCE);
 //   	  algos.add(TimsortStrippedDown.INSTANCE);
 //   	  algos.add(Timsort.INSTANCE);
-
         algos.add(MarlinSort.INSTANCE);
         algos.add(MarlinMergeSort.INSTANCE);
 //        algos.add(DynPivotSort.INSTANCE);

@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 import wildinter.net.WelfordVariance;
 
@@ -16,6 +18,7 @@ import wildinter.net.WelfordVariance;
  */
 public class Statistic {
 
+    private final static String HEADER_STATS = "--- STATS ---";
     private final static double MIN_PREC = 1e-5; // nanosecond
 
     public static void main(String[] args) {
@@ -27,19 +30,31 @@ public class Statistic {
 
     protected void doAfter(String number, String name) {
         System.out.println();
+        System.out.println(HEADER_STATS);
         System.out.println("winners  : " + myWinners[0] + " / " + myWinners[1]);
         System.out.println("avg   (%): " + round(mult() * 100.0));
-        System.out.println("stats (%): " + ratioStats());
+        System.out.println("stats (%): " + ratioStats(null));
+
+        System.out.println("stats per keys:");
+        for (String key : keys) {
+            System.out.println(key + " stats (%): " + ratioStats(key));
+        }
     }
 
     protected void processFile(String file, String number, String name) {
         List<String> lines = getLines(file);
-        myTime = new double[2][lines.size()];
+        final int size = lines.size();
 
-        for (int i = 0; i < lines.size(); i++) {
-            processLine(lines.get(i), i);
+        if (size > 0) {
+            myKey = new String[size];
+            myTime = new double[2][size];
+            keys.clear();
+
+            for (int i = 0; i < size; i++) {
+                processLine(lines.get(i), i);
+            }
+            doAfter(number, name);
         }
-        doAfter(number, name);
     }
 
     protected double mult() {
@@ -62,11 +77,14 @@ public class Statistic {
         return Math.pow(mult, 1.0 / count);
     }
 
-    protected WelfordVariance ratioStats() {
+    protected WelfordVariance ratioStats(String selectedKey) {
         final WelfordVariance samples = new WelfordVariance();
         final int length = myTime[0].length;
 
         for (int i = 0; i < length; i++) {
+            if (selectedKey != null && !selectedKey.equals(myKey[i])) {
+                continue;
+            }
             if (myTime[0][i] > MIN_PREC && myTime[1][i] > MIN_PREC) {
                 samples.addSample(100.0 * myTime[0][i] / myTime[1][i]);
             }
@@ -90,6 +108,11 @@ public class Statistic {
                         || line.contains("SHUFFLE")) {
                     lines.add(line/*.replace(',', '.')*/);
                 }
+                if (line.startsWith(HEADER_STATS)) {
+                    System.err.println("STATS already processed; skipping");
+                    lines.clear();
+                    break;
+                }
             }
             is.close();
         } catch (IOException e) {
@@ -101,13 +124,17 @@ public class Statistic {
     protected void processLine(String line, int i) {
         StringTokenizer stk = new StringTokenizer(line, " \t");
         String value;
-//System.out.println("-- '" + line + "'");
-        value = stk.nextToken();
-        value = stk.nextToken();
-        value = stk.nextToken();
-        value = stk.nextToken();
-        value = stk.nextToken();
+//        System.out.println("-- '" + line + "'");
+        value = stk.nextToken(); // length
+        value = stk.nextToken(); // sub-size
+        value = stk.nextToken(); // type
+        myKey[i] = value;
+        value = stk.nextToken(); // variant
+        myKey[i] += ":" + value;
 
+        keys.add(myKey[i]);
+
+        value = stk.nextToken();
         myTime[0][i] = getDouble(value);
 //System.out.print("Line " + i + ": " + value + " " + myTime[0][i]);
 
@@ -154,6 +181,8 @@ public class Statistic {
         return s;
     }
 
+    private Set<String> keys = new LinkedHashSet<String>();
+    private String[] myKey;
     private double[][] myTime;
     private int[] myWinners = new int[2];
 }

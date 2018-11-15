@@ -57,10 +57,15 @@ public final class DualPivotQuicksort201811 implements wildinter.net.mergesort.S
     private DualPivotQuicksort201811() {
     }
 
+    // avoid alloc
+    private final Sorter sorter = new Sorter();
+    
     @Override
     public void sort(final int[] A, final int low, final int high) {
-        // TODO: LBO preallocation of any arrays into custom Sorter class
-        sort(null, A, 0, low, high + 1); // exclusive
+        // preallocation of temporary arrays into custom Sorter class
+        sorter.initLength(high - low + 1);
+        
+        sort(sorter, A, 0, low, high + 1); // exclusive
     }
 
     @Override
@@ -579,7 +584,9 @@ public final class DualPivotQuicksort201811 implements wildinter.net.mergesort.S
             /*
              * Check special cases.
              */
-            if (run == null) {
+            if (sorter.runInit || run == null) {
+                sorter.runInit = false; // LBO
+                
                 if (k == high) {
 
                     /*
@@ -598,7 +605,10 @@ public final class DualPivotQuicksort201811 implements wildinter.net.mergesort.S
                     return false;
                 }
 
-                run = new int[INITIAL_RUN_CAPACITY];
+//                System.out.println("alloc run");
+//                run = new int[INITIAL_RUN_CAPACITY];
+
+                run = sorter.run; // LBO: prealloc
                 run[0] = low;
 
             } else if (a[last - 1] > a[last]) {
@@ -625,11 +635,12 @@ public final class DualPivotQuicksort201811 implements wildinter.net.mergesort.S
         if (count < max && count > 1) {
             int[] b; int offset = low;
 
-            if (sorter == null || (b = (int[]) sorter.b) == null) {
-// TODO: alloc LOLO                
-               b = new int[size];
-            } else {
-// offset = sorter.offset;
+            // LBO: prealloc
+            if (sorter == null || (b = sorter.b) == null || b.length < size) {
+//                System.out.println("alloc b: "+size);
+                b = new int[size];
+//            } else {
+                // offset = sorter.offset;
             }
             mergeRuns(a, b, offset, 1, sorter != null, run, 0, count);
         }
@@ -719,7 +730,7 @@ public final class DualPivotQuicksort201811 implements wildinter.net.mergesort.S
     private static void mergeParts(Merger merger, int[] dst, int k,
             int[] a1, int lo1, int hi1, int[] a2, int lo2, int hi2) {
 
-        if (merger != null && a1 == a2) {
+        if (false && merger != null && a1 == a2) {
 
             while (true) {
                 /*
@@ -792,9 +803,22 @@ public final class DualPivotQuicksort201811 implements wildinter.net.mergesort.S
     }
 // ...
     private class Sorter{
-        // TODO: prealloc
-        int[] b;   /* b = new int[size]; size = array size */
-        int[] run; /* run = new int[INITIAL_RUN_CAPACITY]; */
+        final int[] run;
+        int[] b;
+        boolean runInit;
+        
+        Sorter() {
+            // preallocate max runs:
+            final int max = getMaxRunCount(Integer.MAX_VALUE) + 1;
+            run = new int[max];
+        }
+        
+        void initLength(int length) {
+            if (b == null || b.length < length) {
+                b = new int[length];
+            }
+            runInit = true;
+        }
     }
     
     private class Merger{}

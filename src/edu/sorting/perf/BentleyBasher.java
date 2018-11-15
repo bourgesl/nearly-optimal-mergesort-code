@@ -9,7 +9,8 @@ public final class BentleyBasher {
 
     private static final int MAX_N = 1000001;
 
-    private static final int[] lengths = {10, 100, 1000, 10000, MAX_N};
+//    private static final int[] lengths = {10, 100, 1000, 10000, MAX_N};
+    private static final int[] lengths = {10 * 1000};
 
     private static int reps(int n) {
         return (int) (12000000 / (n * Math.log10(n)));
@@ -17,7 +18,7 @@ public final class BentleyBasher {
 
     public static void main(String[] args) {
         Locale.setDefault(Locale.US);
-        
+
         warmUp();
         sort();
     }
@@ -47,16 +48,18 @@ public final class BentleyBasher {
 
             for (int m = 1; m < 2 * n; m *= 2) {
                 for (ParamIntArrayBuilder iab : ParamIntArrayBuilder.values()) {
-                    int[] proto1 = iab.build(n, m);
+                    final int[] proto1 = iab.build(n, m);
 
                     for (IntArrayTweaker iat : IntArrayTweaker.values()) {
-                        int[] proto2 = iat.tweak(proto1);
+                        final int[] proto2 = iat.tweak(proto1);
                         System.out.print(n + " " + m + "  " + iab + " " + iat + "  ");
 
                         for (int i = 0; i < sorters.length; i++) {
                             final IntSorter sorter = sorters[i];
                             minTime = Long.MAX_VALUE;
                             int[] test = null;
+                            
+                            cleanup();
 
                             for (int k = 0; k < reps; k++) {
                                 test = proto2.clone();
@@ -66,7 +69,7 @@ public final class BentleyBasher {
                                 minTime = Math.min(minTime, endTime - startTime);
                             }
                             check(test, proto2);
-                            System.out.print("\t" + round(minTime / 1000000.0));
+                            System.out.print("\t" + round(minTime / 1E6)); // ms
                             times[i] = minTime;
                         }
                         double ratio = times[0] / times[1];
@@ -150,5 +153,28 @@ public final class BentleyBasher {
             s = " " + s;
         }
         return s;
+    }
+
+    /**
+     * Cleanup (GC + pause)
+     */
+    static void cleanup() {
+//        final long freeBefore = Runtime.getRuntime().freeMemory();
+        // Perform GC:
+        System.runFinalization();
+        System.gc();
+        System.gc();
+        System.gc();
+
+        // pause for 100 ms :
+        try {
+            Thread.sleep(100l);
+        } catch (InterruptedException ie) {
+            System.out.println("thread interrupted");
+        }
+        /*        
+        final long freeAfter = Runtime.getRuntime().freeMemory();
+        System.out.println(String.format("cleanup (explicit Full GC): %,d / %,d bytes free.", freeBefore, freeAfter));
+         */
     }
 }
