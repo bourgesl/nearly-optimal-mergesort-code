@@ -19,7 +19,7 @@ import wildinter.net.WelfordVariance;
 /**
  * @author Vladimir Yaroslavskiy
  */
-public class Statistic {
+public final class Statistic {
 
     private final static boolean IGNORE_LOW_CONFIDENCE = true;
 
@@ -38,60 +38,72 @@ public class Statistic {
             args = new String[]{"/home/bourgesl/libs/nearly-optimal-mergesort-code/basher-results.out"};
         }
 
-        new Statistic().processFile(args[0], null, null);
+        new Statistic().processFile(args[0]);
     }
 
-    protected void doAfter(String number, String name) {
+    private void processFile(String file) {
+        final List<String> lines = getLines(file);
+        final int size = lines.size();
+
+        if (size > 0) {
+            final IntSorter[] sorters = IntSorter.values();
+            myLen = new int[size];
+            lengths.clear();
+            myKey = new String[size];
+            keys.clear();
+            myTime = new double[sorters.length][size];
+            myWinners = new int[sorters.length];
+
+            for (int i = 0; i < size; i++) {
+                processLine(sorters, lines.get(i), i);
+            }
+            doAfter();
+        }
+    }
+
+    private void doAfter() {
+        // TODO: use arguments for selected sorters, (sorter reference), warmup, sizes ... at least
+        doStats(IntSorter.DPQ_11.ordinal(), IntSorter.DPQ_18_11.ordinal());
+        doStats(IntSorter.DPQ_18_2.ordinal(), IntSorter.DPQ_18_11.ordinal());
+        doStats(IntSorter.DPQ_18_11.ordinal(), IntSorter.RADIX.ordinal());
+        doStats(IntSorter.DPQ_18_11.ordinal(), IntSorter.MARLIN.ordinal());
+    }
+
+    private void doStats(final int idxRef, final int idxTest) {
+        final IntSorter[] sorters = IntSorter.values();
         System.out.println();
         System.out.println(HEADER_STATS);
-        System.out.println("winners  : " + myWinners[0] + " / " + myWinners[1]);
-        System.out.println("avg   (%): " + round(df4, mult() * 100.0));
-        System.out.println("stats (%): " + ratioStats(null, null));
+        System.out.println("Comparing sorters " + sorters[idxRef] + " vs " + sorters[idxTest]);
+        System.out.println("winners  : " + myWinners[idxRef] + " / " + myWinners[idxTest]);
+        System.out.println("avg   (%): " + round(df4, mult(idxRef, idxTest) * 100.0));
+        System.out.println("stats (%): " + ratioStats(idxRef, idxTest));
 
         System.out.println("\n\nStats per keys:");
         for (String key : keys) {
-            System.out.println(key + " stats (%): " + ratioStats(key, null));
+            System.out.println(key + " stats (%): " + ratioStats(idxRef, idxTest, key));
         }
         System.out.println("\n\nstats per keys and sizes:");
         for (Integer len : lengths) {
             System.out.println("- size = " + len);
             for (String key : keys) {
-                System.out.println(key + " stats (%): " + ratioStats(key, len));
+                System.out.println(key + " stats (%): " + ratioStats(idxRef, idxTest, key, len));
             }
             System.out.println("\n");
         }
     }
 
-    protected void processFile(String file, String number, String name) {
-        List<String> lines = getLines(file);
-        final int size = lines.size();
-
-        if (size > 0) {
-            myLen = new int[size];
-            lengths.clear();
-            myKey = new String[size];
-            myTime = new double[2][size];
-            keys.clear();
-
-            for (int i = 0; i < size; i++) {
-                processLine(lines.get(i), i);
-            }
-            doAfter(number, name);
-        }
-    }
-
-    protected double mult() {
+    private double mult(final int idxRef, final int idxTest) {
         double mult = 1.0d;
-        final int length = myTime[0].length;
+        final int length = myTime[idxRef].length;
 
         int count = 0;
         for (int i = 0; i < length; i++) {
-            if (myTime[0][i] > MIN_PREC && myTime[1][i] > MIN_PREC) {
+            if (myTime[idxRef][i] > MIN_PREC && myTime[idxTest][i] > MIN_PREC) {
                 count++;
-                if (Math.pow(mult * (myTime[0][i] / myTime[1][i]), 1.0 / (count + 1)) == 0.0) {
+                if (Math.pow(mult * (myTime[idxRef][i] / myTime[idxTest][i]), 1.0 / (count + 1)) == 0.0) {
                     break;
                 }
-                mult *= (myTime[0][i] / myTime[1][i]);
+                mult *= (myTime[idxRef][i] / myTime[idxTest][i]);
             }
         }
         if (count < 2) {
@@ -100,9 +112,20 @@ public class Statistic {
         return Math.pow(mult, 1.0 / count);
     }
 
-    protected WelfordVariance ratioStats(final String selectedKey, final Integer selectedLen) {
+    private WelfordVariance ratioStats(final int idxRef, final int idxTest) {
+        return ratioStats(idxRef, idxTest, null);
+    }
+
+    private WelfordVariance ratioStats(final int idxRef, final int idxTest,
+                                       final String selectedKey) {
+        return ratioStats(idxRef, idxTest, selectedKey, null);
+    }
+
+    private WelfordVariance ratioStats(final int idxRef, final int idxTest,
+                                       final String selectedKey, final Integer selectedLen) {
+
         final WelfordVariance samples = new WelfordVariance();
-        final int length = myTime[0].length;
+        final int length = myTime[idxRef].length;
 
         for (int i = 0; i < length; i++) {
             if (selectedKey != null && !selectedKey.equals(myKey[i])) {
@@ -111,14 +134,14 @@ public class Statistic {
             if (selectedLen != null && selectedLen.intValue() != myLen[i]) {
                 continue;
             }
-            if (myTime[0][i] > MIN_PREC && myTime[1][i] > MIN_PREC) {
-                samples.add(100.0 * myTime[0][i] / myTime[1][i]);
+            if (myTime[idxRef][i] > MIN_PREC && myTime[idxTest][i] > MIN_PREC) {
+                samples.add(100.0 * myTime[idxRef][i] / myTime[idxTest][i]);
             }
         }
         return samples;
     }
 
-    protected List<String> getLines(String file) {
+    private List<String> getLines(String file) {
         List<String> lines = new ArrayList<String>();
         String line;
 
@@ -147,7 +170,7 @@ public class Statistic {
         return lines;
     }
 
-    protected void processLine(String line, int i) {
+    private void processLine(final IntSorter[] sorters, String line, int i) {
         StringTokenizer stk = new StringTokenizer(line, " \t");
         String value;
 //        System.out.println("-- '" + line + "'");
@@ -165,24 +188,23 @@ public class Statistic {
 
         keys.add(myKey[i]);
 
-// First 2 (customize that selection):        
-        value = stk.nextToken();
-        myTime[0][i] = getDouble(value);
-//System.out.print("Line " + i + ": " + value + " " + myTime[0][i]);
+// Data parsing:
+        for (int j = 0; j < sorters.length; j++) {
 
-        value = stk.nextToken();
-        myTime[1][i] = getDouble(value);
-//System.out.println(" " + value + " " + myTime[1][i]);
+            value = stk.nextToken();
+            myTime[j][i] = getDouble(value);
+//System.out.print("Line " + i + ": " + value + " " + myTime[j][i]);
+        }
 
-        int winnerIndex = getWinner(i);
+        int winnerIndex = getWinner(sorters.length, i);
         myWinners[winnerIndex]++;
     }
 
-    private int getWinner(int row) {
+    private int getWinner(int nSorters, int row) {
         int winnerIndex = 0;
         double winner = myTime[0][row];
 
-        for (int k = 1; k < 2; k++) {
+        for (int k = 1; k < nSorters; k++) {
             if (winner > MIN_PREC && myTime[k][row] > MIN_PREC && myTime[k][row] < winner) {
                 winnerIndex = k;
                 winner = myTime[k][row];
@@ -231,5 +253,5 @@ public class Statistic {
     private final Set<String> keys = new LinkedHashSet<String>();
     private String[] myKey;
     private double[][] myTime;
-    private int[] myWinners = new int[2];
+    private int[] myWinners;
 }
