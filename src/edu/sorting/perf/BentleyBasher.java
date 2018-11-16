@@ -37,6 +37,7 @@ public final class BentleyBasher {
     private static final int SMALL_TH = 10000;
     
     private static final int REP_REPEAT = 5;
+    private static final int REP_SKIP = 10;
 
     private final static DecimalFormat df2;
     private final static DecimalFormat df6;
@@ -123,6 +124,9 @@ public final class BentleyBasher {
 //                System.out.println("reps: " + reps + "\n");
                 minTimeTh = MIN_NS;
             }
+            
+            final int effReps = reps + REP_SKIP;
+//                System.out.println("effReps: " + effReps + "\n");
 
             // Allocate working array:
             final int[] input = new int[n];
@@ -152,7 +156,7 @@ public final class BentleyBasher {
                                 cleanup();
                             }
 
-                            for (int k = 0; k < reps; k++) {
+                            for (int k = 0; k < effReps; k++) {
                                 // reduce variance on very small arrays (use more repeats):
                                 time = 0l;
 
@@ -163,7 +167,7 @@ public final class BentleyBasher {
                                     time += System.nanoTime() - start;
                                     loopCount++;
                                 }
-                                if (time > minTimeTh) {
+                                if ((k > REP_SKIP) && (time > minTimeTh)) {
                                     samples.add(((double) time) / lreps);
                                 }
                             }

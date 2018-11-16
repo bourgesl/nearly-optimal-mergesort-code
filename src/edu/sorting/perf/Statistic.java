@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -20,15 +21,23 @@ import wildinter.net.WelfordVariance;
  */
 public class Statistic {
 
+    private final static boolean IGNORE_LOW_CONFIDENCE = true;
+
     private final static String HEADER_STATS = "--- STATS ---";
 
-    public static void main(String[] args) {
+    private final static DecimalFormat df4;
+
+    static {
         // Set the default locale to en-US locale (for Numerical Fields "." ",")
         Locale.setDefault(Locale.US);
+        df4 = new DecimalFormat("0.0000");
+    }
 
+    public static void main(String[] args) {
         if (args.length == 0) {
             args = new String[]{"/home/bourgesl/libs/nearly-optimal-mergesort-code/basher-results.out"};
         }
+
         new Statistic().processFile(args[0], null, null);
     }
 
@@ -36,12 +45,20 @@ public class Statistic {
         System.out.println();
         System.out.println(HEADER_STATS);
         System.out.println("winners  : " + myWinners[0] + " / " + myWinners[1]);
-        System.out.println("avg   (%): " + round(mult() * 100.0));
-        System.out.println("stats (%): " + ratioStats(null));
+        System.out.println("avg   (%): " + round(df4, mult() * 100.0));
+        System.out.println("stats (%): " + ratioStats(null, null));
 
-        System.out.println("stats per keys:");
+        System.out.println("\n\nStats per keys:");
         for (String key : keys) {
-            System.out.println(key + " stats (%): " + ratioStats(key));
+            System.out.println(key + " stats (%): " + ratioStats(key, null));
+        }
+        System.out.println("\n\nstats per keys and sizes:");
+        for (Integer len : lengths) {
+            System.out.println("- size = " + len);
+            for (String key : keys) {
+                System.out.println(key + " stats (%): " + ratioStats(key, len));
+            }
+            System.out.println("\n");
         }
     }
 
@@ -50,6 +67,8 @@ public class Statistic {
         final int size = lines.size();
 
         if (size > 0) {
+            myLen = new int[size];
+            lengths.clear();
             myKey = new String[size];
             myTime = new double[2][size];
             keys.clear();
@@ -81,12 +100,15 @@ public class Statistic {
         return Math.pow(mult, 1.0 / count);
     }
 
-    protected WelfordVariance ratioStats(String selectedKey) {
+    protected WelfordVariance ratioStats(final String selectedKey, final Integer selectedLen) {
         final WelfordVariance samples = new WelfordVariance();
         final int length = myTime[0].length;
 
         for (int i = 0; i < length; i++) {
             if (selectedKey != null && !selectedKey.equals(myKey[i])) {
+                continue;
+            }
+            if (selectedLen != null && selectedLen.intValue() != myLen[i]) {
                 continue;
             }
             if (myTime[0][i] > MIN_PREC && myTime[1][i] > MIN_PREC) {
@@ -130,9 +152,14 @@ public class Statistic {
         String value;
 //        System.out.println("-- '" + line + "'");
         value = stk.nextToken(); // length
+        myLen[i] = Integer.parseInt(value);
+
+        lengths.add(Integer.valueOf(myLen[i]));
+
         value = stk.nextToken(); // sub-size
         value = stk.nextToken(); // type
         myKey[i] = value;
+
         value = stk.nextToken(); // variant
         myKey[i] += ":" + value;
 
@@ -156,7 +183,7 @@ public class Statistic {
         double winner = myTime[0][row];
 
         for (int k = 1; k < 2; k++) {
-            if (myTime[k][row] < winner) {
+            if (winner > MIN_PREC && myTime[k][row] > MIN_PREC && myTime[k][row] < winner) {
                 winnerIndex = k;
                 winner = myTime[k][row];
             }
@@ -165,28 +192,43 @@ public class Statistic {
     }
 
     private double getDouble(String value) {
+        if (value.startsWith("!")) {
+            if (IGNORE_LOW_CONFIDENCE) {
+                return -0.0d;
+            } else {
+                value = value.substring(1);
+            }
+        }
         try {
             return Double.parseDouble(value);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
+        } catch (NumberFormatException nfe) {
+            nfe.printStackTrace();
             return -0.0d;
         }
     }
 
-    private static String round(double value) {
+    private static String round(DecimalFormat df, double value) {
         if (Double.isNaN(value)) {
             return "NaN";
         }
+        String s = df.format(value);
+        for (int i = s.length(); i < 10; ++i) {
+            s += " ";
+        }
+        /*        
         String s = String.valueOf(Math.round(value * 10000.0) / 10000.0);
         int k = s.length() - s.indexOf(".");
 
         for (int i = k; i <= 4; ++i) {
             s += "0";
         }
+         */
         return s;
     }
 
-    private Set<String> keys = new LinkedHashSet<String>();
+    private final Set<Integer> lengths = new LinkedHashSet<Integer>();
+    private int[] myLen;
+    private final Set<String> keys = new LinkedHashSet<String>();
     private String[] myKey;
     private double[][] myTime;
     private int[] myWinners = new int[2];
