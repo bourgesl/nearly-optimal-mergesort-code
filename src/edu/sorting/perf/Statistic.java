@@ -90,7 +90,7 @@ public class Statistic {
                 continue;
             }
             if (myTime[0][i] > MIN_PREC && myTime[1][i] > MIN_PREC) {
-                samples.addSample(100.0 * myTime[0][i] / myTime[1][i]);
+                samples.add(100.0 * myTime[0][i] / myTime[1][i]);
             }
         }
         return samples;

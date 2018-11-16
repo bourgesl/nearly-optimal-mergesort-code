@@ -15,15 +15,22 @@ public enum ParamIntArrayBuilder {
 
     abstract int element(int i, int m, int n);
 
-    public int[] build(int len, int m) {
-        int[] result = new int[len];
+    public void build(int[] result, int m) {
+        final int len = result.length;
 
         for (int i = 0; i < len; i++) {
             result[i] = element(i, m, len);
         }
-        return result;
+    }
+    
+    public static void reset() {
+        rnd = newRandom();
+    }
+
+    private static Random newRandom() {
+        return  new Random(0x777);
     }
 
     private static int j = 0, k = 1;
-    private static Random rnd = new Random(0x777);
+    private static Random rnd = newRandom();
 }

@@ -232,10 +232,10 @@ public class Mergesorts {
                     if (r >= warmupMin) {
                         final double msDiff = (time / 1e6) / lreps;
                         // Skip first iteration, often slower!
-                        samples.addSample(msDiff);
+                        samples.add(msDiff);
                         if (MergesAndRuns.COUNT_MOVE_COSTS) {
                             out.write(algoName + "," + msDiff + "," + size + "," + inputs + "," + r + "," + MergesAndRuns.totalMoveCosts + "\n");
-                            samplesCost.addSample(MergesAndRuns.totalMoveCosts);
+                            samplesCost.add(MergesAndRuns.totalMoveCosts);
                         } else if (MergesAndRuns.COUNT_MERGE_COSTS) {
                             out.write(algoName + "," + msDiff + "," + size + "," + inputs + "," + r + "," + MergesAndRuns.totalMergeCosts + "\n");
                         } else {

@@ -2,43 +2,60 @@ package edu.sorting.perf;
 
 import java.text.DecimalFormat;
 import java.util.Locale;
+import wildinter.net.WelfordVariance;
 
 /**
  * @author Jon Bentley
  */
 public final class BentleyBasher {
 
+    private final static boolean USE_RMS = true; // false means use MIN(TIME)
+    
+    private final static int TWEAK_INC = 4; // 2 originally
+
+    private final static boolean DO_WARMUP = true;
+    private static final int WARMUP_N = 10 * 1001;
+
+    // TODO: use arguments for selected sorters, (sorter reference), warmup, sizes ... at least
     private final static int IDX_REF = IntSorter.DPQ_11.ordinal();
     private final static int IDX_TEST = IntSorter.DPQ_18_11.ordinal();
 
     public final static long MIN_NS = 50; // latency in ns
     public final static double MIN_PREC = 1e-9 * MIN_NS / 1e3; // ms
 
-    private static final int WARMUP_N = 10 * 1001;
     private static final int HUGE_N = 10 * 1000 * 1001;
 
-    private static final int[] LENGTHS = {500, 1000, 2000, 5000, 10000, 50000, 100000, HUGE_N};
+    private static final int[] LENGTHS = {100, 1000, 10000, 100000 /*, HUGE_N */};
 //    private static final int[] lengths = {50 * 1000};
 
-    private final static DecimalFormat df;
+    private final static DecimalFormat df2;
+    private final static DecimalFormat df6;
 
     static {
         // Set the default locale to en-US locale (for Numerical Fields "." ",")
         Locale.setDefault(Locale.US);
-        df = new DecimalFormat("0.000000");
+        df2 = new DecimalFormat("0.00");
+        df6 = new DecimalFormat("0.000000");
     }
 
     public static void main(String[] args) {
-        if (true) {
-            // warmUp();
+        System.out.println("\n--- Bentley Basher ---\n");
+        if (DO_WARMUP) {
             System.out.println("Start warm up ...");
             final int warmupCount = sort(25, WARMUP_N);
             System.out.println("  End warm up (" + warmupCount + " iterations per sort).\n");
         }
 
+        System.out.println("\n-----\n");
         System.out.println("\nStarting benchmarks ...");
+        if (USE_RMS) {
+            System.out.println("Timings are given in milli-seconds (rms = mean + 1 stddev)");
+        } else {
+            System.out.println("Timings are given in milli-seconds (min time)");
+        }
+        System.out.println("\n\n");
         sort(0, 0);
-        System.out.println("\ndone.");
+        System.out.println("\n-----\n");
     }
 
     private static int reps(int n) {
@@ -46,26 +63,29 @@ public final class BentleyBasher {
     }
 
     private static int sort(final int maxReps, final int len) {
-        System.out.print("                           ");
+        final boolean warmup = (maxReps > 0);
 
         final IntSorter[] sorters = IntSorter.values();
         final double[] times = new double[sorters.length];
 
-        for (IntSorter sorter : sorters) {
-            System.out.print("        " + sorter);
+        if (!warmup) {
+            System.out.print("                           ");
+
+            for (IntSorter sorter : sorters) {
+                System.out.print("         " + sorter);
+            }
+            System.out.print("        [" + sorters[IDX_REF] + " % " + sorters[IDX_TEST] + "]");
+            System.out.println();
+            System.out.println();
         }
-        System.out.print("        [" + sorters[IDX_REF] + " % " + sorters[IDX_TEST] + "]");
-        System.out.println();
-        System.out.println();
 
         long start;
         long time;
-        long minTime;
         long minTimeTh;
 
         final int[] realLengths = (len > 0) ? new int[]{len} : LENGTHS;
 
-        final boolean warmup = (maxReps > 0);
+        final WelfordVariance samples = new WelfordVariance();
         int loopCount = 0;
 
         for (int n : realLengths) {
@@ -91,20 +111,25 @@ public final class BentleyBasher {
                 minTimeTh = MIN_NS;
             }
 
-            for (int m = 1; m < 2 * n; m *= 2) {
-                for (ParamIntArrayBuilder iab : ParamIntArrayBuilder.values()) {
-                    final int[] proto1 = iab.build(n, m);
+            // Allocate working array:
+            final int[] input = new int[n];
 
-                    for (IntArrayTweaker iat : IntArrayTweaker.values()) {
-                        final int[] proto2 = iat.tweak(proto1);
+            for (int m = 1, end = 2 * n; m < end; m *= TWEAK_INC) {
+                for (IntArrayTweaker iat : IntArrayTweaker.values()) {
+                    for (ParamIntArrayBuilder iab : ParamIntArrayBuilder.values()) {
+                        // TODO: sample 10x times the distribution
+                        iab.build(input, m);
+
+                        ParamIntArrayBuilder.reset();
+                        final int[] proto2 = iat.tweak(input);
                         if (!warmup) {
                             System.out.print(n + " " + m + "  " + iab + " " + iat + "  ");
                         }
 
                         for (int i = 0; i < sorters.length; i++) {
                             final IntSorter sorter = sorters[i];
-                            minTime = Long.MAX_VALUE;
                             int[] test = null;
+                            samples.reset();
 
                             if (!warmup) {
                                 cleanup();
@@ -113,6 +138,7 @@ public final class BentleyBasher {
                             for (int k = 0; k < reps; k++) {
                                 // reduce variance on very small arrays (use more repeats):
                                 time = 0l;
+
                                 for (int q = 0; q < lreps; q++) {
                                     test = proto2.clone();
                                     start = System.nanoTime();
@@ -121,70 +147,46 @@ public final class BentleyBasher {
                                     loopCount++;
                                 }
                                 if (time > minTimeTh) {
-                                    minTime = Math.min(minTime, time);
+                                    samples.add(((double) time) / lreps);
                                 }
                             }
                             check(test, proto2);
-//                            System.out.print("\t" + minTime);
 
-                            times[i] = (minTime != Long.MAX_VALUE)
-                                    ? (((double) minTime) / lreps) : Double.NaN;
+                            times[i] = 1E-6 * ((USE_RMS) ? samples.rms() : samples.min());
+
                             if (!warmup) {
-                                System.out.print("\t" + round(1E-6 * times[i])); // ms
+                                System.out.print("\t" + round(df6, times[i])); // ms
                             }
+                            // TODO detailed report (all stats)
+//                            System.out.println("\t" + samples.toString());
                         }
                         if (!warmup) {
                             final double ratio = times[IDX_REF] / times[IDX_TEST];
                             if (!warmup) {
-                                System.out.printf("\t  " + round(ratio));
+                                System.out.print("\t" + round(df2, 100.0 * ratio));
                             }
-                            String mark = "";
+                            String mark = " % ";
 
                             if (1.00 <= ratio && ratio < 1.05) {
-                                mark = "..";
+                                mark += "..";
                             } else if (1.05 <= ratio && ratio < 1.10) {
-                                mark = ".!.";
+                                mark += ".!.";
                             } else if (1.10 <= ratio && ratio < 1.20) {
-                                mark = ".!!.";
+                                mark += ".!!.";
                             } else if (1.20 <= ratio && ratio < 1.60) {
-                                mark = ".!!!.";
+                                mark += ".!!!.";
                             } else if (1.60 <= ratio && ratio < 2.00) {
-                                mark = ".!!!!.";
+                                mark += ".!!!!.";
                             } else if (2.00 <= ratio) {
-                                mark = ".!!!!!.";
+                                mark += ".!!!!!.";
                             }
-                            if (mark.length() == 0) {
-                                System.out.println();
-                            } else {
-                                System.out.println(" " + mark);
-                            }
+                            System.out.println(mark);
                         }
                     }
                 }
             }
         }
         return loopCount / sorters.length;
-    }
-
-    private static void warmUp() {
-        System.out.println("start warm up");
-        int MAX_M = Math.min(2 * WARMUP_N, 8 + 1);
-
-        for (int m = 1; m < MAX_M; m *= 2) {
-            for (ParamIntArrayBuilder iab : ParamIntArrayBuilder.values()) {
-                int[] proto1 = iab.build(WARMUP_N, m);
-
-                for (IntArrayTweaker iat : IntArrayTweaker.values()) {
-                    int[] proto2 = iat.tweak(proto1);
-
-                    for (IntSorter sorter : IntSorter.values()) {
-                        sorter.sort(proto2.clone());
-                    }
-                }
-            }
-        }
-        System.out.println("  end warm up");
-        System.out.println();
     }
 
     private static void check(int[] a1, int[] a2) {
@@ -212,11 +214,14 @@ public final class BentleyBasher {
         }
     }
 
-    private static String round(double value) {
+    private static String round(DecimalFormat df, double value) {
         if (Double.isNaN(value)) {
             return "NaN";
         }
-        return df.format(value);
+        String s = df.format(value);
+        for (int i = s.length(); i < 10; ++i) {
+            s = " " + s;
+        }
         /*        
         String s = "" + (((long) Math.round(value * 1000000.0)) / 1000000.0);
         int k = s.length() - s.indexOf(".");
@@ -224,11 +229,8 @@ public final class BentleyBasher {
         for (int i = k; i <= 6; ++i) {
             s = s + "0";
         }
-        for (int i = s.length(); i < 10; ++i) {
-            s = " " + s;
-        }
-        return s;
          */
+        return s;
     }
 
     /**

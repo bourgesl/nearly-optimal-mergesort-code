@@ -9,53 +9,108 @@ package wildinter.net;
  * @author Sebastian Wild (wild@uwaterloo.ca)
  */
 public class WelfordVariance {
-	private int nSamples = 0;
-	private double mean = 0, squaredError = 0;
 
-	public void addSample(double x) {
-		++nSamples;
-		double oldMean = mean;
-		mean += (x - mean) / nSamples;
-		squaredError += (x - mean) * (x - oldMean);
-	}
+    private long nSamples;
+    private double min, max, mean, squaredError;
 
-	public double mean() {
-		return mean;
-	}
-
-	public int nSamples() {
-		return nSamples;
-	}
-
-	public double variance() {
-		return squaredError / (nSamples - 1);
-	}
-
-	public double stdev() {
-		return Math.sqrt(variance());
-	}
-    
-    public int errorPercent() {
-        return (int)Math.round(Math.abs(100.0 * stdev() / mean()));
+    public WelfordVariance() {
+        reset();
     }
 
-	@Override
-	public String toString() {
-		return "(" +
-				"n=" + nSamples +
-				", µ=" + (float) mean() +
-				", σ=" + (float) stdev() +
-				')';
-	}
+    public void reset() {
+        nSamples = 0L;
+        min = Double.POSITIVE_INFINITY;
+        max = Double.NEGATIVE_INFINITY;
+        mean = 0.0;
+        squaredError = 0.0;
+    }
 
-	public static void main(String[] args) {
-		WelfordVariance v = new WelfordVariance();
-		for (int i : new int[]{1, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4, 5, 5, 6, 6, 7, 8, 89,10000,100001,00,101,}) {
-			v.addSample(i);
-		}
-		System.out.println("v.mean() = " + v.mean());
-		System.out.println("v.variance() = " + v.variance());
-		System.out.println("v.stdev() = " + v.stdev());
-	}
+    public void add(double x) {
+        if (x < min) {
+            min = x;
+        }
+        if (x > max) {
+            max = x;
+        }
+        ++nSamples;
+        final double oldMean = mean;
+        mean += (x - mean) / nSamples;
+        squaredError += (x - mean) * (x - oldMean);
+    }
+
+    public double min() {
+        if (nSamples == 0L) {
+            return Double.NaN;
+        }
+        return min;
+    }
+
+    public double max() {
+        if (nSamples == 0L) {
+            return Double.NaN;
+        }
+        return max;
+    }
+
+    public double mean() {
+        if (nSamples == 0L) {
+            return Double.NaN;
+        }
+        return mean;
+    }
+
+    public long nSamples() {
+        return nSamples;
+    }
+
+    public double variance() {
+        if (nSamples == 0L) {
+            return Double.NaN;
+        }
+        return squaredError / (nSamples - 1L);
+    }
+
+    public double stdev() {
+        if (nSamples == 0L) {
+            return Double.NaN;
+        }
+        return Math.sqrt(variance());
+    }
+
+    public double rms() {
+        if (nSamples == 0L) {
+            return Double.NaN;
+        }
+        return mean() + stdev();
+    }
+
+    public int errorPercent() {
+        if (nSamples == 0L) {
+            return -1;
+        }
+        return (int) Math.round(Math.abs(100.0 * stdev() / mean()));
+    }
+
+    @Override
+    public String toString() {
+        return "[" + nSamples()
+                + ": µ=" + (float) mean()
+                + " σ=" + (float) stdev()
+                + " rms=" + (float) rms()
+                + " min=" + (float) min()
+                + " max=" + (float) max()
+                + "]";
+    }
+
+    public static void main(String[] args) {
+        WelfordVariance v = new WelfordVariance();
+        for (int i : new int[]{1, 2, 2, 2, 3, 3, 4, 4, 4, 4, 4, 5, 5, 6, 6, 7, 8, 89, 10000, 100001, 00, 101,}) {
+            v.add(i);
+        }
+        System.out.println("v.mean() = " + v.mean());
+        System.out.println("v.variance() = " + v.variance());
+        System.out.println("v.stdev() = " + v.stdev());
+        System.out.println("stats() = " + v);
+    }
 
 }
