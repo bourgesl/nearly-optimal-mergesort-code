@@ -25,14 +25,14 @@ public enum IntSorter {
             DualPivotQuickSort2011.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
-    DPQ_18_2 {
-        public void sort(int[] a) {
-            DualPivotQuicksort201802.INSTANCE.sort(a, 0, a.length - 1);
-        }
-    },
     DPQ_18_11 {
         public void sort(int[] a) {
             DualPivotQuicksort201811.INSTANCE.sort(a, 0, a.length - 1);
+        }
+    },
+    DPQ_18_2 {
+        public void sort(int[] a) {
+            DualPivotQuicksort201802.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
     RADIX {

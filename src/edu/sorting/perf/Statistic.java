@@ -138,6 +138,7 @@ public class Statistic {
 
         keys.add(myKey[i]);
 
+// First 2 (customize that selection):        
         value = stk.nextToken();
         myTime[0][i] = getDouble(value);
 //System.out.print("Line " + i + ": " + value + " " + myTime[0][i]);

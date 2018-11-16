@@ -1,5 +1,7 @@
 #!/bin/bash
 
+lscpu
+
 ./cpu_fixed.sh
 
 echo "JAVA:"

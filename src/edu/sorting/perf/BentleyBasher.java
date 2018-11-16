@@ -1,5 +1,6 @@
 package edu.sorting.perf;
 
+import edu.sorting.ArrayUtils;
 import java.text.DecimalFormat;
 import java.util.Locale;
 import wildinter.net.WelfordVariance;
@@ -10,11 +11,15 @@ import wildinter.net.WelfordVariance;
 public final class BentleyBasher {
 
     private final static boolean USE_RMS = true; // false means use MIN(TIME)
-    
+
     private final static int TWEAK_INC = 4; // 2 originally
 
     private final static boolean DO_WARMUP = true;
-    private static final int WARMUP_N = 10 * 1001;
+    private final static int WARMUP_REPS = 40;
+    private final static int[] WARMUP_LENGTHS = new int[]{501, 10001};
+
+    // 10ms >> 3 x [Full GC (System.gc())  794K->794K(1013632K), 0,0022879 secs]
+    private final static long GC_LATENCY = 10l;
 
     // TODO: use arguments for selected sorters, (sorter reference), warmup, sizes ... at least
     private final static int IDX_REF = IntSorter.DPQ_11.ordinal();
@@ -27,6 +32,11 @@ public final class BentleyBasher {
 
     private static final int[] LENGTHS = {100, 1000, 10000, 100000 /*, HUGE_N */};
 //    private static final int[] lengths = {50 * 1000};
+
+    // threshold to do more iterations (inner-loop) for small arrays in order to reduce variance:
+    private static final int SMALL_TH = 10000;
+    
+    private static final int REP_REPEAT = 5;
 
     private final static DecimalFormat df2;
     private final static DecimalFormat df6;
@@ -42,19 +52,20 @@ public final class BentleyBasher {
         System.out.println("\n--- Bentley Basher ---\n");
         if (DO_WARMUP) {
             System.out.println("Start warm up ...");
-            final int warmupCount = sort(25, WARMUP_N);
+            // At least more than 10,000 per sorter (JIT hotspot threshold)
+            final int warmupCount = sort(WARMUP_REPS, WARMUP_LENGTHS);
             System.out.println("  End warm up (" + warmupCount + " iterations per sort).\n");
         }
 
-        System.out.println("\n-----\n");
+        System.out.println("-----\n");
         System.out.println("\nStarting benchmarks ...");
         if (USE_RMS) {
             System.out.println("Timings are given in milli-seconds (rms = mean + 1 stddev)");
         } else {
             System.out.println("Timings are given in milli-seconds (min time)");
         }
-        System.out.println("\n\n");
-        sort(0, 0);
+        System.out.println("\n");
+        sort(0, null);
         System.out.println("\n-----\n");
     }
 
@@ -62,7 +73,7 @@ public final class BentleyBasher {
         return (int) (12000000 / (n * Math.log10(n)));
     }
 
-    private static int sort(final int maxReps, final int len) {
+    private static int sort(final int maxReps, final int[] forceLengths) {
         final boolean warmup = (maxReps > 0);
 
         final IntSorter[] sorters = IntSorter.values();
@@ -83,7 +94,7 @@ public final class BentleyBasher {
         long time;
         long minTimeTh;
 
-        final int[] realLengths = (len > 0) ? new int[]{len} : LENGTHS;
+        final int[] realLengths = (forceLengths != null) ? forceLengths : LENGTHS;
 
         final WelfordVariance samples = new WelfordVariance();
         int loopCount = 0;
@@ -95,14 +106,16 @@ public final class BentleyBasher {
                     reps = maxReps;
                 }
                 System.out.println("warmup length: " + n + " reps: " + reps);
+            } else {
+                reps *= REP_REPEAT;
             }
             if (reps < 3) {
                 reps = 3;
             }
 //            System.out.print("reps: " + reps + "\n");
-            final int lreps = 1 + ((n <= 1000) ? (int) Math.ceil(1.0 * 1000 / n) : 0);
+            final int lreps = 1 + ((n <= SMALL_TH) ? (int) Math.ceil(3.0 * SMALL_TH / n) : 0);
             if (lreps > 1) {
-                reps /= lreps;
+                reps = Math.max(1, reps / lreps);
 //                System.out.println("lreps: " + lreps + " with reps: " + reps + "\n");
 
                 minTimeTh = MIN_NS * lreps;
@@ -113,6 +126,8 @@ public final class BentleyBasher {
 
             // Allocate working array:
             final int[] input = new int[n];
+            final int[] proto = new int[n];
+            final int[] test = new int[n];
 
             for (int m = 1, end = 2 * n; m < end; m *= TWEAK_INC) {
                 for (IntArrayTweaker iat : IntArrayTweaker.values()) {
@@ -121,14 +136,16 @@ public final class BentleyBasher {
                         iab.build(input, m);
 
                         ParamIntArrayBuilder.reset();
-                        final int[] proto2 = iat.tweak(input);
+                        iat.tweak(input, proto);
+
+                        // TODO: IntArrayTweaker.SORT is independent of the ParamIntArrayBuilder
+                        // => do not run multiple times in this case (useless) !
                         if (!warmup) {
                             System.out.print(n + " " + m + "  " + iab + " " + iat + "  ");
                         }
 
                         for (int i = 0; i < sorters.length; i++) {
                             final IntSorter sorter = sorters[i];
-                            int[] test = null;
                             samples.reset();
 
                             if (!warmup) {
@@ -140,7 +157,7 @@ public final class BentleyBasher {
                                 time = 0l;
 
                                 for (int q = 0; q < lreps; q++) {
-                                    test = proto2.clone();
+                                    ArrayUtils.clone(proto, test);
                                     start = System.nanoTime();
                                     sorter.sort(test);
                                     time += System.nanoTime() - start;
@@ -150,12 +167,18 @@ public final class BentleyBasher {
                                     samples.add(((double) time) / lreps);
                                 }
                             }
-                            check(test, proto2);
+                            check(test, proto);
 
                             times[i] = 1E-6 * ((USE_RMS) ? samples.rms() : samples.min());
 
                             if (!warmup) {
-                                System.out.print("\t" + round(df6, times[i])); // ms
+                                System.out.print('\t');
+                                if (samples.errorPercent() >= 10) {
+                                    System.out.print('!');
+                                } else {
+                                    System.out.print(' ');
+                                }
+                                System.out.print(round(df6, times[i])); // ms
                             }
                             // TODO detailed report (all stats)
 //                            System.out.println("\t" + samples.toString());
@@ -163,22 +186,24 @@ public final class BentleyBasher {
                         if (!warmup) {
                             final double ratio = times[IDX_REF] / times[IDX_TEST];
                             if (!warmup) {
-                                System.out.print("\t" + round(df2, 100.0 * ratio));
+                                System.out.print('\t');
+                                System.out.print(round(df2, 100.0 * ratio));
                             }
-                            String mark = " % ";
+                            System.out.print(" % ");
+                            String mark = "";
 
                             if (1.00 <= ratio && ratio < 1.05) {
-                                mark += "..";
+                                mark = "..";
                             } else if (1.05 <= ratio && ratio < 1.10) {
-                                mark += ".!.";
+                                mark = ".!.";
                             } else if (1.10 <= ratio && ratio < 1.20) {
-                                mark += ".!!.";
+                                mark = ".!!.";
                             } else if (1.20 <= ratio && ratio < 1.60) {
-                                mark += ".!!!.";
+                                mark = ".!!!.";
                             } else if (1.60 <= ratio && ratio < 2.00) {
-                                mark += ".!!!!.";
+                                mark = ".!!!!.";
                             } else if (2.00 <= ratio) {
-                                mark += ".!!!!!.";
+                                mark = ".!!!!!.";
                             }
                             System.out.println(mark);
                         }
@@ -189,7 +214,7 @@ public final class BentleyBasher {
         return loopCount / sorters.length;
     }
 
-    private static void check(int[] a1, int[] a2) {
+    private static void check(int[] a1, int[] ref) {
         for (int i = 0; i < a1.length - 1; i++) {
             if (a1[i] > a1[i + 1]) {
                 throw new RuntimeException("!!! Array is not sorted at: " + i);
@@ -202,9 +227,9 @@ public final class BentleyBasher {
 
         for (int i = 0; i < a1.length; i++) {
             plusCheckSum1 += a1[i];
-            plusCheckSum2 += a2[i];
+            plusCheckSum2 += ref[i];
             xorCheckSum1 ^= a1[i];
-            xorCheckSum2 ^= a2[i];
+            xorCheckSum2 ^= ref[i];
         }
         if (plusCheckSum1 != plusCheckSum2) {
             throw new RuntimeException("!!! Array is not sorted correctly [+].");
@@ -220,7 +245,7 @@ public final class BentleyBasher {
         }
         String s = df.format(value);
         for (int i = s.length(); i < 10; ++i) {
-            s = " " + s;
+            s += " ";
         }
         /*        
         String s = "" + (((long) Math.round(value * 1000000.0)) / 1000000.0);
@@ -246,7 +271,7 @@ public final class BentleyBasher {
 
         // pause for 100 ms :
         try {
-            Thread.sleep(100l);
+            Thread.sleep(GC_LATENCY);
         } catch (InterruptedException ie) {
             System.out.println("thread interrupted");
         }
