@@ -1,5 +1,7 @@
 package edu.sorting.perf;
 
+import static edu.sorting.perf.BentleyBasher.IDX_REF;
+import static edu.sorting.perf.BentleyBasher.IDX_TEST;
 import static edu.sorting.perf.BentleyBasher.MIN_PREC;
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,7 +23,7 @@ import wildinter.net.WelfordVariance;
  */
 public final class Statistic {
 
-    private final static boolean IGNORE_LOW_CONFIDENCE = true;
+    private final static boolean IGNORE_LOW_CONFIDENCE = false;
 
     private final static String HEADER_STATS = "--- STATS ---";
 
@@ -63,10 +65,16 @@ public final class Statistic {
 
     private void doAfter() {
         // TODO: use arguments for selected sorters, (sorter reference), warmup, sizes ... at least
+
+        doStats(IDX_REF, IDX_TEST);
+        doStats(IDX_REF, IDX_TEST + 1);
+        doStats(IDX_REF, IDX_TEST + 2);
+        /*
         doStats(IntSorter.DPQ_11.ordinal(), IntSorter.DPQ_18_11.ordinal());
         doStats(IntSorter.DPQ_18_2.ordinal(), IntSorter.DPQ_18_11.ordinal());
         doStats(IntSorter.DPQ_18_11.ordinal(), IntSorter.RADIX.ordinal());
         doStats(IntSorter.DPQ_18_11.ordinal(), IntSorter.MARLIN.ordinal());
+         */
     }
 
     private void doStats(final int idxRef, final int idxTest) {
@@ -85,6 +93,8 @@ public final class Statistic {
         System.out.println("\n\nstats per keys and sizes:");
         for (Integer len : lengths) {
             System.out.println("- size = " + len);
+            System.out.println("stats (%): " + ratioStats(idxRef, idxTest, null, len));
+
             for (String key : keys) {
                 System.out.println(key + " stats (%): " + ratioStats(idxRef, idxTest, key, len));
             }
@@ -136,6 +146,8 @@ public final class Statistic {
             }
             if (myTime[idxRef][i] > MIN_PREC && myTime[idxTest][i] > MIN_PREC) {
                 samples.add(100.0 * myTime[idxRef][i] / myTime[idxTest][i]);
+            } else {
+                System.err.println("Ignore: " + myTime[idxTest][i]);
             }
         }
         return samples;
@@ -190,8 +202,25 @@ public final class Statistic {
 
 // Data parsing:
         for (int j = 0; j < sorters.length; j++) {
-
             value = stk.nextToken();
+            if (value.contains("[")) {
+                // skip [...] distribution flags
+//                System.err.println("skip value '" + value + "'");
+                do {
+                    value = stk.nextToken();
+//                    System.err.println("skip value '" + value + "'");
+                } while (!value.contains("]"));
+
+                value = stk.nextToken();
+            }
+            if (value.startsWith("!")) {
+                if (IGNORE_LOW_CONFIDENCE) {
+                    myTime[j][i] = -0.0d;
+                } else {
+                    value = stk.nextToken();
+                }
+            }
+
             myTime[j][i] = getDouble(value);
 //System.out.print("Line " + i + ": " + value + " " + myTime[j][i]);
         }
@@ -202,9 +231,9 @@ public final class Statistic {
 
     private int getWinner(int nSorters, int row) {
         int winnerIndex = 0;
-        double winner = myTime[0][row];
+        double winner = myTime[1][row];
 
-        for (int k = 1; k < nSorters; k++) {
+        for (int k = 2; k < nSorters; k++) {
             if (winner > MIN_PREC && myTime[k][row] > MIN_PREC && myTime[k][row] < winner) {
                 winnerIndex = k;
                 winner = myTime[k][row];
@@ -214,16 +243,10 @@ public final class Statistic {
     }
 
     private double getDouble(String value) {
-        if (value.startsWith("!")) {
-            if (IGNORE_LOW_CONFIDENCE) {
-                return -0.0d;
-            } else {
-                value = value.substring(1);
-            }
-        }
         try {
             return Double.parseDouble(value);
         } catch (NumberFormatException nfe) {
+            System.err.println("Invalid double '" + value + "'");
             nfe.printStackTrace();
             return -0.0d;
         }

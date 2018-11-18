@@ -18,12 +18,12 @@ public final class BentleyBasher {
     private final static int WARMUP_REPS = 40;
     private final static int[] WARMUP_LENGTHS = new int[]{501, 10001};
 
-    // 10ms >> 3 x [Full GC (System.gc())  794K->794K(1013632K), 0,0022879 secs]
-    private final static long GC_LATENCY = 10l;
+    // 5ms >> [Full GC (System.gc())  794K->794K(1013632K), 0,0022879 secs]
+    private final static long GC_LATENCY = 5l;
 
     // TODO: use arguments for selected sorters, (sorter reference), warmup, sizes ... at least
-    private final static int IDX_REF = IntSorter.DPQ_11.ordinal();
-    private final static int IDX_TEST = IntSorter.DPQ_18_11.ordinal();
+    public final static int IDX_REF = 1; // IntSorter.DPQ_18_11.ordinal();
+    public final static int IDX_TEST = 2; // IntSorter.DPQ_18_11P.ordinal();
 
     public final static long MIN_NS = 50; // latency in ns
     public final static double MIN_PREC = 1e-9 * MIN_NS / 1e3; // ms
@@ -35,9 +35,13 @@ public final class BentleyBasher {
 
     // threshold to do more iterations (inner-loop) for small arrays in order to reduce variance:
     private static final int SMALL_TH = 10000;
-    
-    private static final int REP_REPEAT = 5;
+
+    private static final int REP_DISTRIB = 7;
+    private static final int REP_REPEAT = 15;
     private static final int REP_SKIP = 10;
+
+    private static final int ERR_DIST_TH = 5;
+    private static final int ERR_WARNING = 25;
 
     private final static DecimalFormat df2;
     private final static DecimalFormat df6;
@@ -81,23 +85,22 @@ public final class BentleyBasher {
         final double[] times = new double[sorters.length];
 
         if (!warmup) {
-            System.out.print("                           ");
+            System.out.print("Length Sub-size  Builder Tweaker  ");
 
             for (IntSorter sorter : sorters) {
-                System.out.print("         " + sorter);
+                System.out.print("\t" + sorter);
             }
-            System.out.print("        [" + sorters[IDX_REF] + " % " + sorters[IDX_TEST] + "]");
+            System.out.print("\t[" + sorters[IDX_REF] + " % " + sorters[IDX_TEST] + "]");
             System.out.println();
             System.out.println();
         }
 
         long start;
         long time;
-        long minTimeTh;
 
         final int[] realLengths = (forceLengths != null) ? forceLengths : LENGTHS;
 
-        final WelfordVariance samples = new WelfordVariance();
+        final WelfordVariance statSorter = new WelfordVariance();
         int loopCount = 0;
 
         for (int n : realLengths) {
@@ -110,83 +113,128 @@ public final class BentleyBasher {
             } else {
                 reps *= REP_REPEAT;
             }
-            if (reps < 3) {
-                reps = 3;
-            }
 //            System.out.print("reps: " + reps + "\n");
-            final int lreps = 1 + ((n <= SMALL_TH) ? (int) Math.ceil(3.0 * SMALL_TH / n) : 0);
+            final int lreps = 1 + ((n <= SMALL_TH) ? (int) Math.ceil(10.0 * SMALL_TH / n) : 0);
             if (lreps > 1) {
                 reps = Math.max(1, reps / lreps);
-//                System.out.println("lreps: " + lreps + " with reps: " + reps + "\n");
-
-                minTimeTh = MIN_NS * lreps;
-            } else {
-//                System.out.println("reps: " + reps + "\n");
-                minTimeTh = MIN_NS;
             }
-            
-            final int effReps = reps + REP_SKIP;
-//                System.out.println("effReps: " + effReps + "\n");
+
+//            System.out.println("lreps: " + lreps + " with reps: " + reps + "\n");
+
+            // adjust reps to sample properly distributions
+            final int repDist = (warmup) ? 2 : REP_DISTRIB;
+            reps = Math.max((warmup) ? 1 : 13, reps / repDist);
+
+            final WelfordVariance[] statDists = new WelfordVariance[repDist];
+            for (int d = 0; d < repDist; d++) {
+                statDists[d] = new WelfordVariance();
+            }
+
+            final int skipReps = (warmup) ? 0 : REP_SKIP;
+
+            final int effReps = reps + skipReps;
+//            System.out.println("effReps: " + effReps + "\n");
 
             // Allocate working array:
             final int[] input = new int[n];
             final int[] proto = new int[n];
             final int[] test = new int[n];
 
-            for (int m = 1, end = 2 * n; m < end; m *= TWEAK_INC) {
+            // adjust tweak increment depending on arrat size
+            final int tweakInc = (n > 1000000) ? 16 : TWEAK_INC;
+
+            for (int m = 1, end = 2 * n; m < end; m *= tweakInc) {
+
                 for (IntArrayTweaker iat : IntArrayTweaker.values()) {
+
                     for (ParamIntArrayBuilder iab : ParamIntArrayBuilder.values()) {
-                        // TODO: sample 10x times the distribution
-                        iab.build(input, m);
 
-                        ParamIntArrayBuilder.reset();
-                        iat.tweak(input, proto);
-
-                        // TODO: IntArrayTweaker.SORT is independent of the ParamIntArrayBuilder
-                        // => do not run multiple times in this case (useless) !
                         if (!warmup) {
                             System.out.print(n + " " + m + "  " + iab + " " + iat + "  ");
                         }
 
-                        for (int i = 0; i < sorters.length; i++) {
+                        for (int i = 0, d, e, r; i < sorters.length; i++) {
                             final IntSorter sorter = sorters[i];
-                            samples.reset();
+                            statSorter.reset();
 
                             if (!warmup) {
                                 cleanup();
                             }
+                            // Reset tweaker to have sample initial conditions (seed):
+                            ParamIntArrayBuilder.reset();
 
-                            for (int k = 0; k < effReps; k++) {
-                                // reduce variance on very small arrays (use more repeats):
-                                time = 0l;
+                            // sample 10x times the distribution
+                            for (d = 0; d < repDist; d++) {
+                                statDists[d].reset();
 
-                                for (int q = 0; q < lreps; q++) {
-                                    ArrayUtils.clone(proto, test);
+                                // Get new distribution sample:
+                                iab.build(input, m);
+
+                                // tweak sample:
+                                iat.tweak(input, proto);
+
+                                for (e = 0; e < effReps; e++) {
+                                    // reduce variance on very small arrays (use more repeats):
+
+                                    // measurement loop:
                                     start = System.nanoTime();
-                                    sorter.sort(test);
-                                    time += System.nanoTime() - start;
-                                    loopCount++;
+
+                                    for (r = 0; r < lreps; r++) {
+                                        ArrayUtils.clone(proto, test);
+                                        sorter.sort(test);
+                                    }
+                                    time = System.nanoTime() - start;
+                                    loopCount += r;
+
+                                    if (time > MIN_NS) {
+                                        final double measure = ((double) time) / lreps;
+
+                                        statDists[d].add(measure);
+
+                                        if (e >= skipReps) {
+                                            statSorter.add(measure);
+                                        }
+                                    }
                                 }
-                                if ((k > REP_SKIP) && (time > minTimeTh)) {
-                                    samples.add(((double) time) / lreps);
+                                if (!sorter.skipCheck()) {
+                                    check(test, proto);
                                 }
                             }
-                            check(test, proto);
 
-                            times[i] = 1E-6 * ((USE_RMS) ? samples.rms() : samples.min());
+                            // Collect statistics:
+                            times[i] = 1E-6 * ((USE_RMS) ? statSorter.rms() : statSorter.min());
 
                             if (!warmup) {
+                                System.out.print("\t[");
+
+                                // Check distribution statistics:
+                                for (d = 0; d < repDist; d++) {
+                                    if (statDists[d].errorPercent() >= ERR_DIST_TH) {
+                                        System.out.print('!');
+                                    } else {
+                                        System.out.print(' ');
+                                    }
+                                }
+                                System.out.print(']');
+
                                 System.out.print('\t');
-                                if (samples.errorPercent() >= 10) {
+                                if (statSorter.errorPercent() >= ERR_WARNING) {
                                     System.out.print('!');
                                 } else {
                                     System.out.print(' ');
                                 }
                                 System.out.print(round(df6, times[i])); // ms
+                                if (false) {
+                                    System.out.print(" ~");
+                                    System.out.print(statSorter.errorPercent()); // %
+                                    System.out.print('%');
+                                }
                             }
                             // TODO detailed report (all stats)
 //                            System.out.println("\t" + samples.toString());
-                        }
+
+                        } // sorter loop
+
                         if (!warmup) {
                             final double ratio = times[IDX_REF] / times[IDX_TEST];
                             if (!warmup) {
@@ -249,16 +297,8 @@ public final class BentleyBasher {
         }
         String s = df.format(value);
         for (int i = s.length(); i < 10; ++i) {
-            s += " ";
+            s = " " + s;
         }
-        /*        
-        String s = "" + (((long) Math.round(value * 1000000.0)) / 1000000.0);
-        int k = s.length() - s.indexOf(".");
-
-        for (int i = k; i <= 6; ++i) {
-            s = s + "0";
-        }
-         */
         return s;
     }
 
@@ -269,8 +309,6 @@ public final class BentleyBasher {
 //        final long freeBefore = Runtime.getRuntime().freeMemory();
         // Perform GC:
         System.runFinalization();
-        System.gc();
-        System.gc();
         System.gc();
 
         // pause for 100 ms :
