@@ -86,7 +86,7 @@ public class WelfordVariance {
 
     public int errorPercent() {
         if (nSamples == 0L) {
-            return -1;
+            return 1000;
         }
         return (int) Math.round(Math.abs(100.0 * stdev() / mean()));
     }

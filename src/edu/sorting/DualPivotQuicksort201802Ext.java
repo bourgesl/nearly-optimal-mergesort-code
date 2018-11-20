@@ -64,7 +64,7 @@ public final class DualPivotQuicksort201802Ext implements Sorter {
 
     @Override
     public void sort(final int[] A, final int low, final int high) {
-        final int length = high - low + 1;
+        final int length = high - low + 1 + 1;
         if (auxA == null || auxA.length < length) {
             auxA = new int[length];
         }
@@ -85,7 +85,7 @@ public final class DualPivotQuicksort201802Ext implements Sorter {
             }
         }
 
-        final int max = SortingAlgorithms201802Ext.getMaxRunCount(length) + 1;
+        final int max = SortingAlgorithms201802Ext.getMaxRunCount(length);
         if (run == null || run.length < max) {
             run = new int[max];
         }
