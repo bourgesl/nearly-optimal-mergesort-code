@@ -34,8 +34,8 @@ public final class BentleyBasher {
     public final static int IDX_REF = 1; // IntSorter.DPQ_18_11.ordinal();
     public final static int IDX_TEST = 2; // IntSorter.DPQ_18_11P.ordinal();
 
-    public final static long MIN_NS = 50; // latency in ns
-    public final static double MIN_PREC = 1e-9 * MIN_NS / 1e3; // ms
+    private final static long MIN_NS = 50; // latency in ns
+    private final static double MIN_PREC = 1e-9 * MIN_NS / 1e3; // ms
 
     private static final int HUGE_N = 10 * 1000 * 1001;
 

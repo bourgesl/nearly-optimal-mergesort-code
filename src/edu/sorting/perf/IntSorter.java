@@ -1,18 +1,11 @@
 package edu.sorting.perf;
 
 import edu.sorting.DualPivotQuickSort2011;
-import edu.sorting.DualPivotQuicksort201802;
-import edu.sorting.DualPivotQuicksort201802Ext;
 import edu.sorting.DualPivotQuicksort201811;
+import edu.sorting.DualPivotQuicksort20181121;
 import edu.sorting.DualPivotQuicksort201811P;
 import edu.sorting.RadixSort;
-import org.marlin.MarlinMergeSort;
 import org.marlin.MarlinSort;
-import org.marlin.Qsorte;
-import wildinter.net.mergesort.BottomUpMergesort;
-import wildinter.net.mergesort.PeekSort;
-import wildinter.net.mergesort.Sorter;
-import wildinter.net.mergesort.TimsortTrot;
 
 /**
  * @author Jon Bentley
@@ -50,6 +43,12 @@ public enum IntSorter {
             DualPivotQuicksort201811P.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
+    DPQ_18_11_21 {
+        @Override
+        public void sort(int[] a) {
+            DualPivotQuicksort20181121.INSTANCE.sort(a, 0, a.length - 1);
+        }
+    },
     /*    
     DPQ_18_2 {
         @Override
@@ -75,8 +74,7 @@ public enum IntSorter {
         public void sort(int[] a) {
             MarlinSort.INSTANCE.sort(a, 0, a.length - 1);
         }
-    },
-    /*    
+    }, /*    
     QSORTE {
         @Override
         public void sort(int[] a) {
@@ -121,7 +119,6 @@ public enum IntSorter {
             Timsort.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
-     */
     PEEK_SORT {
         private final Sorter INSTANCE = new PeekSort(24, false);
 
@@ -129,7 +126,7 @@ public enum IntSorter {
         public void sort(int[] a) {
             INSTANCE.sort(a, 0, a.length - 1);
         }
-    }, /*    
+    }, 
     POWER_SORT {
         private final Sorter INSTANCE = new PowerSort(true, false, 24);
 
@@ -137,8 +134,8 @@ public enum IntSorter {
             INSTANCE.sort(a, 0, a.length - 1);
         }
     }    
-     */
-    // 2 arrays variants
+     */ // 2 arrays variants
+    /*
     DPQ_18_11_E {
         @Override
         public void sort(int[] a) {
@@ -150,7 +147,8 @@ public enum IntSorter {
         public void sort(int[] a) {
             MarlinMergeSort.INSTANCE.sort(a, 0, a.length - 1);
         }
-    };
+    }
+     */;
 
     public abstract void sort(int[] a);
 

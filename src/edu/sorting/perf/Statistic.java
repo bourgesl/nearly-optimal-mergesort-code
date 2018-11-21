@@ -1,8 +1,6 @@
 package edu.sorting.perf;
 
 import static edu.sorting.perf.BentleyBasher.IDX_REF;
-import static edu.sorting.perf.BentleyBasher.IDX_TEST;
-import static edu.sorting.perf.BentleyBasher.MIN_PREC;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -23,7 +21,9 @@ import wildinter.net.WelfordVariance;
  */
 public final class Statistic {
 
-    private final static boolean IGNORE_LOW_CONFIDENCE = false;
+    private final static boolean IGNORE_LOW_CONFIDENCE = true;
+
+    private final static double MIN_PREC = 1e-6; // 1ns expressed in ms
 
     private final static String HEADER_STATS = "--- STATS ---";
 
@@ -66,15 +66,13 @@ public final class Statistic {
     private void doAfter() {
         // TODO: use arguments for selected sorters, (sorter reference), warmup, sizes ... at least
 
-        doStats(IDX_REF, IDX_TEST);
-        doStats(IDX_REF, IDX_TEST + 1);
-        doStats(IDX_REF, IDX_TEST + 2);
-        /*
-        doStats(IntSorter.DPQ_11.ordinal(), IntSorter.DPQ_18_11.ordinal());
-        doStats(IntSorter.DPQ_18_2.ordinal(), IntSorter.DPQ_18_11.ordinal());
-        doStats(IntSorter.DPQ_18_11.ordinal(), IntSorter.RADIX.ordinal());
-        doStats(IntSorter.DPQ_18_11.ordinal(), IntSorter.MARLIN.ordinal());
-         */
+        // warning: indexes are only valid for specific runs (IntSorter class change may affect ordinal values)
+        doStats(IntSorter.DPQ_18_11.ordinal(), IntSorter.DPQ_18_11P.ordinal());
+        doStats(IntSorter.DPQ_18_11.ordinal(), IntSorter.DPQ_18_11_21.ordinal());
+        doStats(IntSorter.DPQ_18_11P.ordinal(), IntSorter.DPQ_18_11_21.ordinal());
+        doStats(IntSorter.DPQ_11.ordinal(), IntSorter.DPQ_18_11_21.ordinal());
+        doStats(IntSorter.DPQ_18_11_21.ordinal(), IntSorter.RADIX.ordinal());
+        doStats(IntSorter.DPQ_18_11_21.ordinal(), IntSorter.MARLIN.ordinal());
     }
 
     private void doStats(final int idxRef, final int idxTest) {
@@ -147,7 +145,7 @@ public final class Statistic {
             if (myTime[idxRef][i] > MIN_PREC && myTime[idxTest][i] > MIN_PREC) {
                 samples.add(100.0 * myTime[idxRef][i] / myTime[idxTest][i]);
             } else {
-                System.err.println("Ignore: " + myTime[idxTest][i]);
+                System.err.println("Ignore: " + myTime[idxRef][i] + " and " + myTime[idxTest][i]);
             }
         }
         return samples;
@@ -184,6 +182,9 @@ public final class Statistic {
 
     private void processLine(final IntSorter[] sorters, String line, int i) {
         StringTokenizer stk = new StringTokenizer(line, " \t");
+        if (stk.countTokens() < 4 + sorters.length) {
+            throw new IllegalStateException("Invalid line: '" + line + "'");
+        }
         String value;
 //        System.out.println("-- '" + line + "'");
         value = stk.nextToken(); // length
@@ -213,7 +214,7 @@ public final class Statistic {
 
                 value = stk.nextToken();
             }
-            if (value.startsWith("!")) {
+            if (value.startsWith("$") || value.startsWith("!")) {
                 if (IGNORE_LOW_CONFIDENCE) {
                     myTime[j][i] = -0.0d;
                 } else {
