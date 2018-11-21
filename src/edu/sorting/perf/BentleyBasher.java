@@ -52,9 +52,9 @@ public final class BentleyBasher {
 
     private static final long SEC_IN_NS = 1000 * 1000 * 1000; // 1s in ns;
     private static final long MIN_LOOP_TIME = SEC_IN_NS / 250; // 4ms
-    private static final long MAX_LOOP_TIME = 3 * SEC_IN_NS; // 3s max
+    private static final long MAX_LOOP_TIME = 10 * SEC_IN_NS; // 10s max
 
-    private static final int ERR_DIST_TH = 1; // 5% per timing loop
+    private static final int ERR_DIST_TH = 3; // 3% per timing loop
     private static final int ERR_WARNING = 25; // 25% warning on all distributions
 
     private final static DecimalFormat df2;
@@ -116,7 +116,7 @@ public final class BentleyBasher {
         }
 
         long start;
-        long time, estTime;
+        long time, estTime, maxEstTime;
 
         final int[] realLengths = (forceLengths != null) ? forceLengths : LENGTHS;
 
@@ -133,6 +133,7 @@ public final class BentleyBasher {
         }
 
         int loopCount = 0;
+        int numTest = 0;
 
         for (int n : realLengths) {
             int reps = reps(n);
@@ -195,6 +196,9 @@ public final class BentleyBasher {
 
                             // Reset tweaker to have sample initial conditions (seed):
                             ParamIntArrayBuilder.reset();
+
+                            // adjust max estimated time per distribution except for baseline and first 3 tests:
+                            maxEstTime = ((i == IDX_BASELINE) || (numTest < 3)) ? MAX_LOOP_TIME : (MAX_LOOP_TIME / repDist);
 
                             // sample 10x times the distribution
                             for (d = 0; d < repDist; d++) {
@@ -263,7 +267,7 @@ public final class BentleyBasher {
 
                                     if (statDist.errorPercent() <= ERR_DIST_TH) {
                                         if (REPORT_DEBUG_ESTIMATOR) {
-                                            out.println("Loop " + l + ": " + statDist.errorPercent() + " % (OK)");
+                                            out.println("Loop " + l + ": " + round(df2, statDist.rawErrorPercent()) + " % (OK)");
                                         }
                                         break;
                                     }
@@ -309,13 +313,14 @@ public final class BentleyBasher {
                                     statReps = Math.max(REP_MIN, (int) (newTotReps / loopReps));
 
                                     if (REPORT_DEBUG_ESTIMATOR) {
-                                        out.println("! Loop " + l + " [tot: " + totReps + "] : " + statDist.errorPercent() + " %"
+                                        out.println("! Loop " + l + " [tot: " + totReps + "] : " + round(df2, statDist.rawErrorPercent()) + " %"
                                                 + " => try sr: " + statReps + " lr: " + loopReps
                                                 + " tot: " + newTotReps + " estTime: " + round(df6, 1E-6 * estTime) + " ms");
                                     }
 
-                                    if (estTime > MAX_LOOP_TIME) {
-                                        System.err.println("Too long loop: " + round(df6, 1E-6 * estTime) + " ms for "+ sorter + " @ "+testHeader);
+                                    if (estTime > maxEstTime) {
+                                        System.err.println("Too long loop: " + round(df2, 1E-6 * estTime) + " ms for test ["
+                                                + testHeader + " " + sorter + "] : " + round(df2, statDist.rawErrorPercent()) + " %");
                                         break;
                                     }
 
@@ -349,10 +354,12 @@ public final class BentleyBasher {
                                     out.print('\t');
                                     out.print(sorter);
                                 }
-                                if (SHOW_DIST_FLAGS) {
-                                    out.print("\t[");
+                                out.print('\t');
 
-                                    // Check distribution statistics:
+                                if (SHOW_DIST_FLAGS) {
+                                    out.print("[");
+
+                                    // Check distribution statistics (all flags):
                                     for (d = 0; d < repDist; d++) {
                                         if (statDists[d].errorPercent() > ERR_DIST_TH) {
                                             out.print('!');
@@ -360,9 +367,16 @@ public final class BentleyBasher {
                                             out.print(' ');
                                         }
                                     }
-                                    out.print(']');
+                                    out.print("]\t");
+                                } else {
+                                    // Check distribution statistics (1 flag only):
+                                    for (d = 0; d < repDist; d++) {
+                                        if (statDists[d].errorPercent() > ERR_DIST_TH) {
+                                            out.print('$');
+                                            break;
+                                        }
+                                    }
                                 }
-                                out.print('\t');
 
                                 if (statSorter.errorPercent() >= ERR_WARNING) {
                                     out.print('!');
@@ -422,10 +436,12 @@ public final class BentleyBasher {
                             }
                             out.println(mark);
                         }
-                    }
-                }
-            }
-        }
+
+                        numTest++;
+                    } // builder
+                } // tweaker
+            } // sub-size
+        } // size
         return loopCount / sorters.length;
     }
 
