@@ -52,7 +52,7 @@ public final class BentleyBasher {
 
     private static final long SEC_IN_NS = 1000 * 1000 * 1000; // 1s in ns;
     private static final long MIN_LOOP_TIME = SEC_IN_NS / 250; // 4ms
-    private static final long MAX_LOOP_TIME = 1 * SEC_IN_NS; // 1s
+    private static final long MAX_LOOP_TIME = 3 * SEC_IN_NS; // 3s max
 
     private static final int ERR_DIST_TH = 1; // 5% per timing loop
     private static final int ERR_WARNING = 25; // 25% warning on all distributions
@@ -272,7 +272,7 @@ public final class BentleyBasher {
                                         break;
                                     }
 
-                                    // TODO: test loop stability on statDist.mean()
+                                    // TODO: test mean time convergence ie loop stability on statDist.mean()
                                     avg = statDist.mean();
 
                                     totReps = ((long) statReps) * loopReps; // may overflow ?
@@ -303,8 +303,8 @@ public final class BentleyBasher {
                                     }
                                     newTotReps = Math.min(5 * totReps, newTotReps);
 
-                                    // adjust if time is converging too (warmup issue) ?
-                                    estTime = (long) Math.ceil(avg * newTotReps / totReps);
+                                    // check for long test duration:
+                                    estTime = (long) Math.ceil(avg * newTotReps);
 
                                     statReps = Math.max(REP_MIN, (int) (newTotReps / loopReps));
 
@@ -315,7 +315,7 @@ public final class BentleyBasher {
                                     }
 
                                     if (estTime > MAX_LOOP_TIME) {
-                                        System.err.println("Too long loop: " + estTime + " ns");
+                                        System.err.println("Too long loop: " + round(df6, 1E-6 * estTime) + " ms for "+ sorter + " @ "+testHeader);
                                         break;
                                     }
 
