@@ -50,12 +50,14 @@ public enum IntSorter {
             DualPivotQuicksort201811P.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
+    /*    
     DPQ_18_2 {
         @Override
         public void sort(int[] a) {
             DualPivotQuicksort201802.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
+     */
     DPQ_11 {
         @Override
         public void sort(int[] a) {
@@ -74,13 +76,13 @@ public enum IntSorter {
             MarlinSort.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
+    /*    
     QSORTE {
         @Override
         public void sort(int[] a) {
             Qsorte.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
-    /*    
     DYN_PIVOT {
         @Override
         public void sort(int[] a) {
@@ -95,7 +97,6 @@ public enum IntSorter {
             INSTANCE.sort(a, 0, a.length - 1);
         }
     },
-     */
     MERGE_BU {
         private final Sorter INSTANCE = new BottomUpMergesort(24, true);
 
@@ -110,7 +111,6 @@ public enum IntSorter {
             TimsortTrot.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
-    /*    
     TIM_SD {
         public void sort(int[] a) {
             TimsortStrippedDown.INSTANCE.sort(a, 0, a.length - 1);

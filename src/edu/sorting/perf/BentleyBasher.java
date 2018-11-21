@@ -39,8 +39,8 @@ public final class BentleyBasher {
 
     private static final int HUGE_N = 10 * 1000 * 1001;
 
-    private static final int[] LENGTHS = {50, 100, 200, 500, 1000, 2000, 5000, 10000, 50000 /*, 100000, HUGE_N */};
-//    private static final int[] lengths = {50 * 1000};
+    private static final int[] LENGTHS = {50, 100, 200, 500, 1000, 2000, 5000, 10000, 50000 /*, 100000 */};
+//    private static final int[] LENGTHS = {1000000, HUGE_N};
 
     // threshold to do more iterations (inner-loop) for small arrays in order to reduce variance:
     private static final int SMALL_TH = 10000;
@@ -198,7 +198,7 @@ public final class BentleyBasher {
                             ParamIntArrayBuilder.reset();
 
                             // adjust max estimated time per distribution except for baseline and first 3 tests:
-                            maxEstTime = ((i == IDX_BASELINE) || (numTest < 3)) ? MAX_LOOP_TIME : (MAX_LOOP_TIME / repDist);
+                            maxEstTime = (((i == IDX_BASELINE) || (numTest < 3)) ? 5 : 1) * (MAX_LOOP_TIME / repDist);
 
                             // sample 10x times the distribution
                             for (d = 0; d < repDist; d++) {

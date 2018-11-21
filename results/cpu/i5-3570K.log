@@ -1,0 +1,25 @@
+Architecture :        x86_64
+Mode(s) opératoire(s) des processeurs :32-bit, 64-bit
+Boutisme :            Little Endian
+Processeur(s) :       4
+Liste de processeur(s) en ligne :0-3
+Thread(s) par cœur : 1
+Cœur(s) par socket : 4
+Socket(s) :           1
+Nœud(s) NUMA :       1
+Identifiant constructeur :GenuineIntel
+Famille de processeur :6
+Modèle :             58
+Nom de modèle :      Intel(R) Core(TM) i5-3570K CPU @ 3.40GHz
+Révision :           9
+Vitesse du processeur en MHz :3013.382
+Vitesse maximale du processeur en MHz :3800,0000
+Vitesse minimale du processeur en MHz :1600,0000
+BogoMIPS :            6800.12
+Virtualisation :      VT-x
+Cache L1d :           32K
+Cache L1i :           32K
+Cache L2 :            256K
+Cache L3 :            6144K
+Nœud NUMA 0 de processeur(s) :0-3
+Drapaux :             fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm epb ssbd ibrs ibpb stibp kaiser tpr_shadow vnmi flexpriority ept vpid fsgsbase smep erms xsaveopt dtherm ida arat pln pts flush_l1d
