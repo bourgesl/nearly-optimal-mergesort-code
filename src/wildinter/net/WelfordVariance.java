@@ -8,13 +8,21 @@ package wildinter.net;
  *
  * @author Sebastian Wild (wild@uwaterloo.ca)
  */
-public class WelfordVariance {
+public final class WelfordVariance {
 
-    private long nSamples;
-    private double min, max, mean, squaredError;
+    long nSamples;
+    double min, max, mean, squaredError;
 
     public WelfordVariance() {
         reset();
+    }
+
+    public void copy(WelfordVariance other) {
+        nSamples = other.nSamples;
+        min = other.min;
+        max = other.max;
+        mean = other.mean;
+        squaredError = other.squaredError;
     }
 
     public void reset() {
@@ -70,7 +78,7 @@ public class WelfordVariance {
         return squaredError / (nSamples - 1L);
     }
 
-    public double stdev() {
+    public double stddev() {
         if (nSamples == 0L) {
             return Double.NaN;
         }
@@ -81,21 +89,25 @@ public class WelfordVariance {
         if (nSamples == 0L) {
             return Double.NaN;
         }
-        return mean() + stdev();
+        return mean() + stddev();
     }
 
     public int errorPercent() {
         if (nSamples == 0L) {
             return 1000;
         }
-        return (int) Math.round(Math.abs(100.0 * stdev() / mean()));
+        return (int) Math.round(rawErrorPercent());
+    }
+
+    public double rawErrorPercent() {
+        return Math.abs(100.0 * stddev() / mean());
     }
 
     @Override
     public String toString() {
         return "[" + nSamples()
                 + ": µ=" + (float) mean()
-                + " σ=" + (float) stdev()
+                + " σ=" + (float) stddev()
                 + " rms=" + (float) rms()
                 + " min=" + (float) min()
                 + " max=" + (float) max()
@@ -109,7 +121,7 @@ public class WelfordVariance {
         }
         System.out.println("v.mean() = " + v.mean());
         System.out.println("v.variance() = " + v.variance());
-        System.out.println("v.stdev() = " + v.stdev());
+        System.out.println("v.stdev() = " + v.stddev());
         System.out.println("stats() = " + v);
     }
 
