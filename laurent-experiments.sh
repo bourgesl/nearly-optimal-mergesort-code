@@ -8,7 +8,8 @@ echo "JAVA:"
 java -version
 
 # define CPU core to use
-CORE=0
+# Note: use linux kernel GRUB_CMDLINE_LINUX="isolcpus=3" in /etc/default/grub
+CORE=3
 
 # define Java options
 # -XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation

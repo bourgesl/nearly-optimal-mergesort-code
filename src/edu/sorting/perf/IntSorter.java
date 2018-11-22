@@ -31,22 +31,30 @@ public enum IntSorter {
         }
     },
      */
+    DPQ_11 {
+        @Override
+        public void sort(int[] a) {
+            DualPivotQuickSort2011.INSTANCE.sort(a, 0, a.length - 1);
+        }
+    },
+/*
     DPQ_18_11 {
         @Override
         public void sort(int[] a) {
             DualPivotQuicksort201811.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
-    DPQ_18_11P {
-        @Override
-        public void sort(int[] a) {
-            DualPivotQuicksort201811P.INSTANCE.sort(a, 0, a.length - 1);
-        }
-    },
+*/
     DPQ_18_11_21 {
         @Override
         public void sort(int[] a) {
             DualPivotQuicksort20181121.INSTANCE.sort(a, 0, a.length - 1);
+        }
+    },
+    DPQ_18_11P {
+        @Override
+        public void sort(int[] a) {
+            DualPivotQuicksort201811P.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
     /*    
@@ -57,24 +65,19 @@ public enum IntSorter {
         }
     },
      */
-    DPQ_11 {
-        @Override
-        public void sort(int[] a) {
-            DualPivotQuickSort2011.INSTANCE.sort(a, 0, a.length - 1);
-        }
-    },
     RADIX {
         @Override
         public void sort(int[] a) {
             RadixSort.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
+/*
     MARLIN {
         @Override
         public void sort(int[] a) {
             MarlinSort.INSTANCE.sort(a, 0, a.length - 1);
         }
-    }, /*    
+    },
     QSORTE {
         @Override
         public void sort(int[] a) {

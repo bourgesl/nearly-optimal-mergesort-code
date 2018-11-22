@@ -11,18 +11,29 @@ import wildinter.net.WelfordVariance;
  */
 public final class BentleyBasher {
 
-    private final static boolean REPORT_VERBOSE = false;
-    private final static boolean REPORT_TIME_ERR = false;
+    // general settings
+    public static final long SEC_IN_NS = 1000 * 1000 * 1000; // 1s in ns;
 
-    private final static boolean REPORT_DEBUG_ESTIMATOR = false;
+    private static final int[] LENGTHS = {50, 100, 200, 500, 1000, 2000, 5000, 10000};
+//    private static final int[] LENGTHS = {50 * 1000, 100 * 1000, 500 * 1000, 1000 * 1000, 10 * 1000 * 1000};
 
-    private final static boolean SHOW_DIST_FLAGS = false;
+    private static final long MAX_LOOP_TIME = 30 * SEC_IN_NS; // 30s max per test
+    private static final int ERR_DIST_TH = 2; // 2% per timing loop
 
     private final static boolean USE_RMS = true; // false means use MIN(TIME)
 
+    private final static boolean DO_WARMUP = true;
+
+    private final static boolean REPORT_VERBOSE = false;
+    private final static boolean REPORT_TIME_ERR = false;
+
+    private final static boolean SHOW_DIST_FLAGS = false;
+
+    private final static boolean REPORT_DEBUG_ESTIMATOR = false;
+
+    // internal settings
     private final static int TWEAK_INC = 4; // 2 originally
 
-    private final static boolean DO_WARMUP = true;
     private final static int WARMUP_REPS = 20;
     private final static int[] WARMUP_LENGTHS = new int[]{501, 10001};
 
@@ -37,11 +48,6 @@ public final class BentleyBasher {
     private final static long MIN_NS = 50; // latency in ns
     private final static double MIN_PREC = 1e-9 * MIN_NS / 1e3; // ms
 
-    private static final int HUGE_N = 10 * 1000 * 1001;
-
-    private static final int[] LENGTHS = {50, 100, 200, 500, 1000, 2000, 5000, 10000, 50000 /*, 100000 */};
-//    private static final int[] LENGTHS = {1000000, HUGE_N};
-
     // threshold to do more iterations (inner-loop) for small arrays in order to reduce variance:
     private static final int SMALL_TH = 10000;
 
@@ -50,11 +56,8 @@ public final class BentleyBasher {
     private static final int REP_SKIP = 10;
     private static final int ADJ_MAX = 10;
 
-    private static final long SEC_IN_NS = 1000 * 1000 * 1000; // 1s in ns;
     private static final long MIN_LOOP_TIME = SEC_IN_NS / 250; // 4ms
-    private static final long MAX_LOOP_TIME = 10 * SEC_IN_NS; // 10s max
 
-    private static final int ERR_DIST_TH = 3; // 3% per timing loop
     private static final int ERR_WARNING = 25; // 25% warning on all distributions
 
     private final static DecimalFormat df2;
@@ -83,6 +86,10 @@ public final class BentleyBasher {
         } else {
             System.out.println("Timings are given in milli-seconds (min time)");
         }
+        System.out.println("\nTimings are estimated using auto-tune to satisfy the maximal uncertainty of " + ERR_DIST_TH + " %.");
+
+        // TODO: estimate uncertainty on ratios: (100 +/- err) / (100 +- err) non linear
+
         System.out.println("\n");
         sort(0, null);
         System.out.println("\n-----\n");

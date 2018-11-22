@@ -67,12 +67,10 @@ public final class Statistic {
         // TODO: use arguments for selected sorters, (sorter reference), warmup, sizes ... at least
 
         // warning: indexes are only valid for specific runs (IntSorter class change may affect ordinal values)
-        doStats(IntSorter.DPQ_18_11.ordinal(), IntSorter.DPQ_18_11P.ordinal());
-        doStats(IntSorter.DPQ_18_11.ordinal(), IntSorter.DPQ_18_11_21.ordinal());
-        doStats(IntSorter.DPQ_18_11P.ordinal(), IntSorter.DPQ_18_11_21.ordinal());
         doStats(IntSorter.DPQ_11.ordinal(), IntSorter.DPQ_18_11_21.ordinal());
+        doStats(IntSorter.DPQ_11.ordinal(), IntSorter.DPQ_18_11P.ordinal());
+        doStats(IntSorter.DPQ_18_11P.ordinal(), IntSorter.DPQ_18_11_21.ordinal());
         doStats(IntSorter.DPQ_18_11_21.ordinal(), IntSorter.RADIX.ordinal());
-        doStats(IntSorter.DPQ_18_11_21.ordinal(), IntSorter.MARLIN.ordinal());
     }
 
     private void doStats(final int idxRef, final int idxTest) {

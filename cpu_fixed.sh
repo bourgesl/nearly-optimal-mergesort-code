@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FREQ="2.0GHz"
+FREQ="2.7GHz" # nominal
 echo "using sudo to set CPU frequency to $FREQ ..."
 
 # set fixed frequency with governor 'performance'
