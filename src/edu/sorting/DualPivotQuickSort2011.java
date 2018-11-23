@@ -62,10 +62,11 @@ public final class DualPivotQuickSort2011 implements Sorter {
 
     @Override
     public void sort(final int[] A, final int left, final int right) {
-        if (aux == null || aux.length < (right - left + 1)) {
-            aux = new int[(right - left + 1)];
+        final int length = right - left + 1;
+        if (aux == null || aux.length < length) {
+            aux = new int[length];
         }
-        sort(A, left, right, aux, aux.length, 0, run);
+        sort(A, left, right, aux, 0, aux.length, run);
     }
     
     /**
@@ -204,6 +205,7 @@ public final class DualPivotQuickSort2011 implements Sorter {
         int ao, bo;              // array offsets from 'left'
         int blen = right - left; // space needed for b
         if (work == null || workLen < blen || workBase + blen > work.length) {
+//            System.out.println("new Alloc: "+blen + " vs " + (workLen));
             work = new int[blen];
             workBase = 0;
         }

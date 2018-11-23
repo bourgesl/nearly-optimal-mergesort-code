@@ -59,7 +59,7 @@ public final class DualPivotQuicksort201802Ext implements Sorter {
     private int[] auxB = null;
     private int[] run = null;
 
-    //
+    // checks only
     private static int[] A_REF = null;
 
     @Override
@@ -429,179 +429,93 @@ public final class DualPivotQuicksort201802Ext implements Sorter {
             sort(a, b, bits, low, lower, auxA, auxB, run);
             sort(a, b, bits | 1, lower + 1, upper, auxA, auxB, run);
         } else { // Partitioning with one pivot
+            /*
+             * Use the third element as the pivot. This value
+             * is inexpensive approximation of the median.
+             */
+            final int pivotA = a[e3];
+            final int pivotB = b[e3];
 
-            // LBO / Vladimir fix swaps !
-            if (true) {
-                /*
-                 * Use the third element as the pivot. This value
-                 * is inexpensive approximation of the median.
-                 */
-                final int pivotA = a[e3];
-                final int pivotB = b[e3];
+            /*
+             * The first element to be sorted is moved to the location
+             * formerly occupied by the pivot. When partitioning is
+             * completed, the pivot is swapped back into its final
+             * position, and excluded from subsequent sorting.
+             */
+            a[e3] = a[lower];
+            b[e3] = b[lower];
 
-                /*
-                 * The first element to be sorted is moved to the location
-                 * formerly occupied by the pivot. When partitioning is
-                 * completed, the pivot is swapped back into its final
-                 * position, and excluded from subsequent sorting.
-                 */
-                a[e3] = a[lower];
-                b[e3] = b[lower];
+            /*
+             * Traditional 3-way (Dutch National Flag) partitioning
+             *
+             *   left part                 central part    right part
+             * +------------------------------------------------------+
+             * |   < pivot   |     ?     |   == pivot   |   > pivot   |
+             * +------------------------------------------------------+
+             *              ^           ^                ^
+             *              |           |                |
+             *            lower         k              upper
+             *
+             * Invariants:
+             *
+             *   all in (low, lower] < pivot
+             *   all in (k, upper)  == pivot
+             *   all in [upper, end] > pivot
+             *
+             * Pointer k is the last index of ?-part
+             */
+            for (int k = ++upper; --k > lower;) {
+                final int ak = a[k];
 
-                /*
-                 * Traditional 3-way (Dutch National Flag) partitioning
-                 *
-                 *   left part                 central part    right part
-                 * +------------------------------------------------------+
-                 * |   < pivot   |     ?     |   == pivot   |   > pivot   |
-                 * +------------------------------------------------------+
-                 *              ^           ^                ^
-                 *              |           |                |
-                 *            lower         k              upper
-                 *
-                 * Invariants:
-                 *
-                 *   all in (low, lower] < pivot
-                 *   all in (k, upper)  == pivot
-                 *   all in [upper, end] > pivot
-                 *
-                 * Pointer k is the last index of ?-part
-                 */
-                for (int k = ++upper; --k > lower;) {
-                    final int ak = a[k];
+                if (ak != pivotA) {
+                    final int bk = b[k];
 
-                    if (ak != pivotA) {
-                        final int bk = b[k];
-
-                        if (ak < pivotA) { 
-                            // Move a[k] to the left side
-                            while (a[++lower] < pivotA);
-
-                            // LBO: restored range check:
-                            if (lower > k) {
-                                lower = k;
-                                break;
-                            }
-
-                            if (a[lower] > pivotA) {
-                                a[k] = a[--upper];
-                                a[upper] = a[lower];
-                                b[k] = b[  upper];
-                                b[upper] = b[lower];
-                            } else {
-                                a[k] = a[lower];
-                                b[k] = b[lower];
-                            }
-                            a[lower] = ak;
-                            b[lower] = bk;
-                        } else { 
-                            // ak > pivot - Move a[k] to the right side
-                            a[k] = a[--upper];
-                            a[upper] = ak;
-                            b[k] = b[  upper];
-                            b[upper] = bk;
-                        }
-                    }
-                }
-
-                /*
-                 * Swap the pivot into its final position.
-                 */
-                a[low] = a[lower];
-                a[lower] = pivotA;
-                b[low] = b[lower];
-                b[lower] = pivotB;
-
-                /*
-                 * Sort the left and the right parts recursively, excluding
-                 * known pivot. All elements from the central part are equal
-                 * and, therefore, already sorted.
-                 */
-                sort(a, b, bits | 1, upper, high, auxA, auxB, run);
-                sort(a, b, bits, low, lower, auxA, auxB, run);
-            } else {
-                /*
-                 * Use the third element as the pivot. This value
-                 * is inexpensive approximation of the median.
-                 */
-                final int pivotA = a[e3];
-                final int pivotB = b[e3];
-
-                /*
-                 * The first element to be sorted is moved to the location
-                 * formerly occupied by the pivot. When partitioning is
-                 * completed, the pivot is swapped back into its final
-                 * position, and excluded from subsequent sorting.
-                 */
-                a[e3] = a[lower];
-                b[e3] = b[lower];
-
-                /*
-                 * Traditional 3-way (Dutch National Flag) partitioning
-                 *
-                 *   left part                 central part    right part
-                 * +------------------------------------------------------+
-                 * |   < pivot   |     ?     |   == pivot   |   > pivot   |
-                 * +------------------------------------------------------+
-                 *              ^           ^                ^
-                 *              |           |                |
-                 *            lower         k              upper
-                 *
-                 * Invariants:
-                 *
-                 *   all in (low, lower] < pivot
-                 *   all in (k, upper)  == pivot
-                 *   all in [upper, end] > pivot
-                 *
-                 * Pointer k is the last index of ?-part
-                 */
-                for (int k = ++upper; --k > lower;) {
-                    if (a[k] == pivotA) {
-                        continue;
-                    }
-                    int ak = a[k];
-                    int bk = b[k];
-
-                    if (ak < pivotA) { // Move a[k] to the left side
+                    if (ak < pivotA) { 
+                        // Move a[k] to the left side
                         while (a[++lower] < pivotA);
 
+                        // LBO: restored range check:
                         if (lower > k) {
                             lower = k;
                             break;
                         }
-                        a[k] = pivotA;
-                        b[k] = pivotB;
 
                         if (a[lower] > pivotA) {
-                            a[--upper] = a[lower];
+                            a[k] = a[--upper];
+                            a[upper] = a[lower];
+                            b[k] = b[  upper];
                             b[upper] = b[lower];
+                        } else {
+                            a[k] = a[lower];
+                            b[k] = b[lower];
                         }
                         a[lower] = ak;
                         b[lower] = bk;
-                    } else { // ak > pivot - Move a[k] to the right side
-                        a[k] = pivotA;
-                        a[--upper] = ak;
-                        b[k] = pivotB;
+                    } else { 
+                        // ak > pivot - Move a[k] to the right side
+                        a[k] = a[--upper];
+                        a[upper] = ak;
+                        b[k] = b[  upper];
                         b[upper] = bk;
                     }
                 }
-
-                /*
-                 * Swap the pivot into its final position.
-                 */
-                a[low] = a[lower];
-                a[lower] = pivotA;
-                b[low] = b[lower];
-                b[lower] = pivotB;
-
-                /*
-                 * Sort the left and the right parts recursively, excluding
-                 * known pivot. All elements from the central part are equal
-                 * and, therefore, already sorted.
-                 */
-                sort(a, b, bits | 1, upper, high, auxA, auxB, run);
-                sort(a, b, bits, low, lower, auxA, auxB, run);
             }
+
+            /*
+             * Swap the pivot into its final position.
+             */
+            a[low] = a[lower];
+            a[lower] = pivotA;
+            b[low] = b[lower];
+            b[lower] = pivotB;
+
+            /*
+             * Sort the left and the right parts recursively, excluding
+             * known pivot. All elements from the central part are equal
+             * and, therefore, already sorted.
+             */
+            sort(a, b, bits | 1, upper, high, auxA, auxB, run);
+            sort(a, b, bits, low, lower, auxA, auxB, run);
         }
     }
 }

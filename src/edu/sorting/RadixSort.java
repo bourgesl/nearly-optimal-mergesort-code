@@ -22,12 +22,11 @@ public final class RadixSort implements Sorter {
         if (offset < 0 || end < offset || end >= array.length) {
             throw new IllegalArgumentException();
         }
-        final int bLen = end - offset + 1;
+        final int length = end - offset + 1;
         /* extra right increment ? */
-        if (aux == null || aux.length < bLen) {
-            aux = new int[bLen];
+        if (aux == null || aux.length < length) {
+            aux = new int[length];
         }
-
         tryMerge(array, offset, end, aux, run);
     }
 

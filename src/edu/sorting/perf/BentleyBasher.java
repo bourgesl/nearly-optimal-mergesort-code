@@ -14,10 +14,16 @@ public final class BentleyBasher {
     // general settings
     public static final long SEC_IN_NS = 1000 * 1000 * 1000; // 1s in ns;
 
+    // Small array lengths:
     private static final int[] LENGTHS = {50, 100, 200, 500, 1000, 2000, 5000, 10000};
-//    private static final int[] LENGTHS = {50 * 1000, 100 * 1000, 500 * 1000, 1000 * 1000, 10 * 1000 * 1000};
+    // Large array lengths:
+//    private static final int[] LENGTHS = {50 * 1000, 100 * 1000, 500 * 1000};
+    // Very large array lengths:
+//    private static final int[] LENGTHS = {1000 * 1000, 10 * 1000 * 1000};
 
-    private static final long MAX_LOOP_TIME = 30 * SEC_IN_NS; // 30s max per test
+    private static final long MAX_LOOP_TIME = 10 * SEC_IN_NS; // 10s max per test (small)
+//    private static final long MAX_LOOP_TIME = 30 * SEC_IN_NS; // 30s max per test (large)    
+
     private static final int ERR_DIST_TH = 2; // 2% per timing loop
 
     private final static boolean USE_RMS = true; // false means use MIN(TIME)
@@ -25,11 +31,10 @@ public final class BentleyBasher {
     private final static boolean DO_WARMUP = true;
 
     private final static boolean REPORT_VERBOSE = false;
-    private final static boolean REPORT_TIME_ERR = false;
-
-    private final static boolean SHOW_DIST_FLAGS = false;
-
     private final static boolean REPORT_DEBUG_ESTIMATOR = false;
+
+    private final static boolean REPORT_TIME_ERR = false;
+    private final static boolean SHOW_DIST_FLAGS = false;
 
     // internal settings
     private final static int TWEAK_INC = 4; // 2 originally
@@ -37,7 +42,7 @@ public final class BentleyBasher {
     private final static int WARMUP_REPS = 20;
     private final static int[] WARMUP_LENGTHS = new int[]{501, 10001};
 
-    // 5ms >> [Full GC (System.gc())  794K->794K(1013632K), 0,0022879 secs]
+    // 10ms >> [Full GC (System.gc())  794K->794K(1013632K), 0,0022879 secs] for 1g heap
     private final static long GC_LATENCY = 10l;
 
     // TODO: use arguments for selected sorters, (sorter reference), warmup, sizes ... at least
@@ -46,20 +51,20 @@ public final class BentleyBasher {
     public final static int IDX_TEST = 2; // IntSorter.DPQ_18_11P.ordinal();
 
     private final static long MIN_NS = 50; // latency in ns
-    private final static double MIN_PREC = 1e-9 * MIN_NS / 1e3; // ms
 
     // threshold to do more iterations (inner-loop) for small arrays in order to reduce variance:
     private static final int SMALL_TH = 10000;
 
-    private static final int REP_MIN = 5;
+    private static final int REP_MIN = 50;
     private static final int REP_DISTRIB = 10;
     private static final int REP_SKIP = 10;
     private static final int ADJ_MAX = 10;
 
-    private static final long MIN_LOOP_TIME = SEC_IN_NS / 250; // 4ms
+    private static final long MIN_LOOP_TIME = SEC_IN_NS / 100; // 10ms
 
     private static final int ERR_WARNING = 25; // 25% warning on all distributions
 
+    public final static String HEADER_COLUMNS = "COLUMNS:";
     private final static DecimalFormat df2;
     private final static DecimalFormat df6;
 
@@ -86,10 +91,9 @@ public final class BentleyBasher {
         } else {
             System.out.println("Timings are given in milli-seconds (min time)");
         }
-        System.out.println("\nTimings are estimated using auto-tune to satisfy the maximal uncertainty of " + ERR_DIST_TH + " %.");
+        System.out.println("\nTimings are estimated using auto-tune to satisfy the maximal uncertainty of " + ERR_DIST_TH + ".0 %.");
 
         // TODO: estimate uncertainty on ratios: (100 +/- err) / (100 +- err) non linear
-
         System.out.println("\n");
         sort(0, null);
         System.out.println("\n-----\n");
@@ -108,7 +112,7 @@ public final class BentleyBasher {
         final PrintStream out = System.out;
 
         if (!warmup) {
-            out.print("Length Sub-size  Builder Tweaker");
+            out.print(HEADER_COLUMNS + "Length Sub-size  Builder Tweaker");
 
             if (REPORT_VERBOSE) {
                 out.print("\tSorter\tRMS\tMean\tStdDev\tCount\tMin\tMax\tExtra");
@@ -142,6 +146,13 @@ public final class BentleyBasher {
         int loopCount = 0;
         int numTest = 0;
 
+        boolean noBL;
+        double timeBL = 0.0;
+        double ratio, avg;
+        long totReps, newTotReps;
+        int timeLimit = 0, total = 0;
+        String testHeader = "";
+
         for (int n : realLengths) {
             int reps = reps(n);
             if (warmup) {
@@ -151,7 +162,7 @@ public final class BentleyBasher {
                 out.println("Warmup length: " + n + " reps: " + reps);
             }
 //            out.print("reps: " + reps + "\n");
-            final int lreps = 1 + ((n <= SMALL_TH) ? (int) Math.ceil(4.0 * SMALL_TH / n) : 0);
+            final int lreps = 5 + ((n <= SMALL_TH) ? (int) Math.ceil(4.0 * SMALL_TH / n) : 0);
             if (lreps > 1) {
                 reps = Math.max(1, reps / lreps);
             }
@@ -172,11 +183,7 @@ public final class BentleyBasher {
             // adjust tweak increment depending on array size
             final int tweakInc = (n > 100000) ? 16 : TWEAK_INC;
 
-            boolean noBL;
-            double timeBL = 0.0;
-            double ratio, avg;
-            long totReps, newTotReps;
-            String testHeader = "";
+            testHeader = "";
 
             for (int m = 1, end = 2 * n; m < end; m *= tweakInc) {
 
@@ -205,7 +212,7 @@ public final class BentleyBasher {
                             ParamIntArrayBuilder.reset();
 
                             // adjust max estimated time per distribution except for baseline and first 3 tests:
-                            maxEstTime = (((i == IDX_BASELINE) || (numTest < 3)) ? 5 : 1) * (MAX_LOOP_TIME / repDist);
+                            maxEstTime = (((i == IDX_BASELINE) || (numTest < 3)) ? 3 : 1) * (MAX_LOOP_TIME / repDist);
 
                             // sample 10x times the distribution
                             for (d = 0; d < repDist; d++) {
@@ -218,11 +225,14 @@ public final class BentleyBasher {
                                 // Backup Sorter stats:
                                 statSorterRef.copy(statSorter);
 
+                                timeLimit = 0;
+
                                 for (loopReps = lreps, statReps = reps, l = 0;;) {
                                     statDist = statDists[d];
                                     statDist.reset();
 
                                     time = 0l;
+                                    total = 0;
 
                                     for (e = statReps + skipReps; e >= 0; e--) {
                                         // reduce variance on very small arrays (use more repeats):
@@ -233,6 +243,8 @@ public final class BentleyBasher {
                                         for (r = loopReps; r >= 0; r--) {
                                             ArrayUtils.clone(proto, test);
                                             sorter.sort(test);
+                                            // always consume test array
+                                            total += test[0];
                                         } // hot timing loop
 
                                         time = System.nanoTime() - start;
@@ -256,6 +268,7 @@ public final class BentleyBasher {
                                     }
 
                                     if (REPORT_DEBUG_ESTIMATOR) {
+                                        out.print(">> ");
                                         out.print(testHeader);
                                         out.print('\t');
                                         out.print(sorter);
@@ -280,6 +293,8 @@ public final class BentleyBasher {
                                     }
 
                                     if (++l > maxAdjSteps) {
+                                        System.err.println("Too many loop adjustments for test ["
+                                                + testHeader + " " + sorter + "] : " + round(df2, statDist.rawErrorPercent()) + " %");
                                         break;
                                     }
 
@@ -314,26 +329,52 @@ public final class BentleyBasher {
                                     }
                                     newTotReps = Math.min(5 * totReps, newTotReps);
 
-                                    // check for long test duration:
-                                    estTime = (long) Math.ceil(avg * newTotReps);
-
+                                    // may exceed time limit
                                     statReps = Math.max(REP_MIN, (int) (newTotReps / loopReps));
 
+                                    // check for long test duration:
+                                    estTime = (long) Math.ceil(avg * statReps * loopReps);
+
                                     if (REPORT_DEBUG_ESTIMATOR) {
-                                        out.println("! Loop " + l + " [tot: " + totReps + "] : " + round(df2, statDist.rawErrorPercent()) + " %"
+                                        out.print("! Loop " + l + " [tot: " + totReps + "] : " + round(df2, statDist.rawErrorPercent()) + " %"
                                                 + " => try sr: " + statReps + " lr: " + loopReps
                                                 + " tot: " + newTotReps + " estTime: " + round(df6, 1E-6 * estTime) + " ms");
                                     }
 
                                     if (estTime > maxEstTime) {
-                                        System.err.println("Too long loop: " + round(df2, 1E-6 * estTime) + " ms for test ["
-                                                + testHeader + " " + sorter + "] : " + round(df2, statDist.rawErrorPercent()) + " %");
-                                        break;
+                                        // try until maxAdjSteps ...
+                                        if (false && (++timeLimit >= 3)) {
+                                            if (REPORT_DEBUG_ESTIMATOR) {
+                                                out.println(" !! Time-Limit => stop auto-tune");
+                                            }
+                                            System.err.println("Too long loop: " + round(df2, 1E-6 * estTime) + " ms for test ["
+                                                    + testHeader + " " + sorter + "] : " + round(df2, statDist.rawErrorPercent()) + " %");
+                                            break;
+                                        }
+
+                                        // adjust reps to time limit:
+                                        newTotReps = (long) Math.ceil(maxEstTime / avg);
+
+                                        statReps = Math.max(REP_MIN, (int) (newTotReps / loopReps));
+
+                                        estTime = (long) Math.ceil(avg * statReps * loopReps);
+
+                                        if (REPORT_DEBUG_ESTIMATOR) {
+                                            out.print(" !! Time-Limit => try sr: " + statReps + " lr: " + loopReps
+                                                    + " tot: " + newTotReps + " estTime: " + round(df6, 1E-6 * estTime) + " ms");
+                                        }
+                                    }
+                                    if (REPORT_DEBUG_ESTIMATOR) {
+                                        out.println();
                                     }
 
                                     // Restore Sorter stats to previous state:
                                     statSorter.copy(statSorterRef);
 
+                                    // cleanup again
+                                    if (!warmup) {
+                                        cleanup();
+                                    }
                                 } // inner-loop (timing)
 
                                 if (!sorter.skipCheck()) {
@@ -449,6 +490,9 @@ public final class BentleyBasher {
                 } // tweaker
             } // sub-size
         } // size
+
+        out.println("total: " + total);
+
         return loopCount / sorters.length;
     }
 
@@ -497,7 +541,7 @@ public final class BentleyBasher {
         System.runFinalization();
         System.gc();
 
-        // pause for 100 ms :
+        // pause for few ms :
         try {
             Thread.sleep(GC_LATENCY);
         } catch (InterruptedException ie) {

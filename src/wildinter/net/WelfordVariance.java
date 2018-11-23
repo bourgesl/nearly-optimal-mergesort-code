@@ -96,7 +96,7 @@ public final class WelfordVariance {
         if (nSamples == 0L) {
             return 1000;
         }
-        return (int) Math.round(rawErrorPercent());
+        return (int) Math.ceil(rawErrorPercent());
     }
 
     public double rawErrorPercent() {

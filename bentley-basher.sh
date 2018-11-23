@@ -15,7 +15,8 @@ CORE=3
 # -XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation
 # -XX:-TieredCompilation
 # -verbose:gc
-JAVA_OPTS="-Xms1g -Xmx1g"
+# -XX:+PrintGCApplicationStoppedTime
+JAVA_OPTS="-Xms1g -Xmx1g -XX:+UnlockDiagnosticVMOptions -XX:GuaranteedSafepointInterval=300000"
 echo "JAVA_OPTS: $JAVA_OPTS"
 
 echo "Running Bentley basher"
