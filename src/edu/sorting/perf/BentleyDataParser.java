@@ -1,46 +1,42 @@
 package edu.sorting.perf;
 
-import static edu.sorting.perf.BentleyBasher.IDX_REF;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import java.util.StringTokenizer;
-import wildinter.net.WelfordVariance;
 
 /**
- * @author Vladimir Yaroslavskiy
+ * BentleyBasher data parser to convert into ASCII tables in std out:
+ * #columns
+ * row values (ignore low confidence)
+ * @author Laurent Bourges
  */
-public final class Statistic {
+public final class BentleyDataParser {
 
     private final static boolean IGNORE_LOW_CONFIDENCE = true;
 
-    private final static double MIN_PREC = 1e-6; // 1ns expressed in ms
-
-    private final static String HEADER_STATS = "--- STATS ---";
-
-    private final static DecimalFormat df4;
+    private final static DecimalFormat df;
 
     static {
         // Set the default locale to en-US locale (for Numerical Fields "." ",")
         Locale.setDefault(Locale.US);
-        df4 = new DecimalFormat("0.0000");
+        df = new DecimalFormat("0.0000000"); // 7 digits
     }
 
     public static void main(String[] args) {
         if (args.length == 0) {
             args = new String[]{"/home/bourgesl/libs/nearly-optimal-mergesort-code/basher-results.out"};
         }
-
-        new Statistic().processFile(args[0]);
+        System.err.println("Parsing " + args[0] + " ...");
+        new BentleyDataParser().processFile(args[0]);
     }
 
     private void processFile(String file) {
@@ -48,114 +44,25 @@ public final class Statistic {
         final int size = lines.size();
 
         if (size > 0) {
-            final IntSorter[] sorters = IntSorter.values();
-            myLen = new int[size];
-            lengths.clear();
-            myKey = new String[size];
-            keys.clear();
-            myTime = new double[sorters.length][size];
-            myWinners = new int[sorters.length];
+            // parse columns
+            final List<String> columns = processHeader(lines.get(0));
 
-            for (int i = 0; i < size; i++) {
-                processLine(sorters, lines.get(i), i);
-            }
-            doAfter();
-        }
-    }
-
-    private void doAfter() {
-        // TODO: use arguments for selected sorters, (sorter reference), warmup, sizes ... at least
-
-        // warning: indexes are only valid for specific runs (IntSorter class change may affect ordinal values)
-        doStats(IntSorter.DPQ_11.ordinal(), IntSorter.DPQ_18_11_21.ordinal());
-        doStats(IntSorter.DPQ_11.ordinal(), IntSorter.DPQ_18_11P.ordinal());
-        doStats(IntSorter.DPQ_18_11P.ordinal(), IntSorter.DPQ_18_11_21.ordinal());
-        doStats(IntSorter.DPQ_18_11_21.ordinal(), IntSorter.RADIX.ordinal());
-    }
-
-    private void doStats(final int idxRef, final int idxTest) {
-        final IntSorter[] sorters = IntSorter.values();
-        System.out.println();
-        System.out.println(HEADER_STATS);
-        System.out.println("Comparing sorters " + sorters[idxRef] + " vs " + sorters[idxTest]);
-        System.out.println("winners  : " + myWinners[idxRef] + " / " + myWinners[idxTest]);
-        System.out.println("avg   (%): " + round(df4, mult(idxRef, idxTest) * 100.0));
-        System.out.println("stats (%): " + ratioStats(idxRef, idxTest));
-
-        System.out.println("\n\nStats per keys:");
-        for (String key : keys) {
-            System.out.println(key + " stats (%): " + ratioStats(idxRef, idxTest, key));
-        }
-        System.out.println("\n\nstats per keys and sizes:");
-        for (Integer len : lengths) {
-            System.out.println("- size = " + len);
-            System.out.println("stats (%): " + ratioStats(idxRef, idxTest, null, len));
-
-            for (String key : keys) {
-                System.out.println(key + " stats (%): " + ratioStats(idxRef, idxTest, key, len));
-            }
-            System.out.println("\n");
-        }
-    }
-
-    private double mult(final int idxRef, final int idxTest) {
-        double mult = 1.0d;
-        final int length = myTime[idxRef].length;
-
-        int count = 0;
-        for (int i = 0; i < length; i++) {
-            if (myTime[idxRef][i] > MIN_PREC && myTime[idxTest][i] > MIN_PREC) {
-                count++;
-                if (Math.pow(mult * (myTime[idxRef][i] / myTime[idxTest][i]), 1.0 / (count + 1)) == 0.0) {
-                    break;
-                }
-                mult *= (myTime[idxRef][i] / myTime[idxTest][i]);
+            // parse lines:
+            for (int i = 1; i < size; i++) {
+                processLine(columns, lines.get(i));
             }
         }
-        if (count < 2) {
-            return Double.NaN;
-        }
-        return Math.pow(mult, 1.0 / count);
-    }
-
-    private WelfordVariance ratioStats(final int idxRef, final int idxTest) {
-        return ratioStats(idxRef, idxTest, null);
-    }
-
-    private WelfordVariance ratioStats(final int idxRef, final int idxTest,
-                                       final String selectedKey) {
-        return ratioStats(idxRef, idxTest, selectedKey, null);
-    }
-
-    private WelfordVariance ratioStats(final int idxRef, final int idxTest,
-                                       final String selectedKey, final Integer selectedLen) {
-
-        final WelfordVariance samples = new WelfordVariance();
-        final int length = myTime[idxRef].length;
-
-        for (int i = 0; i < length; i++) {
-            if (selectedKey != null && !selectedKey.equals(myKey[i])) {
-                continue;
-            }
-            if (selectedLen != null && selectedLen.intValue() != myLen[i]) {
-                continue;
-            }
-            if (myTime[idxRef][i] > MIN_PREC && myTime[idxTest][i] > MIN_PREC) {
-                samples.add(100.0 * myTime[idxRef][i] / myTime[idxTest][i]);
-            } else {
-                System.err.println("Ignore: " + myTime[idxRef][i] + " and " + myTime[idxTest][i]);
-            }
-        }
-        return samples;
     }
 
     private List<String> getLines(String file) {
-        List<String> lines = new ArrayList<String>();
+        final List<String> lines = new ArrayList<String>();
         String line;
 
         try {
             InputStream is = new FileInputStream(new File(file));
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+
+            boolean cols = false;
 
             while ((line = reader.readLine()) != null) {
                 if (line.contains("SAWTOTH")
@@ -163,13 +70,18 @@ public final class Statistic {
                         || line.contains("STAGGER")
                         || line.contains("PLATEAU")
                         || line.contains("SHUFFLE")) {
-                    lines.add(line/*.replace(',', '.')*/);
+                    lines.add(line);
+                } else if (line.startsWith(BentleyBasher.HEADER_COLUMNS)) {
+                    if (cols) {
+                        throw new IllegalStateException("Multiple column header found: '" + line + "' !");
+                    } else {
+                        cols = true;
+                    }
+                    lines.add(0, line.substring(BentleyBasher.HEADER_COLUMNS.length()));
                 }
-                if (line.startsWith(HEADER_STATS)) {
-                    System.err.println("STATS already processed; skipping");
-                    lines.clear();
-                    break;
-                }
+            }
+            if (!cols) {
+                throw new IllegalStateException("Missing column header '" + BentleyBasher.HEADER_COLUMNS + "' !");
             }
             is.close();
         } catch (IOException e) {
@@ -178,29 +90,67 @@ public final class Statistic {
         return lines;
     }
 
-    private void processLine(final IntSorter[] sorters, String line, int i) {
-        StringTokenizer stk = new StringTokenizer(line, " \t");
-        if (stk.countTokens() < 4 + sorters.length) {
-            throw new IllegalStateException("Invalid line: '" + line + "'");
+    private List<String> processHeader(String line) {
+        final StringTokenizer stk = new StringTokenizer(line, " \t");
+
+        final List<String> columns = new ArrayList<String>();
+
+        for (int i = 0; stk.hasMoreTokens(); i++) {
+            String col = stk.nextToken();
+            if (col.startsWith("[")) {
+                // Ignore last col '[A vs B]'
+                break;
+            }
+            columns.add(col);
         }
-        String value;
+
+        // Print header:
+        final PrintStream out = System.out;
+        out.print("# ");
+        for (String col : columns) {
+            out.print(col);
+            out.print('\t');
+        }
+        out.println();
+
+        System.err.println("Columns found: " + columns);
+
+        return columns;
+    }
+
+    private void processLine(final List<String> columns, String line) {
+        final PrintStream out = System.out;
+
+        final int colLen = columns.size();
+
+        final StringTokenizer stk = new StringTokenizer(line, " \t");
+
+        if (stk.countTokens() < colLen) {
+            System.err.println("Invalid line: '" + line + "'");
+            return;
+        }
 //        System.out.println("-- '" + line + "'");
-        value = stk.nextToken(); // length
-        myLen[i] = Integer.parseInt(value);
 
-        lengths.add(Integer.valueOf(myLen[i]));
+        // header first columns: "Length Sub-size  Builder Tweaker"
+        String value;
+        value = stk.nextToken(); // Length (int)
+        out.print(value);
+        out.print("\t");
 
-        value = stk.nextToken(); // sub-size
-        value = stk.nextToken(); // type
-        myKey[i] = value;
+        value = stk.nextToken(); // Sub-size (int)
+        out.print(value);
+        out.print("\t");
 
-        value = stk.nextToken(); // variant
-        myKey[i] += ":" + value;
+        value = stk.nextToken(); // Builder (str)
+        out.print("\"");
+        out.print(value);
+        out.print(":");
+        value = stk.nextToken(); // Tweaker (str)
+        out.print(value);
+        out.print("\"\t");
 
-        keys.add(myKey[i]);
-
-// Data parsing:
-        for (int j = 0; j < sorters.length; j++) {
+        // Data parsing:
+        for (int j = 0, last = colLen - 4; j < last; j++) {
             value = stk.nextToken();
             if (value.contains("[")) {
                 // skip [...] distribution flags
@@ -212,68 +162,39 @@ public final class Statistic {
 
                 value = stk.nextToken();
             }
+            double v = Double.NaN;
             if (value.startsWith("$") || value.startsWith("!")) {
                 if (IGNORE_LOW_CONFIDENCE) {
-                    myTime[j][i] = -0.0d;
-                } else {
-                    value = stk.nextToken();
+                    System.err.println("Flag '" + value + "'");
+                }
+                value = stk.nextToken();
+                if (IGNORE_LOW_CONFIDENCE) {
+                    System.err.println("skip flagged value '" + value + "'");
+                    value = null;
                 }
             }
-
-            myTime[j][i] = getDouble(value);
-//System.out.print("Line " + i + ": " + value + " " + myTime[j][i]);
-        }
-
-        int winnerIndex = getWinner(sorters.length, i);
-        myWinners[winnerIndex]++;
-    }
-
-    private int getWinner(int nSorters, int row) {
-        int winnerIndex = 0;
-        double winner = myTime[1][row];
-
-        for (int k = 2; k < nSorters; k++) {
-            if (winner > MIN_PREC && myTime[k][row] > MIN_PREC && myTime[k][row] < winner) {
-                winnerIndex = k;
-                winner = myTime[k][row];
+            if (value != null) {
+                v = getDouble(value);
             }
+
+            if (Double.isNaN(v)) {
+                out.print("NaN");
+            } else {
+                out.print(df.format(v));
+            }
+            out.print("\t");
         }
-        return winnerIndex;
+        out.println();
     }
 
-    private double getDouble(String value) {
+    private double getDouble(final String value) {
         try {
             return Double.parseDouble(value);
         } catch (NumberFormatException nfe) {
             System.err.println("Invalid double '" + value + "'");
             nfe.printStackTrace();
-            return -0.0d;
+            return Double.NaN;
         }
     }
 
-    private static String round(DecimalFormat df, double value) {
-        if (Double.isNaN(value)) {
-            return "NaN";
-        }
-        String s = df.format(value);
-        for (int i = s.length(); i < 10; ++i) {
-            s += " ";
-        }
-        /*        
-        String s = String.valueOf(Math.round(value * 10000.0) / 10000.0);
-        int k = s.length() - s.indexOf(".");
-
-        for (int i = k; i <= 4; ++i) {
-            s += "0";
-        }
-         */
-        return s;
-    }
-
-    private final Set<Integer> lengths = new LinkedHashSet<Integer>();
-    private int[] myLen;
-    private final Set<String> keys = new LinkedHashSet<String>();
-    private String[] myKey;
-    private double[][] myTime;
-    private int[] myWinners;
 }
