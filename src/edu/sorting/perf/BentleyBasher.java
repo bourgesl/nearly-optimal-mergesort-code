@@ -21,17 +21,18 @@ public final class BentleyBasher {
     // Very large array lengths:
 //    private static final int[] LENGTHS = {1000 * 1000, 10 * 1000 * 1000};
 
-    private static final long MAX_LOOP_TIME = 10 * SEC_IN_NS; // 10s max per test (small)
+    private static final long MAX_LOOP_TIME = 2 * SEC_IN_NS; // 2s max per test (small)
 //    private static final long MAX_LOOP_TIME = 30 * SEC_IN_NS; // 30s max per test (large)    
 
-    private static final int ERR_DIST_TH = 2; // 2% per timing loop
+    private static final int ERR_DIST_TH = 2; // 2% max per timing loop
+    private static final int CONFIDENCE_AVG = 4; // 4 sigma confidence on mean estimation
 
     private final static boolean USE_RMS = true; // false means use MIN(TIME)
 
     private final static boolean DO_WARMUP = true;
 
     private final static boolean REPORT_VERBOSE = false;
-    private final static boolean REPORT_DEBUG_ESTIMATOR = false;
+    private final static boolean REPORT_DEBUG_ESTIMATOR = REPORT_VERBOSE && false;
 
     private final static boolean REPORT_TIME_ERR = false;
     private final static boolean SHOW_DIST_FLAGS = false;
@@ -52,15 +53,12 @@ public final class BentleyBasher {
 
     private final static long MIN_NS = 50; // latency in ns
 
-    // threshold to do more iterations (inner-loop) for small arrays in order to reduce variance:
-    private static final int SMALL_TH = 10000;
-
-    private static final int REP_MIN = 50;
+    private static final int REP_MIN = 90; // to gather enough statistics
     private static final int REP_DISTRIB = 10;
     private static final int REP_SKIP = 10;
     private static final int ADJ_MAX = 10;
 
-    private static final long MIN_LOOP_TIME = SEC_IN_NS / 100; // 10ms
+    private static final long MIN_LOOP_TIME = SEC_IN_NS / 1000; // 1ms
 
     private static final int ERR_WARNING = 25; // 25% warning on all distributions
 
@@ -91,7 +89,8 @@ public final class BentleyBasher {
         } else {
             System.out.println("Timings are given in milli-seconds (min time)");
         }
-        System.out.println("\nTimings are estimated using auto-tune to satisfy the maximal uncertainty of " + ERR_DIST_TH + ".0 %.");
+        System.out.println("\nTimings are estimated using auto-tune to satisfy the maximal uncertainty of " + ERR_DIST_TH + ".0 % "
+                + "with max test duration = " + round(df2, 1E-6 * MAX_LOOP_TIME) + " ms.");
 
         // TODO: estimate uncertainty on ratios: (100 +/- err) / (100 +- err) non linear
         System.out.println("\n");
@@ -143,14 +142,19 @@ public final class BentleyBasher {
             statDists[d] = new WelfordVariance();
         }
 
+        // Allocate many working arrays to circumvent any alignment issue (int[] are aligned to 8/16/24/32):
+        final int[][] inputs = new int[repDist][];
+        final int[][] protos = new int[repDist][];
+        final int[][] tests = new int[repDist][];
+
         int loopCount = 0;
         int numTest = 0;
 
         boolean noBL;
-        double timeBL = 0.0;
-        double ratio, avg;
+        double timeBL;
+        double ratio, avg, prevAvg, confidence;
         long totReps, newTotReps;
-        int timeLimit = 0, total = 0;
+        int total = 0;
         String testHeader = "";
 
         for (int n : realLengths) {
@@ -162,23 +166,33 @@ public final class BentleyBasher {
                 out.println("Warmup length: " + n + " reps: " + reps);
             }
 //            out.print("reps: " + reps + "\n");
-            final int lreps = 5 + ((n <= SMALL_TH) ? (int) Math.ceil(4.0 * SMALL_TH / n) : 0);
+
+            int lreps = 9;
             if (lreps > 1) {
                 reps = Math.max(1, reps / lreps);
             }
+//            out.println("lreps: " + lreps + " with reps: " + reps + "\n");
 
             // adjust reps to sample properly distributions
-            reps = Math.max((warmup) ? 1 : REP_MIN, reps / repDist);
-
+            if (warmup) {
+                reps = Math.max(1, reps / repDist);
+            } else {
+                if (reps < REP_MIN) {
+                    lreps = reps * lreps / REP_MIN;
+                    reps = REP_MIN;
+                }
+            }
             out.println("lreps: " + lreps + " with reps: " + reps + "\n");
 
             final int skipReps = (warmup) ? 0 : REP_SKIP;
             final int maxAdjSteps = (warmup) ? 0 : ADJ_MAX;
 
-            // Allocate working array:
-            final int[] input = new int[n];
-            final int[] proto = new int[n];
-            final int[] test = new int[n];
+            // Allocate many working arrays to circumvent any alignment issue (int[] are aligned to 8/16/24/32):
+            for (int d = 0; d < repDist; d++) {
+                inputs[d] = new int[n];
+                protos[d] = new int[n];
+                tests[d] = new int[n];
+            }
 
             // adjust tweak increment depending on array size
             final int tweakInc = (n > 100000) ? 16 : TWEAK_INC;
@@ -211,11 +225,24 @@ public final class BentleyBasher {
                             // Reset tweaker to have sample initial conditions (seed):
                             ParamIntArrayBuilder.reset();
 
-                            // adjust max estimated time per distribution except for baseline and first 3 tests:
-                            maxEstTime = (((i == IDX_BASELINE) || (numTest < 3)) ? 3 : 1) * (MAX_LOOP_TIME / repDist);
+                            // adjust max estimated time per distribution except for baseline and first 2 tests:
+                            maxEstTime = (((i == IDX_BASELINE) || (numTest < 2)) ? 3 : 1) * (MAX_LOOP_TIME / repDist);
+
+                            // previous average should be applicable among distributions (for same test):
+                            prevAvg = 0.0;
+                            confidence = 0.0;
+
+                            // Set loops at initial conditions:
+                            loopReps = lreps;
+                            statReps = reps;
 
                             // sample 10x times the distribution
                             for (d = 0; d < repDist; d++) {
+                                // Use many working arrays (1 per distribution):
+                                final int[] input = inputs[d];
+                                final int[] proto = protos[d];
+                                final int[] test = tests[d];
+
                                 // Get new distribution sample:
                                 iab.build(input, m);
 
@@ -225,9 +252,7 @@ public final class BentleyBasher {
                                 // Backup Sorter stats:
                                 statSorterRef.copy(statSorter);
 
-                                timeLimit = 0;
-
-                                for (loopReps = lreps, statReps = reps, l = 0;;) {
+                                for (l = 0;;) {
                                     statDist = statDists[d];
                                     statDist.reset();
 
@@ -273,6 +298,8 @@ public final class BentleyBasher {
                                         out.print('\t');
                                         out.print(sorter);
                                         out.print('\t');
+                                        out.print(round(df6, 1E-6 * statDist.rms())); // ms
+                                        out.print('\t');
                                         out.print(round(df6, 1E-6 * statDist.mean())); // ms
                                         out.print('\t');
                                         out.print(round(df6, 1E-6 * statDist.stddev()));
@@ -285,21 +312,28 @@ public final class BentleyBasher {
                                         out.print('\t');
                                     }
 
-                                    if (statDist.errorPercent() <= ERR_DIST_TH) {
-                                        if (REPORT_DEBUG_ESTIMATOR) {
-                                            out.println("Loop " + l + ": " + round(df2, statDist.rawErrorPercent()) + " % (OK)");
+                                    // test mean time convergence ie loop stability on statDist.mean()
+                                    avg = statDist.mean();
+
+                                    if ((prevAvg != 0.0) && (statDist.errorPercent() <= ERR_DIST_TH)) {
+                                        confidence = Math.abs(prevAvg - avg) / statDist.stddev();
+
+                                        // confidence at 3 sigma:
+                                        if (confidence <= CONFIDENCE_AVG) {
+                                            if (REPORT_DEBUG_ESTIMATOR) {
+                                                out.println("Loop " + l + ": " + round(df2, statDist.rawErrorPercent()) + " % "
+                                                        + "Confidence: " + round(df2, confidence) + " σ (OK)");
+                                            }
+                                            break;
                                         }
-                                        break;
                                     }
 
                                     if (++l > maxAdjSteps) {
                                         System.err.println("Too many loop adjustments for test ["
-                                                + testHeader + " " + sorter + "] : " + round(df2, statDist.rawErrorPercent()) + " %");
+                                                + testHeader + " " + sorter + "] : " + round(df2, statDist.rawErrorPercent()) + " % "
+                                                + "Confidence: " + round(df2, confidence) + " σ");
                                         break;
                                     }
-
-                                    // TODO: test mean time convergence ie loop stability on statDist.mean()
-                                    avg = statDist.mean();
 
                                     totReps = ((long) statReps) * loopReps; // may overflow ?
 
@@ -307,16 +341,17 @@ public final class BentleyBasher {
                                         ratio = 1.1 * MIN_LOOP_TIME / avg; // 10% more (ns)
 
                                         if (REPORT_DEBUG_ESTIMATOR) {
-                                            System.out.print("ratio time: " + round(df2, ratio) + "\t");
+                                            System.out.print("ratio time: " + round(df2, ratio) + " ");
                                         }
 
                                         // adjust loopReps:
-                                        newLoopReps = (int) Math.ceil(ratio * loopReps);
+                                        newLoopReps = (int) Math.ceil(ratio);
 
-                                        if (newLoopReps < 0) {
-                                            newLoopReps = Integer.MAX_VALUE; // overflow
+                                        // avoid too big step
+                                        loopReps = Math.min(newLoopReps, 1000 * loopReps);
+                                        if (REPORT_DEBUG_ESTIMATOR) {
+                                            System.out.print("loopReps: " + loopReps + " ");
                                         }
-                                        loopReps = Math.min(100 * loopReps, newLoopReps); // avoid too big step
                                     }
 
                                     // adjust all reps proportionnally to square of the error scale
@@ -327,7 +362,8 @@ public final class BentleyBasher {
                                     if (newTotReps < 0) {
                                         newTotReps = Integer.MAX_VALUE; // overflow
                                     }
-                                    newTotReps = Math.min(5 * totReps, newTotReps);
+                                    // avoid too big or too small step
+                                    newTotReps = Math.min(newTotReps, (ratio > 1.0) ? 10 * totReps : totReps / 10);
 
                                     // may exceed time limit
                                     statReps = Math.max(REP_MIN, (int) (newTotReps / loopReps));
@@ -342,21 +378,14 @@ public final class BentleyBasher {
                                     }
 
                                     if (estTime > maxEstTime) {
-                                        // try until maxAdjSteps ...
-                                        if (false && (++timeLimit >= 3)) {
-                                            if (REPORT_DEBUG_ESTIMATOR) {
-                                                out.println(" !! Time-Limit => stop auto-tune");
-                                            }
-                                            System.err.println("Too long loop: " + round(df2, 1E-6 * estTime) + " ms for test ["
-                                                    + testHeader + " " + sorter + "] : " + round(df2, statDist.rawErrorPercent()) + " %");
-                                            break;
-                                        }
-
                                         // adjust reps to time limit:
                                         newTotReps = (long) Math.ceil(maxEstTime / avg);
 
-                                        statReps = Math.max(REP_MIN, (int) (newTotReps / loopReps));
-
+                                        if (statReps == REP_MIN) {
+                                            loopReps = (int) (newTotReps / REP_MIN);
+                                        } else {
+                                            statReps = Math.max(REP_MIN, (int) (newTotReps / loopReps));
+                                        }
                                         estTime = (long) Math.ceil(avg * statReps * loopReps);
 
                                         if (REPORT_DEBUG_ESTIMATOR) {
@@ -375,6 +404,9 @@ public final class BentleyBasher {
                                     if (!warmup) {
                                         cleanup();
                                     }
+
+                                    prevAvg = avg;
+
                                 } // inner-loop (timing)
 
                                 if (!sorter.skipCheck()) {

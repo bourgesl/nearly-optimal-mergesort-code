@@ -847,7 +847,7 @@ public final class DualPivotQuicksort20181121 implements wildinter.net.mergesort
         }
     }
 
-    final class Sorter{
+    static final class Sorter {
         final int[] run;
         int[] b;
         boolean runInit;
@@ -866,5 +866,5 @@ public final class DualPivotQuicksort20181121 implements wildinter.net.mergesort
         }
     }
     
-    final class Merger{}
+    static final class Merger {}
 }
