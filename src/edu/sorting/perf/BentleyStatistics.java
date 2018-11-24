@@ -1,14 +1,8 @@
 package edu.sorting.perf;
 
-import static edu.sorting.perf.BentleyBasher.IDX_REF;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -44,11 +38,22 @@ public final class BentleyStatistics {
     }
 
     private void processFile(String file) {
-        final List<String> lines = getLines(file);
-        final int size = lines.size();
+        final List<String> lines = BentleyDataParser.getLines(file);
+        int size = lines.size();
 
-        if (size > 0) {
-            final IntSorter[] sorters = IntSorter.values();
+        if (size > 1) {
+            // parse columns
+            final List<String> columns = BentleyDataParser.processHeader(lines.remove(0));
+            size--;
+
+            // skip header first columns: "Length Sub-size  Builder Tweaker"
+            final int colLen = columns.size();
+            final IntSorter[] sorters = new IntSorter[colLen - 4];
+
+            for (int i = 0; i < sorters.length; i++) {
+                sorters[i] = IntSorter.valueOf(columns.get(i + 4));
+            }
+
             myLen = new int[size];
             lengths.clear();
             myKey = new String[size];
@@ -56,25 +61,52 @@ public final class BentleyStatistics {
             myTime = new double[sorters.length][size];
             myWinners = new int[sorters.length];
 
+            // parse lines:
             for (int i = 0; i < size; i++) {
-                processLine(sorters, lines.get(i), i);
+                if (!processLine(sorters, lines.get(i), i)) {
+                    break;
+                }
             }
-            doAfter();
+            doAfter(sorters);
         }
     }
 
-    private void doAfter() {
-        // TODO: use arguments for selected sorters, (sorter reference), warmup, sizes ... at least
-
-        // warning: indexes are only valid for specific runs (IntSorter class change may affect ordinal values)
-        doStats(IntSorter.DPQ_11.ordinal(), IntSorter.DPQ_18_11_21.ordinal());
-        doStats(IntSorter.DPQ_11.ordinal(), IntSorter.DPQ_18_11P.ordinal());
-        doStats(IntSorter.DPQ_18_11P.ordinal(), IntSorter.DPQ_18_11_21.ordinal());
-        doStats(IntSorter.DPQ_18_11_21.ordinal(), IntSorter.RADIX.ordinal());
+    private static int indexOf(final IntSorter[] sorters, final IntSorter sorter) {
+        for (int i = 0; i < sorters.length; i++) {
+            if (sorters[i] == sorter) {
+                return i;
+            }
+        }
+        System.err.println("Sorter[" + sorter + "] not found in data sorters: "
+                + Arrays.toString(sorters));
+        return -1;
     }
 
-    private void doStats(final int idxRef, final int idxTest) {
-        final IntSorter[] sorters = IntSorter.values();
+    private void doAfter(final IntSorter[] sorters) {
+        // TODO: use arguments for selected sorters, (sorter reference), warmup, sizes ... at least
+        System.out.println(HEADER_STATS);
+        System.out.println("Winners: ");
+
+        for (int i = 0; i < sorters.length; i++) {
+            // ignore BASELINE
+            if (sorters[i] != IntSorter.BASELINE) {
+                System.out.println(sorters[i] + " : " + myWinners[i]);
+            }
+        }
+
+        for (int i = 0; i < sorters.length; i++) {
+            // ignore BASELINE
+            if (sorters[i] != IntSorter.BASELINE) {
+                for (int j = i + 1; j < sorters.length; j++) {
+                    // ignore BASELINE
+                    doStats(sorters, i, j);
+                }
+            }
+        }
+        // doStats(sorters, indexOf(sorters, IntSorter.DPQ_11), indexOf(sorters, IntSorter.DPQ_18_11_21));
+    }
+
+    private void doStats(final IntSorter[] sorters, final int idxRef, final int idxTest) {
         System.out.println();
         System.out.println(HEADER_STATS);
         System.out.println("Comparing sorters " + sorters[idxRef] + " vs " + sorters[idxTest]);
@@ -143,45 +175,17 @@ public final class BentleyStatistics {
             if (myTime[idxRef][i] > MIN_PREC && myTime[idxTest][i] > MIN_PREC) {
                 samples.add(100.0 * myTime[idxRef][i] / myTime[idxTest][i]);
             } else {
-                System.err.println("Ignore: " + myTime[idxRef][i] + " and " + myTime[idxTest][i]);
+//                System.err.println("Ignore: " + myTime[idxRef][i] + " and " + myTime[idxTest][i]);
             }
         }
         return samples;
     }
 
-    private List<String> getLines(String file) {
-        List<String> lines = new ArrayList<String>();
-        String line;
-
-        try {
-            InputStream is = new FileInputStream(new File(file));
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-
-            while ((line = reader.readLine()) != null) {
-                if (line.contains("SAWTOTH")
-                        || line.contains("_RANDOM")
-                        || line.contains("STAGGER")
-                        || line.contains("PLATEAU")
-                        || line.contains("SHUFFLE")) {
-                    lines.add(line/*.replace(',', '.')*/);
-                }
-                if (line.startsWith(HEADER_STATS)) {
-                    System.err.println("STATS already processed; skipping");
-                    lines.clear();
-                    break;
-                }
-            }
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return lines;
-    }
-
-    private void processLine(final IntSorter[] sorters, String line, int i) {
+    private boolean processLine(final IntSorter[] sorters, String line, int i) {
         StringTokenizer stk = new StringTokenizer(line, " \t");
         if (stk.countTokens() < 4 + sorters.length) {
-            throw new IllegalStateException("Invalid line: '" + line + "'");
+            System.err.println("Invalid line: '" + line + "'");
+            return false;
         }
         String value;
 //        System.out.println("-- '" + line + "'");
@@ -201,54 +205,32 @@ public final class BentleyStatistics {
 
 // Data parsing:
         for (int j = 0; j < sorters.length; j++) {
-            value = stk.nextToken();
-            if (value.contains("[")) {
-                // skip [...] distribution flags
-//                System.err.println("skip value '" + value + "'");
-                do {
-                    value = stk.nextToken();
-//                    System.err.println("skip value '" + value + "'");
-                } while (!value.contains("]"));
-
-                value = stk.nextToken();
-            }
-            if (value.startsWith("$") || value.startsWith("!")) {
-                if (IGNORE_LOW_CONFIDENCE) {
-                    myTime[j][i] = -0.0d;
-                } else {
-                    value = stk.nextToken();
-                }
-            }
-
-            myTime[j][i] = getDouble(value);
+            myTime[j][i] = BentleyDataParser.parseTime(stk);
 //System.out.print("Line " + i + ": " + value + " " + myTime[j][i]);
         }
 
-        int winnerIndex = getWinner(sorters.length, i);
-        myWinners[winnerIndex]++;
+        int winnerIndex = getWinner(sorters, i);
+        if (winnerIndex != -1) {
+            myWinners[winnerIndex]++;
+        }
+        return true;
     }
 
-    private int getWinner(int nSorters, int row) {
-        int winnerIndex = 0;
-        double winner = myTime[1][row];
+    private int getWinner(final IntSorter[] sorters, int row) {
+        int winnerIndex = -1;
+        double winner = Double.MAX_VALUE;
 
-        for (int k = 2; k < nSorters; k++) {
-            if (winner > MIN_PREC && myTime[k][row] > MIN_PREC && myTime[k][row] < winner) {
+        for (int k = 0; k < sorters.length; k++) {
+            // ignore BASELINE
+            if (sorters[k] != IntSorter.BASELINE
+                    && winner > MIN_PREC
+                    && myTime[k][row] > MIN_PREC
+                    && myTime[k][row] < winner) {
                 winnerIndex = k;
                 winner = myTime[k][row];
             }
         }
         return winnerIndex;
-    }
-
-    private double getDouble(String value) {
-        try {
-            return Double.parseDouble(value);
-        } catch (NumberFormatException nfe) {
-            System.err.println("Invalid double '" + value + "'");
-            nfe.printStackTrace();
-            return -0.0d;
-        }
     }
 
     private static String round(DecimalFormat df, double value) {

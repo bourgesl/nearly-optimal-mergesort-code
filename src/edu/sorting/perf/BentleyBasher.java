@@ -183,7 +183,7 @@ public final class BentleyBasher {
                 reps = Math.max(1, reps / repDist);
             } else {
                 if (reps < REP_MIN) {
-                    lreps = reps * lreps / REP_MIN;
+                    lreps = Math.max(1, reps * lreps / REP_MIN);
                     reps = REP_MIN;
                 }
             }
@@ -354,7 +354,7 @@ public final class BentleyBasher {
                                         newLoopReps = (int) Math.ceil(ratio);
 
                                         // avoid too big step
-                                        loopReps = Math.min(1, Math.min(newLoopReps, 1000 * loopReps));
+                                        loopReps = Math.max(1, Math.min(newLoopReps, 1000 * loopReps));
 
                                         if (REPORT_DEBUG_ESTIMATOR) {
                                             System.out.print("loopReps: " + loopReps + " ");
@@ -373,6 +373,14 @@ public final class BentleyBasher {
                                     newTotReps = Math.min(newTotReps, (ratio > 1.0) ? 10 * totReps : totReps / 10);
 
                                     // may exceed time limit
+
+// avoid / 0 (KILL ?)
+                                    if (loopReps == 0) {
+                                        loopReps = lreps;
+                                        System.err.print("! loopReps = 0 : Loop " + l + " [tot: " + totReps + "] : " + round(df2, statDist.rawErrorPercent()) 
+                                                + " % => try sr: " + statReps + " lr: " + loopReps
+                                                + " tot: " + newTotReps);
+                                    }
                                     statReps = Math.max(REP_MIN, (int) (newTotReps / loopReps));
 
                                     // check for long test duration:
@@ -389,7 +397,7 @@ public final class BentleyBasher {
                                         newTotReps = (long) Math.ceil(maxEstTime / avg);
 
                                         if (statReps == REP_MIN) {
-                                            loopReps = Math.min(1, (int) (newTotReps / REP_MIN));
+                                            loopReps = Math.max(1, (int) (newTotReps / REP_MIN));
                                         } else {
                                             statReps = Math.max(REP_MIN, (int) (newTotReps / loopReps));
                                         }

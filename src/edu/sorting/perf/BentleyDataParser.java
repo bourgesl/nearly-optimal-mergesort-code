@@ -43,9 +43,20 @@ public final class BentleyDataParser {
         final List<String> lines = getLines(file);
         final int size = lines.size();
 
-        if (size > 0) {
+        if (size > 1) {
             // parse columns
             final List<String> columns = processHeader(lines.get(0));
+
+            // Print header:
+            final PrintStream out = System.out;
+            out.print("# ");
+            for (String col : columns) {
+                out.print(col);
+                out.print('\t');
+            }
+            out.println();
+
+            System.err.println("Columns found: " + columns);
 
             // parse lines:
             for (int i = 1; i < size; i++) {
@@ -54,7 +65,7 @@ public final class BentleyDataParser {
         }
     }
 
-    private List<String> getLines(String file) {
+    static List<String> getLines(String file) {
         final List<String> lines = new ArrayList<String>();
         String line;
 
@@ -90,7 +101,7 @@ public final class BentleyDataParser {
         return lines;
     }
 
-    private List<String> processHeader(String line) {
+    static List<String> processHeader(String line) {
         final StringTokenizer stk = new StringTokenizer(line, " \t");
 
         final List<String> columns = new ArrayList<String>();
@@ -103,18 +114,6 @@ public final class BentleyDataParser {
             }
             columns.add(col);
         }
-
-        // Print header:
-        final PrintStream out = System.out;
-        out.print("# ");
-        for (String col : columns) {
-            out.print(col);
-            out.print('\t');
-        }
-        out.println();
-
-        System.err.println("Columns found: " + columns);
-
         return columns;
     }
 
@@ -151,32 +150,7 @@ public final class BentleyDataParser {
 
         // Data parsing:
         for (int j = 0, last = colLen - 4; j < last; j++) {
-            value = stk.nextToken();
-            if (value.contains("[")) {
-                // skip [...] distribution flags
-//                System.err.println("skip value '" + value + "'");
-                do {
-                    value = stk.nextToken();
-//                    System.err.println("skip value '" + value + "'");
-                } while (!value.contains("]"));
-
-                value = stk.nextToken();
-            }
-            double v = Double.NaN;
-            if (value.startsWith("$") || value.startsWith("!")) {
-                if (IGNORE_LOW_CONFIDENCE) {
-                    System.err.println("Flag '" + value + "'");
-                }
-                value = stk.nextToken();
-                if (IGNORE_LOW_CONFIDENCE) {
-                    System.err.println("skip flagged value '" + value + "'");
-                    value = null;
-                }
-            }
-            if (value != null) {
-                v = getDouble(value);
-            }
-
+            final double v = parseTime(stk);
             if (Double.isNaN(v)) {
                 out.print("NaN");
             } else {
@@ -187,7 +161,36 @@ public final class BentleyDataParser {
         out.println();
     }
 
-    private double getDouble(final String value) {
+    static double parseTime(final StringTokenizer stk) {
+        String value = stk.nextToken();
+        if (value.contains("[")) {
+            // skip [...] distribution flags
+//                System.err.println("skip value '" + value + "'");
+            do {
+                value = stk.nextToken();
+//                    System.err.println("skip value '" + value + "'");
+            } while (!value.contains("]"));
+
+            value = stk.nextToken();
+        }
+        double v = Double.NaN;
+        if (value.startsWith("$") || value.startsWith("!")) {
+            if (IGNORE_LOW_CONFIDENCE) {
+//                System.err.println("Flag '" + value + "'");
+            }
+            value = stk.nextToken();
+            if (IGNORE_LOW_CONFIDENCE) {
+//                System.err.println("skip flagged value '" + value + "'");
+                value = null;
+            }
+        }
+        if (value != null) {
+            v = getDouble(value);
+        }
+        return v;
+    }
+
+    private static double getDouble(final String value) {
         try {
             return Double.parseDouble(value);
         } catch (NumberFormatException nfe) {
