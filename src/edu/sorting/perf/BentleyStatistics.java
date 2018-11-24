@@ -114,11 +114,11 @@ public final class BentleyStatistics {
         System.out.println("avg   (%): " + round(df4, mult(idxRef, idxTest) * 100.0));
         System.out.println("stats (%): " + ratioStats(idxRef, idxTest));
 
-        System.out.println("\n\nStats per keys:");
+        System.out.println("\nStats per keys:");
         for (String key : keys) {
             System.out.println(key + " stats (%): " + ratioStats(idxRef, idxTest, key));
         }
-        System.out.println("\n\nstats per keys and sizes:");
+        System.out.println("\nstats per keys and sizes:");
         for (Integer len : lengths) {
             System.out.println("- size = " + len);
             System.out.println("stats (%): " + ratioStats(idxRef, idxTest, null, len));
