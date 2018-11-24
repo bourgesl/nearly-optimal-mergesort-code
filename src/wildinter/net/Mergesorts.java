@@ -249,10 +249,10 @@ public class Mergesorts {
                     }
                 }
                 if (MergesAndRuns.COUNT_MOVE_COSTS) {
-                    System.out.println("avg-ms=" + (float) (samples.mean()) + "(+/- " + samples.errorPercent() + " %),\t algo=" + algoName
+                    System.out.println("avg-ms=" + (float) (samples.mean()) + "(+/- " + samples.rawErrorPercent() + " %),\t algo=" + algoName
                             + ", n=" + size + "     (" + total + ")\t" + samples + "\tcost: " + samplesCost);
                 } else {
-                    System.out.println("avg-ms=" + (float) (samples.mean()) + "(+/- " + samples.errorPercent() + " %),\t algo=" + algoName
+                    System.out.println("avg-ms=" + (float) (samples.mean()) + "(+/- " + samples.rawErrorPercent() + " %),\t algo=" + algoName
                             + ", n=" + size + "     (" + total + ")\t" + samples);
                 }
             }

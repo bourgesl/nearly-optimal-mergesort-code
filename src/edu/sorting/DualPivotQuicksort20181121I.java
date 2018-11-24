@@ -49,14 +49,14 @@ import java.util.Arrays; // TODO
  *
  * @since 1.7 * 12
  */
-public final class DualPivotQuicksort20181121 implements wildinter.net.mergesort.Sorter {
+public final class DualPivotQuicksort20181121I implements wildinter.net.mergesort.Sorter {
 
-    public final static wildinter.net.mergesort.Sorter INSTANCE = new DualPivotQuicksort20181121();
+    public final static wildinter.net.mergesort.Sorter INSTANCE = new DualPivotQuicksort20181121I();
 
     /**
      * Prevents instantiation.
      */
-    private DualPivotQuicksort20181121() {
+    private DualPivotQuicksort20181121I() {
     }
 
     // avoid alloc
@@ -87,17 +87,12 @@ public final class DualPivotQuicksort20181121 implements wildinter.net.mergesort
     /**
      * Max array size to use insertion sort.
      */
-    private static final int MAX_INSERTION_SORT_SIZE = 26;
+    private static final int MAX_INSERTION_SORT_SIZE = 33; // was 26
 
     /**
      * Max array size to use pair insertion sort.
      */
     private static final int MAX_PAIR_INSERTION_SORT_SIZE = 114;
-
-    /**
-     * Max array size to use heap sort for the leftmost part.
-     */
-    private static final int MAX_HEAP_SORT_SIZE = 69;
 
     /**
      * Min array size for performing sorting in parallel.
@@ -210,7 +205,8 @@ public final class DualPivotQuicksort20181121 implements wildinter.net.mergesort
              * Switch to heap sort on the leftmost part or // TODO
              * if the execution time is becoming quadratic.
              */
-            if (size < 69) {
+            // LBO: adjust threshold (33)
+            if (size < MAX_INSERTION_SORT_SIZE) {
                 insertionSort(a, low, high);
                 return;
             }
@@ -445,20 +441,21 @@ public final class DualPivotQuicksort20181121 implements wildinter.net.mergesort
 
     // todo javadoc, todo byte
     private static void insertionSort(int[] a, int low, int high) {
-        // 2018.11.21 variant
-        for (int i, k = low; ++k < high; ) {
-            int ak = a[i = k];
-
-            if (ak < a[low]) {
-                while (--i >= low) {
-                    a[i + 1] = a[i];
-                }
-            } else {
-                while (ak < a[--i]) {
-                    a[i + 1] = a[i];
+        // 2011 variant
+        /*
+        * Traditional (without sentinel) insertion sort,
+        * optimized for server VM, is used in case of
+        * the leftmost part.
+         */
+        for (int i = low + 1, j = low; i < high; j = i++) {
+            int ai = a[i];
+            while (ai < a[j]) {
+                a[j + 1] = a[j];
+                if (j-- == low) {
+                    break;
                 }
             }
-            a[i + 1] = ak;
+            a[j + 1] = ai;
         }
     }
 

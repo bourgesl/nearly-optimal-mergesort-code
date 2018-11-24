@@ -2,17 +2,17 @@ package edu.sorting.perf;
 
 import edu.sorting.DualPivotQuickSort2011;
 import edu.sorting.DualPivotQuicksort201802Ext;
-import edu.sorting.DualPivotQuicksort201811;
 import edu.sorting.DualPivotQuicksort20181121;
 import edu.sorting.DualPivotQuicksort201811211Ext;
+import edu.sorting.DualPivotQuicksort20181121I;
 import edu.sorting.DualPivotQuicksort201811P;
 import edu.sorting.RadixSort;
 import org.marlin.MarlinMergeSort;
+import org.marlin.MarlinSort;
 
 /**
  * @author Jon Bentley
  */
-
 public enum IntSorter {
     /* baseline must stay at index 0 (first) */
     BASELINE {
@@ -41,16 +41,24 @@ public enum IntSorter {
             DualPivotQuickSort2011.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
+    /*    
     DPQ_18_11 {
         @Override
         public void sort(int[] a) {
             DualPivotQuicksort201811.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
+     */
     DPQ_18_11_21 {
         @Override
         public void sort(int[] a) {
             DualPivotQuicksort20181121.INSTANCE.sort(a, 0, a.length - 1);
+        }
+    },
+    DPQ_18_11I {
+        @Override
+        public void sort(int[] a) {
+            DualPivotQuicksort20181121I.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
     DPQ_18_11P {
@@ -72,13 +80,13 @@ public enum IntSorter {
         public void sort(int[] a) {
             RadixSort.INSTANCE.sort(a, 0, a.length - 1);
         }
-    }, /*
+    },
     MARLIN {
         @Override
         public void sort(int[] a) {
             MarlinSort.INSTANCE.sort(a, 0, a.length - 1);
         }
-    },
+    }, /*
     QSORTE {
         @Override
         public void sort(int[] a) {
@@ -138,8 +146,8 @@ public enum IntSorter {
             INSTANCE.sort(a, 0, a.length - 1);
         }
     }    
-     */ 
-// 2 arrays variants
+     */ // 2 arrays variants
+    /*
     DPQ_18_2_E {
         @Override
         public void sort(int[] a) {
@@ -158,7 +166,7 @@ public enum IntSorter {
             MarlinMergeSort.INSTANCE.sort(a, 0, a.length - 1);
         }
     }
-     ;
+     */;
 
     public abstract void sort(int[] a);
 

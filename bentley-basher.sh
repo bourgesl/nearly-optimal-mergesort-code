@@ -14,7 +14,7 @@ CORE=3
 # define Java options
 # -XX:+UnlockDiagnosticVMOptions -XX:+PrintCompilation
 # -XX:-TieredCompilation
-# -verbose:gc
+# -verbose:gc -Xloggc:gc.log
 # -XX:+PrintGCApplicationStoppedTime
 #JAVA_OPTS="-Xms1g -Xmx1g"
 #JAVA_OPTS="-Xms1g -Xmx1g -XX:+UnlockDiagnosticVMOptions -XX:GuaranteedSafepointInterval=300000"

@@ -92,13 +92,6 @@ public final class WelfordVariance {
         return mean() + stddev();
     }
 
-    public int errorPercent() {
-        if (nSamples == 0L) {
-            return 1000;
-        }
-        return (int) Math.ceil(rawErrorPercent());
-    }
-
     public double rawErrorPercent() {
         return Math.abs(100.0 * stddev() / mean());
     }

@@ -15,19 +15,20 @@ public final class BentleyBasher {
     public static final long SEC_IN_NS = 1000 * 1000 * 1000; // 1s in ns;
 
     // Small array lengths:
-    private static final int[] LENGTHS = {50, 100, 200, 500, 1000, 2000, 5000, 10000};
+//    private static final int[] LENGTHS = {50, 100, 200, 500, 1000, 2000, 5000, 10000};
     // Large array lengths:
-//    private static final int[] LENGTHS = {50 * 1000, 100 * 1000, 500 * 1000};
+    private static final int[] LENGTHS = {50 * 1000, 100 * 1000, 500 * 1000};
     // Very large array lengths:
 //    private static final int[] LENGTHS = {1000 * 1000, 10 * 1000 * 1000};
 
-    private static final long MAX_LOOP_TIME = 2 * SEC_IN_NS; // 2s max per test (small)
-//    private static final long MAX_LOOP_TIME = 30 * SEC_IN_NS; // 30s max per test (large)    
+//    private static final long MAX_LOOP_TIME = 3 * SEC_IN_NS; // 3s max per test (small)
+    private static final long MAX_LOOP_TIME = 10 * SEC_IN_NS; // 30s max per test (large)    
 
-    private static final int ERR_DIST_TH = 2; // 2% max per timing loop
-    private static final int CONFIDENCE_AVG = 4; // 4 sigma confidence on mean estimation
+    private static final double ERR_DIST_TH = 2.0; // 2% max per timing loop
+    private static final double CONFIDENCE_AVG = 4.0; // 4 sigma confidence on mean estimation
 
-    private final static boolean USE_RMS = true; // false means use MIN(TIME)
+    // true means MEAN(time) + STDDEV, false means use MIN(TIME) + STDDEV
+    private final static boolean USE_RMS = false;
 
     private final static boolean DO_WARMUP = true;
 
@@ -40,7 +41,9 @@ public final class BentleyBasher {
     // internal settings
     private final static int TWEAK_INC = 4; // 2 originally
 
-    private final static int WARMUP_REPS = 20;
+    private static final int WARMUP_REP_DISTRIB = 2;
+    private final static int WARMUP_REPS = 30 * WARMUP_REP_DISTRIB;
+
     private final static int[] WARMUP_LENGTHS = new int[]{501, 10001};
 
     // 10ms >> [Full GC (System.gc())  794K->794K(1013632K), 0,0022879 secs] for 1g heap
@@ -53,7 +56,9 @@ public final class BentleyBasher {
 
     private final static long MIN_NS = 50; // latency in ns
 
-    private static final int REP_MIN = 90; // to gather enough statistics
+    // to gather enough statistics
+    private static final int REP_MIN = 90;
+    private static final int LREP_MIN = 9;
     private static final int REP_DISTRIB = 10;
     private static final int REP_SKIP = 10;
     private static final int ADJ_MAX = 10;
@@ -87,10 +92,10 @@ public final class BentleyBasher {
         if (USE_RMS) {
             System.out.println("Timings are given in milli-seconds (rms = mean + 1 stddev)");
         } else {
-            System.out.println("Timings are given in milli-seconds (min time)");
+            System.out.println("Timings are given in milli-seconds (min time + 1 stddev)");
         }
-        System.out.println("\nTimings are estimated using auto-tune to satisfy the maximal uncertainty of " + ERR_DIST_TH + ".0 % "
-                + "with max test duration = " + round(df2, 1E-6 * MAX_LOOP_TIME) + " ms.");
+        System.out.println("\nTimings are estimated using auto-tune to satisfy the maximal uncertainty of " + round(df2, ERR_DIST_TH) + " % "
+                + ", convergence at " + round(df2, CONFIDENCE_AVG) + " sigma with max test duration = " + round(df2, 1E-6 * MAX_LOOP_TIME) + " ms.");
 
         // TODO: estimate uncertainty on ratios: (100 +/- err) / (100 +- err) non linear
         System.out.println("\n");
@@ -135,7 +140,7 @@ public final class BentleyBasher {
         WelfordVariance statDist;
 
         // adjust reps to sample properly distributions
-        final int repDist = (warmup) ? 2 : REP_DISTRIB;
+        final int repDist = (warmup) ? WARMUP_REP_DISTRIB : REP_DISTRIB;
 
         final WelfordVariance[] statDists = new WelfordVariance[repDist];
         for (int d = 0; d < repDist; d++) {
@@ -167,7 +172,7 @@ public final class BentleyBasher {
             }
 //            out.print("reps: " + reps + "\n");
 
-            int lreps = 9;
+            int lreps = LREP_MIN;
             if (lreps > 1) {
                 reps = Math.max(1, reps / lreps);
             }
@@ -259,7 +264,7 @@ public final class BentleyBasher {
                                     time = 0l;
                                     total = 0;
 
-                                    for (e = statReps + skipReps; e >= 0; e--) {
+                                    for (e = 0; e < statReps + skipReps; e++) {
                                         // reduce variance on very small arrays (use more repeats):
 
                                         // measurement loop:
@@ -281,6 +286,7 @@ public final class BentleyBasher {
                                             statDist.add(measure);
 
                                             if (e >= skipReps) {
+                                                // TODO: use stddev(min) ?
                                                 statSorter.add(measure);
                                             }
                                         } else {
@@ -315,7 +321,7 @@ public final class BentleyBasher {
                                     // test mean time convergence ie loop stability on statDist.mean()
                                     avg = statDist.mean();
 
-                                    if ((prevAvg != 0.0) && (statDist.errorPercent() <= ERR_DIST_TH)) {
+                                    if ((prevAvg != 0.0) && (statDist.rawErrorPercent() <= ERR_DIST_TH)) {
                                         confidence = Math.abs(prevAvg - avg) / statDist.stddev();
 
                                         // confidence at 3 sigma:
@@ -348,7 +354,8 @@ public final class BentleyBasher {
                                         newLoopReps = (int) Math.ceil(ratio);
 
                                         // avoid too big step
-                                        loopReps = Math.min(newLoopReps, 1000 * loopReps);
+                                        loopReps = Math.min(1, Math.min(newLoopReps, 1000 * loopReps));
+
                                         if (REPORT_DEBUG_ESTIMATOR) {
                                             System.out.print("loopReps: " + loopReps + " ");
                                         }
@@ -382,7 +389,7 @@ public final class BentleyBasher {
                                         newTotReps = (long) Math.ceil(maxEstTime / avg);
 
                                         if (statReps == REP_MIN) {
-                                            loopReps = (int) (newTotReps / REP_MIN);
+                                            loopReps = Math.min(1, (int) (newTotReps / REP_MIN));
                                         } else {
                                             statReps = Math.max(REP_MIN, (int) (newTotReps / loopReps));
                                         }
@@ -415,7 +422,7 @@ public final class BentleyBasher {
                             } // distribution sampling
 
                             // Collect statistics:
-                            times[i] = 1E-6 * ((USE_RMS) ? statSorter.rms() : statSorter.min());
+                            times[i] = 1E-6 * ((USE_RMS) ? statSorter.rms() : statSorter.min() + statSorter.stddev());
 
                             if (times[i] > timeBL) {
                                 times[i] -= timeBL;
@@ -441,7 +448,7 @@ public final class BentleyBasher {
 
                                     // Check distribution statistics (all flags):
                                     for (d = 0; d < repDist; d++) {
-                                        if (statDists[d].errorPercent() > ERR_DIST_TH) {
+                                        if (statDists[d].rawErrorPercent() > ERR_DIST_TH) {
                                             out.print('!');
                                         } else {
                                             out.print(' ');
@@ -451,14 +458,14 @@ public final class BentleyBasher {
                                 } else {
                                     // Check distribution statistics (1 flag only):
                                     for (d = 0; d < repDist; d++) {
-                                        if (statDists[d].errorPercent() > ERR_DIST_TH) {
+                                        if (statDists[d].rawErrorPercent() > ERR_DIST_TH) {
                                             out.print('$');
                                             break;
                                         }
                                     }
                                 }
 
-                                if (statSorter.errorPercent() >= ERR_WARNING) {
+                                if (statSorter.rawErrorPercent() >= ERR_WARNING) {
                                     out.print('!');
                                 } else {
                                     out.print(' ');
@@ -484,7 +491,7 @@ public final class BentleyBasher {
 
                                     if (REPORT_TIME_ERR) {
                                         out.print(" ~");
-                                        out.print(statSorter.errorPercent()); // %
+                                        out.print(round(df2, statSorter.rawErrorPercent())); // %
                                         out.print('%');
                                     }
                                 }
