@@ -1,21 +1,39 @@
 # Sorting Algorithms & Testbed
 
-In Nov 2018, I needed to figure out what is the best sort algorithm on small datasets (almost sorted) so I started my quest gathering good Java Sorting implementations ...
+In Nov 2018, I needed to figure out what is the best sort algorithm on small datasets (almost sorted) so I started my quest gathering good Java Sorting implementations ... reading papers & started experimenting my own benchmarks.
 
-TODO
+As I got a gem (https://github.com/sebawild/nearly-optimal-mergesort-code), I started hacking it to make its benchmark for fair (more reproductible) and fixed several Sorter implementations to use pre-allocation.
+
+Thanks to Vladimir Yaroslavskiy, I added its DualPivotQuickSort & BentleyBasher implementations, from Tageer its RadixSort ...
+
+TODO: complete history & motivations
+
+# Objective
+
+- Use a robust test methodology to test Java Sorting Implementations (working, tested) with all known distributions (random, sawtooth, dithered, ...) as recent Sorting implementations use polymorphism / adaptive strategy to better sort some types of data sets (sorted & reversed runs, random ...)
+- Include best Sort implementations (based on int[] arrays only, sorry) and also using 2 int[] arrays (data + indices)
+- Provide a complete Test suite (basher, stats, & analysis) to reproduce reliable experiments and allow optimisation (tuning every details of a particular instance) in a faire manner (reduce OS & JVM biases) to obtain a fair comparison
+
+# Data results
+
+See in the results folder to last data & comparison stats
+
+Nice Plots will be coming next...
 
 
-# Fork of the Sebastian Wild's 'Nearly optimal Natural Mergesort &mdash; Code'
+
+## Fork of the Sebastian Wild's 'Nearly optimal Natural Mergesort &mdash; Code'
 
 I derived my work from this fabulous repository on github, that provides source code (MIT license) of several sorting algorithms (merge sorts, like TD/BU, TimSort & variants, Peek & Power Sort).
 
+
 Here is the original 'README' of the master repository:
 
-## Nearly optimal Natural Mergesort &mdash; Code
+### Nearly optimal Natural Mergesort &mdash; Code
 Code for experiments with nearly optimally adaptive mergesort variants 
 peeksort and powersort.
 
-### Reproducing the results from the paper
+#### Reproducing the results from the paper
 
 To reproduce the running time study from the paper,
 execute 
@@ -39,8 +57,7 @@ during timed runs are normal.)
 running time. These files were used in the paper to compute average and standard deviations
 of running times.
 
-
-### Unit Tests
+#### Unit Tests
 
 To run harness tests for correctness of the sorting methods, run
 
