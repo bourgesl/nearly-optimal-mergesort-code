@@ -1,9 +1,17 @@
 #!/bin/bash
 
-WTIME=100ms
-ITER=3
-TIME=100ms
+GC=true
 FORK=1
+
+WTIME=100ms
+TIME=100ms
+ITER=5
+
+OPTS="-p arraySize=1000"
+WTIME=200ms
+TIME=100ms
+ITER=5
+
 # Available formats: text, csv, scsv, json, latex
 FORMAT=text
 
@@ -33,6 +41,12 @@ JAVA_OPTS="-Xms1g -Xmx1g -XX:-TieredCompilation -XX:+UnlockDiagnosticVMOptions -
 echo "JAVA_OPTS: $JAVA_OPTS"
 
 echo "Running JMH ..." 
+# show help
+#java -jar target/edu-sorting-bench.jar -h
+
+# show benchmarks & parameters
+#java -jar target/edu-sorting-bench.jar -lp
+
 # single-threaded:
-taskset -c $CORE java $JAVA_OPTS -jar target/edu-sorting-bench.jar $TEST -wi 3 -w $WTIME -i $ITER -r $TIME -f $FORK -t 1 -rf $FORMAT -rff bench.out &> bench.log 
+taskset -c $CORE java $JAVA_OPTS -jar target/edu-sorting-bench.jar $TEST -gc $GC -wi 3 -w $WTIME -i $ITER -r $TIME -f $FORK -t 1 -rf $FORMAT -rff bench.out $OPTS &> bench.log 
 

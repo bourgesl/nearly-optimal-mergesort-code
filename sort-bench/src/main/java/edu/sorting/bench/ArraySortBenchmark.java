@@ -29,6 +29,10 @@ import edu.sorting.perf.BentleyBasher;
 import edu.sorting.perf.IntArrayTweaker;
 import edu.sorting.perf.IntSorter;
 import edu.sorting.perf.ParamIntArrayBuilder;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -42,6 +46,17 @@ import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.TearDown;
 import org.openjdk.jmh.annotations.Warmup;
+import org.openjdk.jmh.runner.Defaults;
+import org.openjdk.jmh.runner.NoBenchmarksException;
+import org.openjdk.jmh.runner.ProfilersFailedException;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.ChainedOptionsBuilder;
+import org.openjdk.jmh.runner.options.CommandLineOptionException;
+import org.openjdk.jmh.runner.options.CommandLineOptions;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.openjdk.jmh.runner.options.VerboseMode;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -53,6 +68,8 @@ public class ArraySortBenchmark {
 
     private static final int REP_DISTRIB = 10;
 
+    private final static int TWEAK_INC = 4; // 2 originally
+
     @State(Scope.Benchmark)
     public static class BenchmarkState {
 
@@ -62,7 +79,7 @@ public class ArraySortBenchmark {
         })
         int arraySize;
 
-        @Param({"1", "4", "16", "64" /*, "256", "1024", "4096" */})
+        @Param({}/*{"1", "4", "16", "64", "256", "1024", "4096" } */)
         int arraySubSize;
 
         /* IntArrayTweaker.values() */
@@ -85,6 +102,9 @@ public class ArraySortBenchmark {
         public void setUpTrial() {
             if (TRACE) {
                 System.out.println("setUpTrial");
+            }
+            if (arraySubSize > (2 * arraySize)) {
+                throw new IllegalStateException("Invalid arraySubSize: " + arraySubSize + " for arraySize: " + arraySize);
             }
             if (arraySize != lastArraySize) {
                 lastArraySize = arraySize;
@@ -133,6 +153,7 @@ public class ArraySortBenchmark {
 
     @State(Scope.Thread)
     public static class ThreadState {
+
         // current index in distributions
         int idx = 0;
     }
@@ -151,6 +172,110 @@ public class ArraySortBenchmark {
 
         // always consume test array
         return test[0];
+    }
+
+    /**
+     * Custom main()
+     */
+    public static void main(String[] argv) throws IOException {
+
+        // From org.openjdk.jmh.Main:
+        try {
+            final CommandLineOptions cmdOptions = new CommandLineOptions(argv);
+
+            String[] subSizes = null;
+
+            // Generate arraySubSize according to the arraySize parameter:
+            if (cmdOptions.getParameter("arraySize").hasValue()) {
+                Collection<String> sizes = cmdOptions.getParameter("arraySize").get();
+                int max = Integer.MIN_VALUE;
+                for (String size : sizes) {
+                    int v = Integer.valueOf(size);
+                    if (v > max) {
+                        max = v;
+                    }
+                }
+                System.out.println("max(arraySize): " + max);
+
+                // adjust tweak increment depending on array size
+                final int tweakInc = (max > 100000) ? 16 : TWEAK_INC;
+
+                final List<String> subSizeList = new ArrayList<String>();
+
+                for (int m = 1, end = 2 * max; m < end; m *= tweakInc) {
+                    subSizeList.add(String.valueOf(m));
+                }
+
+                System.out.println("subSizeList: " + subSizeList);
+
+                subSizes = subSizeList.toArray(new String[0]);
+            }
+
+            ChainedOptionsBuilder builder = new OptionsBuilder().parent(cmdOptions)
+                    .include(ArraySortBenchmark.class.getSimpleName())
+//                    .syncIterations(false)
+//                    .shouldDoGC(true)
+                    .shouldFailOnError(false);
+
+            if (subSizes != null) {
+                builder.param("arraySubSize", subSizes);
+            }
+
+            final Options opt = builder.build();
+
+            final Runner runner = new Runner(opt);
+
+            if (cmdOptions.shouldHelp()) {
+                cmdOptions.showHelp();
+                return;
+            }
+
+            if (cmdOptions.shouldList()) {
+                runner.list();
+                return;
+            }
+
+            if (cmdOptions.shouldListWithParams()) {
+                runner.listWithParams(cmdOptions);
+                return;
+            }
+
+            if (cmdOptions.shouldListProfilers()) {
+                cmdOptions.listProfilers();
+                return;
+            }
+
+            if (cmdOptions.shouldListResultFormats()) {
+                cmdOptions.listResultFormats();
+                return;
+            }
+
+            try {
+                runner.run();
+            } catch (NoBenchmarksException e) {
+                System.err.println("No matching benchmarks. Miss-spelled regexp?");
+
+                if (cmdOptions.verbosity().orElse(Defaults.VERBOSITY) != VerboseMode.EXTRA) {
+                    System.err.println("Use " + VerboseMode.EXTRA + " verbose mode to debug the pattern matching.");
+                } else {
+                    runner.list();
+                }
+                System.exit(1);
+            } catch (ProfilersFailedException e) {
+                // This is not exactly an error, set non-zero exit code
+                System.err.println(e.getMessage());
+                System.exit(1);
+            } catch (RunnerException e) {
+                System.err.print("ERROR: ");
+                e.printStackTrace(System.err);
+                System.exit(1);
+            }
+
+        } catch (CommandLineOptionException e) {
+            System.err.println("Error parsing command line:");
+            System.err.println(" " + e.getMessage());
+            System.exit(1);
+        }
     }
 
 }
