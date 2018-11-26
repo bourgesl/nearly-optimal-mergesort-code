@@ -1,0 +1,28 @@
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+Benchmark                       (size)  Mode  Cnt       Score       Error  Units
+ArrayCopyBenchmark.arraycopy        50  avgt    9      11,158 ±     0,834  ns/op
+ArrayCopyBenchmark.arraycopy       100  avgt    9      13,967 ±     0,886  ns/op
+ArrayCopyBenchmark.arraycopy       500  avgt    9      41,411 ±    13,680  ns/op
+ArrayCopyBenchmark.arraycopy      1000  avgt    9      77,391 ±    18,495  ns/op
+ArrayCopyBenchmark.arraycopy      5000  avgt    9     646,035 ±    63,861  ns/op
+ArrayCopyBenchmark.arraycopy     10000  avgt    9    1303,219 ±    82,632  ns/op
+ArrayCopyBenchmark.arraycopy     50000  avgt    9    9373,213 ±   570,305  ns/op
+ArrayCopyBenchmark.arraycopy    100000  avgt    9   20914,746 ±   186,442  ns/op
+ArrayCopyBenchmark.arraycopy    500000  avgt    9  108939,145 ±   921,152  ns/op
+ArrayCopyBenchmark.arraycopy   1000000  avgt    9  261416,620 ± 14713,336  ns/op
+ArrayCopyBenchmark.manualcopy       50  avgt    9      14,804 ±     0,650  ns/op
+ArrayCopyBenchmark.manualcopy      100  avgt    9      17,613 ±     3,209  ns/op
+ArrayCopyBenchmark.manualcopy      500  avgt    9      54,329 ±     3,475  ns/op
+ArrayCopyBenchmark.manualcopy     1000  avgt    9     107,633 ±     1,615  ns/op
+ArrayCopyBenchmark.manualcopy     5000  avgt    9     600,629 ±    38,120  ns/op
+ArrayCopyBenchmark.manualcopy    10000  avgt    9    1186,669 ±    41,452  ns/op
+ArrayCopyBenchmark.manualcopy    50000  avgt    9    9330,218 ±   256,947  ns/op
+ArrayCopyBenchmark.manualcopy   100000  avgt    9   20745,227 ±   335,879  ns/op
+ArrayCopyBenchmark.manualcopy   500000  avgt    9  108729,819 ±   831,072  ns/op
+ArrayCopyBenchmark.manualcopy  1000000  avgt    9  255906,381 ±  4815,812  ns/op
+
