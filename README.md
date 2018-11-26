@@ -1,10 +1,14 @@
-# Sorting Algorithms & Testbed
+# Sorting Algorithms & Fair comparison testbed
 
-In Nov 2018, I needed to figure out what is the best sort algorithm on small datasets (almost sorted) so I started my quest gathering good Java Sorting implementations ... reading papers & started experimenting my own benchmarks.
+In Nov 2018, I needed to figure out what is the best sort algorithm on small datasets (almost sorted for graphics rendering) so I started my quest gathering good Java Sorting implementations ... reading papers & started experimenting my own benchmarks.
 
-As I got a gem (https://github.com/sebawild/nearly-optimal-mergesort-code), I started hacking it to make its benchmark for fair (more reproductible) and fixed several Sorter implementations to use pre-allocation.
+As I found this gem (https://github.com/sebawild/nearly-optimal-mergesort-code) the source code of Sebastian Wild 2018 paper, I started hacking the code to make its benchmark for fair (more reproductible) tests and I fixed several Sorter implementations to use pre-allocation (no GC overhead).
 
-Thanks to Vladimir Yaroslavskiy, I added its DualPivotQuickSort & BentleyBasher implementations, from Tageer its RadixSort ...
+Thanks to Vladimir Yaroslavskiy, I added its DualPivotQuickSort 2011, 2018 & his BentleyBasher implementation, from Tageer Valev his adaptive RadixSort ...
+
+I made lots of improvements on the BentleyBasher 
+
+All code is free & open source, under MIT or GPL2 license.
 
 TODO: complete history & motivations
 
