@@ -18,7 +18,7 @@ CORE=3
 JAVA_OPTS="-Xms1g -Xmx1g"
 echo "JAVA_OPTS: $JAVA_OPTS"
 
-PREFIX="taskset -c $CORE java $JAVA_OPTS -jar out/nearly-optimal-mergesort.jar "
+PREFIX="taskset -c $CORE java $JAVA_OPTS -jar out/edu-sorting.jar "
 SEED=248442268
 
 echo Running study 1 - Random Permutations

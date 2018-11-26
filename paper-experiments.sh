@@ -7,7 +7,7 @@ lscpu
 echo "JAVA:"
 java -version
 
-PREFIX="taskset -c 0 java -XX:+UnlockDiagnosticVMOptions -XX:-TieredCompilation -XX:+PrintCompilation -jar out/nearly-optimal-mergesort.jar "
+PREFIX="taskset -c 0 java -XX:+UnlockDiagnosticVMOptions -XX:-TieredCompilation -XX:+PrintCompilation -jar out/edu-sorting.jar "
 SEED=248442268
 
 echo Running study 1 - Random Permutations

@@ -373,11 +373,10 @@ public final class BentleyBasher {
                                     newTotReps = Math.min(newTotReps, (ratio > 1.0) ? 10 * totReps : totReps / 10);
 
                                     // may exceed time limit
-
 // avoid / 0 (KILL ?)
                                     if (loopReps == 0) {
                                         loopReps = lreps;
-                                        System.err.print("! loopReps = 0 : Loop " + l + " [tot: " + totReps + "] : " + round(df2, statDist.rawErrorPercent()) 
+                                        System.err.print("! loopReps = 0 : Loop " + l + " [tot: " + totReps + "] : " + round(df2, statDist.rawErrorPercent())
                                                 + " % => try sr: " + statReps + " lr: " + loopReps
                                                 + " tot: " + newTotReps);
                                     }
@@ -543,7 +542,7 @@ public final class BentleyBasher {
         return loopCount / sorters.length;
     }
 
-    private static void check(int[] a1, int[] ref) {
+    public static void check(int[] a1, int[] ref) {
         for (int i = 0; i < a1.length - 1; i++) {
             if (a1[i] > a1[i + 1]) {
                 throw new RuntimeException("!!! Array is not sorted at: " + i);
@@ -582,7 +581,7 @@ public final class BentleyBasher {
     /**
      * Cleanup (GC + pause)
      */
-    static void cleanup() {
+    public static void cleanup() {
 //        final long freeBefore = Runtime.getRuntime().freeMemory();
         // Perform GC:
         System.runFinalization();
