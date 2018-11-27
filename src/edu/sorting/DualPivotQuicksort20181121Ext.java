@@ -49,16 +49,16 @@ import java.util.Arrays; // TODO
  *
  * @since 1.7 * 12
  */
-public final class DualPivotQuicksort201811211Ext implements wildinter.net.mergesort.Sorter {
+public final class DualPivotQuicksort20181121Ext implements wildinter.net.mergesort.Sorter {
 
     private final static boolean DO_CHECK = false;
 
-    public final static wildinter.net.mergesort.Sorter INSTANCE = new DualPivotQuicksort201811211Ext();
+    public final static wildinter.net.mergesort.Sorter INSTANCE = new DualPivotQuicksort20181121Ext();
 
     /**
      * Prevents instantiation.
      */
-    private DualPivotQuicksort201811211Ext() {
+    private DualPivotQuicksort20181121Ext() {
     }
 
     // avoid alloc

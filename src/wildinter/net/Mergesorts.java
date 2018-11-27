@@ -4,7 +4,7 @@ import edu.sorting.DualPivotQuickSort2011;
 import edu.sorting.DualPivotQuicksort201802;
 import edu.sorting.DualPivotQuicksort201802Ext;
 import edu.sorting.DualPivotQuicksort201811;
-import edu.sorting.DualPivotQuicksort201811211Ext;
+import edu.sorting.DualPivotQuicksort20181121Ext;
 import wildinter.net.mergesort.BottomUpMergesort;
 import wildinter.net.mergesort.Inputs;
 import wildinter.net.mergesort.MergesAndRuns;
@@ -72,7 +72,7 @@ public class Mergesorts {
         algos.add(DualPivotQuicksort201802.INSTANCE);
         algos.add(DualPivotQuicksort201811.INSTANCE);
         algos.add(DualPivotQuicksort201802Ext.INSTANCE);
-        algos.add(DualPivotQuicksort201811211Ext.INSTANCE);
+        algos.add(DualPivotQuicksort20181121Ext.INSTANCE);
 //        algos.add(Sorter.SYSTEMSORT);
 
         algos.add(RadixSort.INSTANCE);
