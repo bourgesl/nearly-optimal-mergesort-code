@@ -6,7 +6,7 @@ package edu.sorting;
  */
 public final class ArrayUtils {
 
-    private final static boolean USE_MANUAL_COPY = false;
+    private final static boolean USE_MANUAL_COPY = true;
 
     private ArrayUtils() {
         // forbidden

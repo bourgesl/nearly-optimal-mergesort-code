@@ -4,11 +4,12 @@
 GC=false
 FORK=2
 
-SIZES="50,100"
-WITER=3
-WTIME=100ms
-TIME=50ms
-ITER=5
+SIZES="100"
+WITER=5
+WTIME=200ms
+TIME=100ms
+# min iter = 10 (to sample all distributions)
+ITER=10
 
 OPTS="-p arraySize=$SIZES"
 

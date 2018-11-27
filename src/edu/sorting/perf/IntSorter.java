@@ -1,13 +1,11 @@
 package edu.sorting.perf;
 
 import edu.sorting.DualPivotQuickSort2011;
-import edu.sorting.DualPivotQuicksort201802Ext;
 import edu.sorting.DualPivotQuicksort20181121;
-import edu.sorting.DualPivotQuicksort201811211Ext;
 import edu.sorting.DualPivotQuicksort20181121I;
+import edu.sorting.DualPivotQuicksort20181127;
 import edu.sorting.DualPivotQuicksort201811P;
 import edu.sorting.RadixSort;
-import org.marlin.MarlinMergeSort;
 import org.marlin.MarlinSort;
 
 /**
@@ -55,6 +53,12 @@ public enum IntSorter {
             DualPivotQuicksort20181121.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
+    DPQ_18_11_27 {
+        @Override
+        public void sort(int[] a) {
+            DualPivotQuicksort20181127.INSTANCE.sort(a, 0, a.length - 1);
+        }
+    },
     DPQ_18_11I {
         @Override
         public void sort(int[] a) {
@@ -67,7 +71,7 @@ public enum IntSorter {
             DualPivotQuicksort201811P.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
-    /*    
+/*    
     DPQ_18_2 {
         @Override
         public void sort(int[] a) {

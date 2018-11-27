@@ -31,6 +31,7 @@ import edu.sorting.perf.IntSorter;
 import edu.sorting.perf.ParamIntArrayBuilder;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -73,13 +74,13 @@ public class ArraySortBenchmark {
     @State(Scope.Benchmark)
     public static class BenchmarkState {
 
-        @Param({"50", "100"
-        /*, "500", "1000", "5000" */
- /*, "10000", "50000", "100000", "500000", "1000000" */
+        @Param({ /* "50", "100", "500" */
+            "1000"
+        /* "5000", "10000", "50000", "100000", "500000", "1000000" */
         })
         int arraySize;
 
-        @Param({}/*{"1", "4", "16", "64", "256", "1024", "4096" } */)
+        @Param({})
         int arraySubSize;
 
         /* IntArrayTweaker.values() */
@@ -90,64 +91,43 @@ public class ArraySortBenchmark {
         @Param({"STAGGER", "SAWTOTH", "_RANDOM", "PLATEAU", "SHUFFLE"})
         ParamIntArrayBuilder distBuilder;
 
-        @Param({"BASELINE", "DPQ_11", "DPQ_18_11_21", "DPQ_18_11I", "DPQ_18_11P", "RADIX" /*, "MARLIN" */})
+        @Param({"BASELINE", "DPQ_11", "DPQ_18_11_21", "DPQ_18_11_27", "DPQ_18_11I", "RADIX", "MARLIN"})
         IntSorter tSorter;
 
         final int[][] inputs = new int[REP_DISTRIB][];
         final int[][] protos = new int[REP_DISTRIB][];
         final int[][] tests = new int[REP_DISTRIB][];
-        private int lastArraySize = -1;
 
         @Setup(Level.Trial)
         public void setUpTrial() {
             if (TRACE) {
-                System.out.println("setUpTrial");
+                System.out.println("\nsetUpTrial");
             }
             if (arraySubSize > (2 * arraySize)) {
                 throw new IllegalStateException("Invalid arraySubSize: " + arraySubSize + " for arraySize: " + arraySize);
             }
-            if (arraySize != lastArraySize) {
-                lastArraySize = arraySize;
-
-                // Allocate many working arrays to circumvent any alignment issue (int[] are aligned to 8/16/24/32):
-                for (int d = 0; d < REP_DISTRIB; d++) {
-                    inputs[d] = new int[arraySize];
-                    protos[d] = new int[arraySize];
-                    tests[d] = new int[arraySize];
-                }
-                // Promote all the arrays (GC)
-                BentleyBasher.cleanup();
-            }
-        }
-
-        @Setup(Level.Iteration)
-        public void setUpIteration() {
             // Reset tweaker to have sample initial conditions (seed):
             ParamIntArrayBuilder.reset();
 
             // Allocate many working arrays to circumvent any alignment issue (int[] are aligned to 8/16/24/32):
             for (int d = 0; d < REP_DISTRIB; d++) {
+                inputs[d] = new int[arraySize];
+                protos[d] = new int[arraySize];
+                tests[d] = new int[arraySize];
+
                 // Get new distribution sample:
                 distBuilder.build(inputs[d], arraySubSize);
 
                 // tweak sample:
                 dataTweaker.tweak(inputs[d], protos[d]);
+
+                if (TRACE) {
+                    System.out.println("\nsetUpTrial: protos[" + d + "] = \n"
+                            + Arrays.toString(protos[d]));
+                }
             }
             // Promote all the arrays (GC)
             BentleyBasher.cleanup();
-        }
-
-        /*
-         * And, check the benchmark went fine afterwards:
-         */
-        @TearDown(Level.Iteration)
-        public void check() {
-            if (!tSorter.skipCheck()) {
-                for (int d = 0; d < REP_DISTRIB; d++) {
-                    // may throw runtime exception
-                    BentleyBasher.check(tests[d], protos[d]);
-                }
-            }
         }
     }
 
@@ -156,19 +136,51 @@ public class ArraySortBenchmark {
 
         // current index in distributions
         int idx = 0;
+        // benchmark loop state:
+        IntSorter sorter = null;
+        int[] proto = null;
+        int[] test = null;
+
+        @Setup(Level.Iteration)
+        public void setUpIteration(final BenchmarkState bs) {
+            // Use many working arrays (1 per distribution):
+            sorter = bs.tSorter;
+            proto = bs.protos[idx];
+            test = bs.tests[idx];
+
+            if (TRACE) {
+                System.out.println("\nsetUpIteration: proto[" + idx + "] = \n"
+                        + Arrays.toString(proto));
+            }
+
+            // go forward
+            idx = (idx + 1) % REP_DISTRIB;
+
+            // Cleanup (GC)
+            BentleyBasher.cleanup();
+        }
+
+        /*
+         * And, check the benchmark went fine afterwards:
+         */
+        @TearDown(Level.Iteration)
+        public void check() {
+            if (sorter != null && !sorter.skipCheck()) {
+                for (int d = 0; d < REP_DISTRIB; d++) {
+                    // may throw runtime exception
+                    BentleyBasher.check(test, proto);
+                }
+            }
+        }
     }
 
     @Benchmark
-    public int sort(final BenchmarkState bs, final ThreadState ts) {
-        // Use many working arrays (1 per distribution):
-        final int i = ts.idx;
-        final int[] proto = bs.protos[i];
-        final int[] test = bs.tests[i];
-        // go forward
-        ts.idx = (i + 1) % REP_DISTRIB;
+    public int sort(final ThreadState ts) {
+        final int[] proto = ts.proto;
+        final int[] test = ts.test;
 
         ArrayUtils.clone(proto, test);
-        bs.tSorter.sort(test);
+        ts.sorter.sort(test);
 
         // always consume test array
         return test[0];
@@ -213,8 +225,6 @@ public class ArraySortBenchmark {
 
             ChainedOptionsBuilder builder = new OptionsBuilder().parent(cmdOptions)
                     .include(ArraySortBenchmark.class.getSimpleName())
-//                    .syncIterations(false)
-//                    .shouldDoGC(true)
                     .shouldFailOnError(false);
 
             if (subSizes != null) {
