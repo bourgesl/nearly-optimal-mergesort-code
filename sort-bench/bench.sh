@@ -1,16 +1,16 @@
 #!/bin/bash
 
-GC=true
-FORK=1
+# do not force GC as setupTrial does cleanup() and sorters use pre-allocation
+GC=false
+FORK=2
 
+SIZES="50,100"
+WITER=3
 WTIME=100ms
-TIME=100ms
+TIME=50ms
 ITER=5
 
-OPTS="-p arraySize=1000"
-WTIME=200ms
-TIME=100ms
-ITER=5
+OPTS="-p arraySize=$SIZES"
 
 # Available formats: text, csv, scsv, json, latex
 FORMAT=text
@@ -48,5 +48,5 @@ echo "Running JMH ..."
 #java -jar target/edu-sorting-bench.jar -lp
 
 # single-threaded:
-taskset -c $CORE java $JAVA_OPTS -jar target/edu-sorting-bench.jar $TEST -gc $GC -wi 3 -w $WTIME -i $ITER -r $TIME -f $FORK -t 1 -rf $FORMAT -rff bench.out $OPTS &> bench.log 
+taskset -c $CORE java $JAVA_OPTS -jar target/edu-sorting-bench.jar $TEST -gc $GC -wi $WITER -w $WTIME -i $ITER -r $TIME -f $FORK -t 1 -rf $FORMAT -rff "sort-$SIZES.out" $OPTS &> "sort-$SIZES.log" 
 
