@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FREQ="2.0GHz" # slower than nominal
+FREQ="2.7GHz" # better variance at the nominal frequency (no overheating issue)
 echo "using sudo to set CPU frequency to $FREQ ..."
 
 # set fixed frequency with governor 'performance'

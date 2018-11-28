@@ -155,9 +155,6 @@ public class ArraySortBenchmark {
 
             // go forward
             idx = (idx + 1) % REP_DISTRIB;
-
-            // Cleanup (GC)
-            BentleyBasher.cleanup();
         }
 
         /*

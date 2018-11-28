@@ -246,7 +246,7 @@ public final class DualPivotQuicksort20181127Ext implements wildinter.net.merges
             }
 
             /*
-             * Switch to heap sort on the leftmost part or // TODO
+             * Switch to heap sort on the leftmost part or
              * if the execution time is becoming quadratic.
              */
             if (size < MAX_HEAP_SORT_SIZE || (bits += 2) > MAX_RECURSION_DEPTH) {
