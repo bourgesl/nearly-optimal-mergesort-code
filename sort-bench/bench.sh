@@ -48,5 +48,5 @@ echo "Running JMH ..."
 
 # single-threaded:
 # -rf $FORMAT -rff "sort-$SIZES.out"
-taskset -c $CORE java $JAVA_OPTS -jar target/edu-sorting-bench.jar -gc $GC -wi $WITER -w $WTIME -i $ITER -r $TIME -f $FORK -t 1 $OPTS &> "sort-$SIZES.log" 
+taskset -c $CORE java $JAVA_OPTS -jar target/edu-sorting-bench.jar -gc $GC -wi $WITER -w $WTIME -i $ITER -r $TIME -f $FORK -t 1 $OPTS 1> "sort-$SIZES.log" 2> "sort-$SIZES.err" 
 

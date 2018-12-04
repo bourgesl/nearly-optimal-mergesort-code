@@ -6,6 +6,8 @@ import edu.sorting.perf.IntArrayTweaker;
 import edu.sorting.perf.IntSorter;
 import edu.sorting.perf.ParamIntArrayBuilder;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -56,19 +58,25 @@ public class ArraySortBenchmark2 {
     private final static VerboseMode VERBOSITY = VerboseMode.NORMAL;
 
     private final static boolean DEBUG = false;
+    private static final boolean TRACE = false;
 
-    private final static int WARMUP_INITIAL_ITER = 5;
+    private final static int WARMUP_PLATEAU = 3;
+    private final static int WARMUP_INITIAL_ITER = WARMUP_PLATEAU * 3;
     private final static long WARMUP_INITIAL_TIME = 4L * 1000 * 1000; // 4ms in nanoseconds
     private final static int WARMUP_BLK = 3;
     private final static long WARMUP_MIN_OPS = 100;
+    // 15% as a local minimum may happen and plateau is then difficult to have
+    private final static double WARMUP_TOL = 0.15;
+    private final static int WARMUP_MAX_ADJUST = 10;
 
-    private final static double WARMUP_TOL = 0.02; // 2%
-
-    private static final boolean TRACE = false;
+    private final static double BENCHMARK_PCT = 0.90; // 90% percentile
 
     private static final int REP_DISTRIB = 10;
 
     private final static int TWEAK_INC = 4; // 2 originally
+
+    public final static String HEADER_COLUMNS = ">> COLUMNS:";
+    private final static DecimalFormat df = new DecimalFormat("0.0000000");
 
     @State(Scope.Benchmark)
     public static class BenchmarkState {
@@ -236,7 +244,6 @@ public class ArraySortBenchmark2 {
                             max = v;
                         }
                     }
-                    System.out.println("max(arraySize): " + max);
 
                     // adjust tweak increment depending on array size
                     final int tweakInc = (max > 100000) ? 16 : TWEAK_INC;
@@ -247,7 +254,7 @@ public class ArraySortBenchmark2 {
                         subSizeList.add(String.valueOf(m));
                     }
 
-                    System.out.println("subSizeList: " + subSizeList);
+                    System.err.println(">> arraySubSize: " + subSizeList);
 
                     subSizes = subSizeList.toArray(new String[0]);
                 }
@@ -272,7 +279,7 @@ public class ArraySortBenchmark2 {
             autotune(builder);
 
         } catch (CommandLineOptionException e) {
-            System.err.println("Error parsing command line:");
+            System.err.println(">> Error parsing command line:");
             System.err.println(" " + e.getMessage());
             System.exit(1);
         }
@@ -281,36 +288,45 @@ public class ArraySortBenchmark2 {
 
     private static void autotune(final ChainedOptionsBuilder builder) {
         // Autotune start small
-        builder.verbosity(VerboseMode.NORMAL);
+        builder.verbosity(VERBOSITY);
 
         final Options baseOptions = builder.build();
         try {
-            final OutputFormat out = OutputFormatFactory.createFormatInstance(System.out, VERBOSITY);
+            final OutputFormat out = OutputFormatFactory.createFormatInstance(System.err, VERBOSITY);
 
             final Options testOptions = new OptionsBuilder().parent(baseOptions)
                     .param("_distSamples", String.valueOf(REP_DISTRIB)).build(); // use all distributions to get variance
 
             final List<BenchmarkListEntry> benchmarks = prepareBenchmarks(out, testOptions);
 
-            System.out.println("Benchmarks ...");
+            System.out.println(">> Benchmarks ...");
+
+            System.out.println(HEADER_COLUMNS + "Mode\tLength\tSub-size\tBuilder\tTweaker\tSorter"
+                    + "\tRMS\tMean\tStdDev\tCount\tMin\tMax");
+            System.err.println(HEADER_COLUMNS + "Mode\tLength\tSub-size\tBuilder\tTweaker\tSorter"
+                    + "\tRMS\tMean\tStdDev\tCount\tMin\tMax");
 
             double[] warmupTimes = null;
+            double[] measureTimes = null;
+            final StringBuilder sb = new StringBuilder(256);
 
             for (BenchmarkListEntry br : benchmarks) {
-                System.out.println("Benchmark: " + br.getUsername() + " " + br.getMode());
+                System.err.println(">> Benchmark: " + br.getUsername() + " " + br.getMode());
 
                 // Automatic WARMUP:
                 int warmupIter = WARMUP_INITIAL_ITER;
                 long warmupNs = WARMUP_INITIAL_TIME;
 
-                for (;;) {
+                for (int warmupAdj = 0;;) {
                     final int warmupCount = WARMUP_BLK * warmupIter;
 
                     if (warmupTimes == null || warmupTimes.length < warmupCount) {
                         warmupTimes = new double[warmupCount];
+                    } else {
+                        Arrays.fill(warmupTimes, 0.0);
                     }
 
-                    System.out.println("Warmup: " + warmupCount + " iterations ...");
+                    System.err.println(">> Warmup: " + warmupCount + " iterations ...");
 
                     // Create a new Runner:
                     final ChainedOptionsBuilder tBuilder = new OptionsBuilder().parent(baseOptions).forks(1)
@@ -322,7 +338,7 @@ public class ArraySortBenchmark2 {
                     for (String key : params.keys()) {
                         final String value = params.get(key);
                         if (!"_distSamples".equals(key)) {
-                            System.out.println("  " + key + " = " + value);
+                            System.err.println("  " + key + " = " + value);
                             tBuilder.param(key, value);
                         }
                     }
@@ -346,7 +362,7 @@ public class ArraySortBenchmark2 {
                         for (int i = 0; i < WARMUP_BLK; i++) {
                             statDists[d].add(warmupTimes[k + i]);
                         }
-                        System.out.println("stats[blk " + d + "]: " + statDists[d]);
+                        System.err.println(">> stats[blk " + d + "]: " + statDists[d]);
 
                         final double rms = statDists[d].rms();
 
@@ -354,72 +370,130 @@ public class ArraySortBenchmark2 {
                             minRms = rms;
                         }
                     }
-                    System.out.println("minRms: " + minRms);
+                    System.err.println(">> minRms: " + minRms);
 
                     final long ops = (long) Math.ceil(warmupNs / minRms);
-                    System.out.println("ops: " + ops);
 
                     if (ops < WARMUP_MIN_OPS) {
+                        System.err.println(">> ops: " + ops + " < " + WARMUP_MIN_OPS);
                         // use longer time:
-                        warmupNs = (long) Math.ceil(1.1 * WARMUP_MIN_OPS * minRms);
-                        System.out.println("adjust warmupNs: " + warmupNs);
+                        warmupNs = (long) Math.ceil(1.05 * WARMUP_MIN_OPS * minRms);
+                        System.err.println(">> Adjusted warmup time: " + (1E-6 * warmupNs) + " ms.");
                         continue;
                     }
 
                     double best = Double.POSITIVE_INFINITY;
                     int minBlk = -1;
+                    int belowCount = 0;
 
                     for (int d = 0; d < warmupIter; d++) {
                         // distance between (rms - minRms)
                         final double err = (statDists[d].rms() - minRms) / minRms;
 
-                        System.out.println("stats[blk " + d + "]: " + err);
+                        System.err.println(">> stats[blk " + d + "]: " + err);
 
                         if (err <= WARMUP_TOL) {
                             if (minBlk == -1) {
                                 best = statDists[d].rms();
                                 minBlk = d;
                             }
+                            belowCount++;
                         }
-                        // TODO: check plateau ?
                     }
 
-                    System.out.println("Best stats[blk " + minBlk + "]: " + statDists[minBlk]);
+                    System.err.println(">> Best stats[blk " + minBlk + "]: " + statDists[minBlk]
+                            + " below: " + belowCount);
 
-                    if ((minBlk == 0) || (minBlk == (warmupIter - 1))) {
-                        // go on:
+                    if ((warmupAdj++ < WARMUP_MAX_ADJUST)
+                            && ((minBlk == 0)
+                            || (minBlk == (warmupIter - 1))
+                            || (belowCount < WARMUP_PLATEAU))) {
+                        // try again with more warmup iterations:
                         warmupIter += WARMUP_INITIAL_ITER;
                         continue;
                     } else {
                         warmupIter = minBlk;
+                        System.err.println(">> Final warmup stats: " + statDists[minBlk]);
                         break;
                     }
                 }
 
-                // TODO: MEASUREMENTS
-                final int warmupCount = WARMUP_BLK * warmupIter + 2; // margin
+                // MEASUREMENTS
+                final int warmupCount = WARMUP_BLK * warmupIter + WARMUP_PLATEAU;
 
-                System.out.println("Warmup: " + warmupCount + " iterations ...");
+                System.err.println(">> Adjusted Warmup: " + warmupCount + " iterations, time: " + (1E-6 * warmupNs)
+                        + " ms");
+
+                // 5 x 2 = 10 per distrib
+                final int forks = 5;
+                final int measureIter = REP_DISTRIB * 2;
+                final long measureNs = warmupNs * 5;
+
+                System.err.println(">> Adjusted test: " + measureIter + " iterations, time: " + (1E-6 * measureNs)
+                        + " ms with " + forks + " forks ...");
+
+                final int measureCount = forks * measureIter;
+
+                if (measureTimes == null || measureTimes.length < measureCount) {
+                    measureTimes = new double[measureCount];
+                } else {
+                    Arrays.fill(measureTimes, 0.0);
+                }
 
                 // Create a new Runner:
-                final ChainedOptionsBuilder tBuilder = new OptionsBuilder().parent(testOptions).forks(3)
+                final ChainedOptionsBuilder tBuilder = new OptionsBuilder().parent(testOptions)
                         .warmupIterations(warmupCount).warmupTime(TimeValue.nanoseconds(warmupNs))
-                        .measurementIterations(REP_DISTRIB * 3) // 3 x 3 = 9 per distrib
-                        .measurementTime(TimeValue.nanoseconds(warmupNs * 5)); // TODO
+                        .measurementIterations(measureIter).forks(forks)
+                        .measurementTime(TimeValue.nanoseconds(measureNs));
 
                 final WorkloadParams params = br.getWorkloadParams();
 
+                String testHeader = null;
+                sb.setLength(0);
+
                 for (String key : params.keys()) {
                     final String value = params.get(key);
+//                    System.out.println("  " + key + " = " + value);
                     tBuilder.param(key, value); // include proper distSample
+                    if (!"_distSamples".equals(key)) {
+                        sb.append('\t').append(value);
+
+                        if ("tSorter".equals(key)) {
+                            // padding (right)
+                            for (int i = 8 - value.length(); i >= 0; i--) {
+                                sb.append(' ');
+                            }
+                        }
+                    }
                 }
+                testHeader = sb.toString();
 
                 final Options runOptions = tBuilder.build();
 
                 final Runner runner = new Runner(runOptions, out);
-                final Collection<RunResult> results = runner.run();
 
-                // TODO: collect best results ie median [0-65% percentile] => variance ie stddev (without outliers)
+                getRawTimes(runner, measureTimes);
+
+                // collect best results ie 90% percentile
+                // => variance ie stddev (without outliers)
+                Arrays.sort(measureTimes, 0, measureCount);
+
+                final WelfordVariance statAll = new WelfordVariance();
+                final WelfordVariance statPct = new WelfordVariance();
+
+                final int idxPct = (int) Math.round(measureCount * BENCHMARK_PCT);
+
+                for (int d = 0; d < measureCount; d++) {
+                    statAll.add(measureTimes[d]);
+
+                    if (d <= idxPct) {
+                        statPct.add(measureTimes[d]);
+                    }
+                }
+
+                dumpResult(System.out, "Best", testHeader, statPct);
+                dumpResult(System.err, "Best", testHeader, statPct);
+                dumpResult(System.err, "All", testHeader, statAll);
             }
 
         } catch (ProfilersFailedException e) {
@@ -433,22 +507,24 @@ public class ArraySortBenchmark2 {
         }
     }
 
-    private int getWarmUpLength(List<Double> times, final double tolerance, final int plateauSize) {
-        double expected = times.get(times.size() - 1);
-        int lastCount = 0;
-        for (int i = times.size() - 1; i >= 0; --i) {
-            double curr = times.get(i);
-            if (Math.abs(curr - expected) <= tolerance * Math.min(curr, expected)) {
-                ++lastCount;
-            } else {
-                break;
-            }
-        }
-        if (lastCount >= plateauSize) {
-            return times.size() - lastCount + plateauSize;
-        } else {
-            return -1;
-        }
+    private static void dumpResult(final PrintStream ps, final String mode, final String testHeader, final WelfordVariance stats) {
+        ps.print(">> ");
+        ps.print(mode);
+        ps.print('\t');
+        ps.print(testHeader);
+        ps.print('\t');
+        ps.print(df.format(1E-6 * stats.rms()));
+        ps.print('\t');
+        ps.print(df.format(1E-6 * stats.mean())); // ms
+        ps.print('\t');
+        ps.print(df.format(1E-6 * stats.stddev()));
+        ps.print('\t');
+        ps.print(stats.nSamples());
+        ps.print('\t');
+        ps.print(df.format(1E-6 * stats.min()));
+        ps.print('\t');
+        ps.print(df.format(1E-6 * stats.max()));
+        ps.print('\n');
     }
 
     private static void getRawTimes(final Runner runner, final double[] times) throws RunnerException {
@@ -507,12 +583,16 @@ public class ArraySortBenchmark2 {
         for (Map.Entry<String, String[]> e : benchParams.entrySet()) {
             String k = e.getKey();
             String[] vals = e.getValue();
+
             Collection<String> values = options.getParameter(k).orElse(Arrays.asList(vals));
             if (values.isEmpty()) {
                 throw new RunnerException("Benchmark \"" + br.getUsername()
                         + "\" defines the parameter \"" + k + "\", but no default values.\n"
                         + "Define the default values within the annotation, or provide the parameter values at runtime.");
             }
+
+            System.out.println("Parameter[" + k + "]: " + values);
+
             if (ps.isEmpty()) {
                 int idx = 0;
                 for (String v : values) {
