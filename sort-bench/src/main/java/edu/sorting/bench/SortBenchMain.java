@@ -14,7 +14,11 @@ public class SortBenchMain {
         // Pre init:
         // Set the default locale to en-US locale (for Numerical Fields "." ",")
         Locale.setDefault(Locale.US);
-        
-        ArraySortBenchmark.main(argv);
+
+        if (true) {
+            ArraySortBenchmark2.main(argv);
+        } else {
+            ArraySortBenchmark.main(argv);
+        }
     }
 }

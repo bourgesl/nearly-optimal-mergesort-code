@@ -17,9 +17,6 @@ OPTS="-p arraySize=$SIZES"
 # Available formats: text, csv, scsv, json, latex
 FORMAT=text
 
-TEST=ArraySortBenchmark
-# ArrayCopyBenchmark
-
 lscpu
 
 ../cpu_fixed.sh
@@ -50,5 +47,6 @@ echo "Running JMH ..."
 #java -jar target/edu-sorting-bench.jar -lp
 
 # single-threaded:
-taskset -c $CORE java $JAVA_OPTS -jar target/edu-sorting-bench.jar $TEST -gc $GC -wi $WITER -w $WTIME -i $ITER -r $TIME -f $FORK -t 1 -rf $FORMAT -rff "sort-$SIZES.out" $OPTS &> "sort-$SIZES.log" 
+# -rf $FORMAT -rff "sort-$SIZES.out"
+taskset -c $CORE java $JAVA_OPTS -jar target/edu-sorting-bench.jar -gc $GC -wi $WITER -w $WTIME -i $ITER -r $TIME -f $FORK -t 1 $OPTS &> "sort-$SIZES.log" 
 
