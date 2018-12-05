@@ -60,13 +60,13 @@ public class ArraySortBenchmark2 {
     private final static boolean DEBUG = false;
     private static final boolean TRACE = false;
 
-    private final static int WARMUP_PLATEAU = 3;
+    private final static int WARMUP_PLATEAU = 4;
     private final static int WARMUP_INITIAL_ITER = WARMUP_PLATEAU * 3;
     private final static long WARMUP_INITIAL_TIME = 4L * 1000 * 1000; // 4ms in nanoseconds
     private final static int WARMUP_BLK = 3;
     private final static long WARMUP_MIN_OPS = 100;
     // 15% as a local minimum may happen and plateau is then difficult to have
-    private final static double WARMUP_TOL = 0.15;
+    private final static double WARMUP_TOL = 0.10;
     private final static int WARMUP_MAX_ADJUST = 10;
 
     private final static double BENCHMARK_PCT = 0.90; // 90% percentile
@@ -326,7 +326,7 @@ public class ArraySortBenchmark2 {
                         Arrays.fill(warmupTimes, 0.0);
                     }
 
-                    System.err.println(">> Warmup: " + warmupCount + " iterations ...");
+                    System.err.println(">> Warmup: " + warmupCount + " iterations [" + (warmupAdj + 1) + " pass] ...");
 
                     // Create a new Runner:
                     final ChainedOptionsBuilder tBuilder = new OptionsBuilder().parent(baseOptions).forks(1)
@@ -424,10 +424,10 @@ public class ArraySortBenchmark2 {
                 System.err.println(">> Adjusted Warmup: " + warmupCount + " iterations, time: " + (1E-6 * warmupNs)
                         + " ms");
 
-                // 5 x 2 = 10 per distrib
-                final int forks = 5;
-                final int measureIter = REP_DISTRIB * 2;
-                final long measureNs = warmupNs * 5;
+                // 4 x 3 = 12 per distribution:
+                final int forks = 4;
+                final int measureIter = REP_DISTRIB * 3;
+                final long measureNs = warmupNs * 4;
 
                 System.err.println(">> Adjusted test: " + measureIter + " iterations, time: " + (1E-6 * measureNs)
                         + " ms with " + forks + " forks ...");
