@@ -1,11 +1,6 @@
 package edu.sorting.bench;
 
-import edu.sorting.ArrayUtils;
-import edu.sorting.perf.BentleyBasher;
-import edu.sorting.perf.IntArrayTweaker;
-import edu.sorting.perf.IntSorter;
-import edu.sorting.perf.ParamIntArrayBuilder;
-import java.io.IOException;
+import static edu.sorting.bench.ArraySortBenchmark2.PARAM_SORTER;
 import java.io.PrintStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -15,19 +10,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
-import java.util.concurrent.TimeUnit;
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Level;
-import org.openjdk.jmh.annotations.Measurement;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Param;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.annotations.TearDown;
-import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.results.BenchmarkResult;
 import org.openjdk.jmh.results.IterationResult;
 import org.openjdk.jmh.results.Result;
@@ -41,266 +23,59 @@ import org.openjdk.jmh.runner.WorkloadParams;
 import org.openjdk.jmh.runner.format.OutputFormat;
 import org.openjdk.jmh.runner.format.OutputFormatFactory;
 import org.openjdk.jmh.runner.options.ChainedOptionsBuilder;
-import org.openjdk.jmh.runner.options.CommandLineOptionException;
-import org.openjdk.jmh.runner.options.CommandLineOptions;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 import org.openjdk.jmh.runner.options.VerboseMode;
 import wildinter.net.WelfordVariance;
 
-@BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.NANOSECONDS)
-@Warmup(iterations = 2, time = 100, timeUnit = TimeUnit.MILLISECONDS)
-@Measurement(iterations = 3, time = 200, timeUnit = TimeUnit.MILLISECONDS)
-public class ArraySortBenchmark2 {
+public class JMHAutoTuneDriver {
 
     private final static VerboseMode VERBOSITY = VerboseMode.NORMAL;
 
-    private final static boolean DEBUG = false;
-    private static final boolean TRACE = false;
-
-    private final static int WARMUP_PLATEAU = 4;
-    private final static int WARMUP_INITIAL_ITER = WARMUP_PLATEAU * 3;
-    private final static long WARMUP_INITIAL_TIME = 4L * 1000 * 1000; // 4ms in nanoseconds
-    private final static int WARMUP_BLK = 3;
+    private final static int WARMUP_BLK = 4;
+    private final static int WARMUP_PLATEAU = 5;
+    private final static int WARMUP_INITIAL_ITER = 3 * WARMUP_PLATEAU;
+    private final static int WARMUP_MAX_ADJUST = 10;
+    private final static long WARMUP_INITIAL_TIME = 2L * 1000 * 1000; // 1ms in nanoseconds
     private final static long WARMUP_MIN_OPS = 100;
     // 15% as a local minimum may happen and plateau is then difficult to have
     private final static double WARMUP_TOL = 0.10;
-    private final static int WARMUP_MAX_ADJUST = 10;
 
     private final static double BENCHMARK_PCT = 0.90; // 90% percentile
 
-    private static final int REP_DISTRIB = 10;
-
-    private final static int TWEAK_INC = 4; // 2 originally
-
-    public final static String HEADER_COLUMNS = ">> COLUMNS:";
+    private final static String HEADER_COLUMNS = ">> COLUMNS:";
     private final static DecimalFormat df = new DecimalFormat("0.0000000");
 
-    @State(Scope.Benchmark)
-    public static class BenchmarkState {
-
-        @Param({})
-        int _distSamples;
-
-        @Param({ /* "50", "100", "500" */
-            "1000"
-        /* "5000", "10000", "50000", "100000", "500000", "1000000" */
-        })
-        int arraySize;
-
-        @Param({})
-        int arraySubSize;
-
-        /* IntArrayTweaker.values() */
-        @Param({"IDENT_____", "REVERSE___", "REVERSE_FR", "REVERSE_BA", "SORT______", "DITHER____"})
-        IntArrayTweaker dataTweaker;
-
-        /* ParamIntArrayBuilder.values() */
-        @Param({"STAGGER", "SAWTOTH", "_RANDOM", "PLATEAU", "SHUFFLE"})
-        ParamIntArrayBuilder distBuilder;
-
-        @Param({"BASELINE", "DPQ_11", "DPQ_18_11_21", "DPQ_18_11_27", "DPQ_18_11I", "RADIX", "MARLIN"})
-        IntSorter tSorter;
-
-        final int[][] inputs = new int[REP_DISTRIB][];
-        final int[][] protos = new int[REP_DISTRIB][];
-        final int[][] tests = new int[REP_DISTRIB][];
-
-        @Setup(Level.Trial)
-        public void setUpTrial() {
-            if (TRACE) {
-                System.out.println("\nsetUpTrial");
-            }
-            if (arraySubSize > (2 * arraySize)) {
-                throw new IllegalStateException("Invalid arraySubSize: " + arraySubSize + " for arraySize: " + arraySize);
-            }
-            // Reset tweaker to have sample initial conditions (seed):
-            ParamIntArrayBuilder.reset();
-
-            // Allocate many working arrays to circumvent any alignment issue (int[] are aligned to 8/16/24/32):
-            for (int d = 0; d < REP_DISTRIB; d++) {
-                inputs[d] = new int[arraySize];
-                protos[d] = new int[arraySize];
-                tests[d] = new int[arraySize];
-
-                // Get new distribution sample:
-                distBuilder.build(inputs[d], arraySubSize);
-
-                // tweak sample:
-                dataTweaker.tweak(inputs[d], protos[d]);
-
-                if (TRACE) {
-                    System.out.println("\nsetUpTrial: protos[" + d + "] = \n"
-                            + Arrays.toString(protos[d]));
-                }
-            }
-            // Promote all the arrays (GC)
-            BentleyBasher.cleanup();
-        }
+    private JMHAutoTuneDriver() {
+        // forbidden
     }
 
-    @State(Scope.Thread)
-    public static class ThreadState {
+    // TODO: kill
+    private final static boolean WARMUP_FIX_DIST_SAMPLES = false;
+    private final static String PARAM_DIST_SAMPLES = "_distSamples";
 
-        // current index in distributions
-        int idx = 0;
-        int distSamples = 0;
-        // benchmark loop state:
-        IntSorter sorter = null;
-        int[] proto = null;
-        int[] test = null;
+    public static void autotune(final ChainedOptionsBuilder builder, final int distributionCount) {
 
-        @Setup(Level.Iteration)
-        public void setUpIteration(final BenchmarkState bs) {
-            // Use many working arrays (1 per distribution):
-            distSamples = bs._distSamples;
-            sorter = bs.tSorter;
-            proto = bs.protos[idx];
-            test = bs.tests[idx];
+        System.out.println("WARMUP_FIX_DIST_SAMPLES: " + WARMUP_FIX_DIST_SAMPLES);
 
-            if (TRACE) {
-                System.out.println("\nsetUpIteration: proto[" + idx + "] = \n"
-                        + Arrays.toString(proto));
-            }
-
-            // go forward
-            idx = (idx + 1) % distSamples;
-        }
-
-        /*
-         * And, check the benchmark went fine afterwards:
-         */
-        @TearDown(Level.Iteration)
-        public void check() {
-            if (sorter != null && !sorter.skipCheck()) {
-                for (int d = 0; d < distSamples; d++) {
-                    // may throw runtime exception
-                    BentleyBasher.check(test, proto);
-                }
-            }
-        }
-    }
-
-    @Benchmark
-    public int sort(final ThreadState ts) {
-        final int[] proto = ts.proto;
-        final int[] test = ts.test;
-
-        ArrayUtils.clone(proto, test);
-        ts.sorter.sort(test);
-
-        // always consume test array
-        return test[0];
-    }
-
-    /**
-     * Custom main()
-     */
-    public static void main(String[] argv) throws IOException {
-        // From org.openjdk.jmh.Main:
-        try {
-            final CommandLineOptions cmdOptions = new CommandLineOptions(argv);
-
-            if (cmdOptions.shouldHelp()) {
-                cmdOptions.showHelp();
-                return;
-            }
-
-            if (cmdOptions.shouldListProfilers()) {
-                cmdOptions.listProfilers();
-                return;
-            }
-
-            if (cmdOptions.shouldListResultFormats()) {
-                cmdOptions.listResultFormats();
-                return;
-            }
-
-            Runner runner = new Runner(cmdOptions);
-
-            if (cmdOptions.shouldList()) {
-                runner.list();
-                return;
-            }
-
-            if (cmdOptions.shouldListWithParams()) {
-                runner.listWithParams(cmdOptions);
-                return;
-            }
-
-            // GO ...
-            String[] subSizes = null;
-
-            if (!DEBUG) {
-                // Generate arraySubSize according to the arraySize parameter:
-                if (cmdOptions.getParameter("arraySize").hasValue()) {
-                    Collection<String> sizes = cmdOptions.getParameter("arraySize").get();
-                    int max = Integer.MIN_VALUE;
-                    for (String size : sizes) {
-                        int v = Integer.valueOf(size);
-                        if (v > max) {
-                            max = v;
-                        }
-                    }
-
-                    // adjust tweak increment depending on array size
-                    final int tweakInc = (max > 100000) ? 16 : TWEAK_INC;
-
-                    final List<String> subSizeList = new ArrayList<String>();
-
-                    for (int m = 1, end = 2 * max; m < end; m *= tweakInc) {
-                        subSizeList.add(String.valueOf(m));
-                    }
-
-                    System.err.println(">> arraySubSize: " + subSizeList);
-
-                    subSizes = subSizeList.toArray(new String[0]);
-                }
-            }
-
-            final ChainedOptionsBuilder builder = new OptionsBuilder().parent(cmdOptions)
-                    .include(ArraySortBenchmark2.class.getSimpleName())
-                    .shouldFailOnError(false);
-
-            if (DEBUG) {
-                builder.param("arraySize", new String[]{"100", "1000", "10000", "100000", "1000000"});
-                builder.param("arraySubSize", "64");
-                builder.param("dataTweaker", "DITHER____");
-                builder.param("distBuilder", "_RANDOM");
-                builder.param("tSorter", new String[]{"BASELINE", "DPQ_11", "DPQ_18_11_21"});
-            } else {
-                if (subSizes != null) {
-                    builder.param("arraySubSize", subSizes);
-                }
-            }
-
-            autotune(builder);
-
-        } catch (CommandLineOptionException e) {
-            System.err.println(">> Error parsing command line:");
-            System.err.println(" " + e.getMessage());
-            System.exit(1);
-        }
-
-    }
-
-    private static void autotune(final ChainedOptionsBuilder builder) {
         // Autotune start small
-        builder.verbosity(VERBOSITY);
+        builder.verbosity(VERBOSITY)
+                .shouldFailOnError(false)
+                .addProfiler(LinuxAffinityHelperProfiler.class);
 
         final Options baseOptions = builder.build();
         try {
             final OutputFormat out = OutputFormatFactory.createFormatInstance(System.err, VERBOSITY);
 
             final Options testOptions = new OptionsBuilder().parent(baseOptions)
-                    .param("_distSamples", String.valueOf(REP_DISTRIB)).build(); // use all distributions to get variance
+                    .param(PARAM_DIST_SAMPLES, String.valueOf(distributionCount)).build(); // use all distributions to get variance
 
             final List<BenchmarkListEntry> benchmarks = prepareBenchmarks(out, testOptions);
 
             System.out.println(">> Benchmarks ...");
 
+            // TODO: generalize output using testOptions parameters:
             System.out.println(HEADER_COLUMNS + "Mode\tLength\tSub-size\tBuilder\tTweaker\tSorter"
                     + "\tRMS\tMean\tStdDev\tCount\tMin\tMax");
             System.err.println(HEADER_COLUMNS + "Mode\tLength\tSub-size\tBuilder\tTweaker\tSorter"
@@ -329,7 +104,8 @@ public class ArraySortBenchmark2 {
                     System.err.println(">> Warmup: " + warmupCount + " iterations [" + (warmupAdj + 1) + " pass] ...");
 
                     // Create a new Runner:
-                    final ChainedOptionsBuilder tBuilder = new OptionsBuilder().parent(baseOptions).forks(1)
+                    final ChainedOptionsBuilder tBuilder = new OptionsBuilder()
+                            .parent(baseOptions).forks(1)
                             .warmupIterations(0).measurementIterations(warmupCount)
                             .measurementTime(TimeValue.nanoseconds(warmupNs));
 
@@ -337,13 +113,15 @@ public class ArraySortBenchmark2 {
 
                     for (String key : params.keys()) {
                         final String value = params.get(key);
-                        if (!"_distSamples".equals(key)) {
+                        if (!WARMUP_FIX_DIST_SAMPLES || !PARAM_DIST_SAMPLES.equals(key)) {
                             System.err.println("  " + key + " = " + value);
                             tBuilder.param(key, value);
                         }
                     }
-                    // Override distSamples:
-                    tBuilder.param("_distSamples", "1"); // use only first distribution
+                    if (WARMUP_FIX_DIST_SAMPLES) {
+                        // Override distSamples:
+                        tBuilder.param(PARAM_DIST_SAMPLES, "1"); // use only first distribution
+                    }
 
                     final Options runOptions = tBuilder.build();
 
@@ -419,15 +197,15 @@ public class ArraySortBenchmark2 {
                 }
 
                 // MEASUREMENTS
-                final int warmupCount = WARMUP_BLK * warmupIter + WARMUP_PLATEAU;
+                final int warmupCount = WARMUP_BLK * warmupIter + (WARMUP_PLATEAU / 2);
 
                 System.err.println(">> Adjusted Warmup: " + warmupCount + " iterations, time: " + (1E-6 * warmupNs)
                         + " ms");
 
                 // 4 x 3 = 12 per distribution:
                 final int forks = 4;
-                final int measureIter = REP_DISTRIB * 3;
-                final long measureNs = warmupNs * 4;
+                final int measureIter = distributionCount * 3;
+                final long measureNs = warmupNs * 2;
 
                 System.err.println(">> Adjusted test: " + measureIter + " iterations, time: " + (1E-6 * measureNs)
                         + " ms with " + forks + " forks ...");
@@ -441,13 +219,15 @@ public class ArraySortBenchmark2 {
                 }
 
                 // Create a new Runner:
-                final ChainedOptionsBuilder tBuilder = new OptionsBuilder().parent(testOptions)
+                final ChainedOptionsBuilder tBuilder = new OptionsBuilder()
+                        .parent(testOptions).forks(forks)
                         .warmupIterations(warmupCount).warmupTime(TimeValue.nanoseconds(warmupNs))
-                        .measurementIterations(measureIter).forks(forks)
+                        .measurementIterations(measureIter)
                         .measurementTime(TimeValue.nanoseconds(measureNs));
 
                 final WorkloadParams params = br.getWorkloadParams();
 
+                // TODO: generalize output using testOptions parameters:
                 String testHeader = null;
                 sb.setLength(0);
 
@@ -455,10 +235,10 @@ public class ArraySortBenchmark2 {
                     final String value = params.get(key);
 //                    System.out.println("  " + key + " = " + value);
                     tBuilder.param(key, value); // include proper distSample
-                    if (!"_distSamples".equals(key)) {
+                    if (!PARAM_DIST_SAMPLES.equals(key)) {
                         sb.append('\t').append(value);
 
-                        if ("tSorter".equals(key)) {
+                        if (PARAM_SORTER.equals(key)) {
                             // padding (right)
                             for (int i = 8 - value.length(); i >= 0; i--) {
                                 sb.append(' ');
@@ -534,24 +314,18 @@ public class ArraySortBenchmark2 {
         for (RunResult result : results) {
 
             for (BenchmarkResult benchmarkResult : result.getBenchmarkResults()) {
-
                 for (IterationResult iterationResult : benchmarkResult.getIterationResults()) {
-
                     for (Result<?> primary : iterationResult.getRawPrimaryResults()) {
 
                         final long n = primary.getStatistics().getN();
-
                         if (n != 1L) {
                             throw new IllegalStateException("Unable to dig through JMH output: getN() != 1", null);
                         }
 
-                        final double value = primary.getScore();
-
                         if (i == times.length) {
                             throw new IllegalStateException("Too many results: " + times.length);
                         }
-
-                        times[i++] = value;
+                        times[i++] = primary.getScore();
                     }
                 }
             }
@@ -559,9 +333,7 @@ public class ArraySortBenchmark2 {
     }
 
     private static List<BenchmarkListEntry> prepareBenchmarks(final OutputFormat out, final Options options) throws RunnerException {
-
         final SortedSet<BenchmarkListEntry> benchmarks = BenchmarkList.defaultList().find(out, options.getIncludes(), options.getExcludes());
-
         final List<BenchmarkListEntry> newBenchmarks = new ArrayList<>();
 
         for (BenchmarkListEntry br : benchmarks) {
@@ -577,37 +349,51 @@ public class ArraySortBenchmark2 {
     }
 
     private static List<WorkloadParams> explodeAllParams(final BenchmarkListEntry br, final Options options) throws RunnerException {
-        Map<String, String[]> benchParams = br.getParams().orElse(Collections.<String, String[]>emptyMap());
+        final Map<String, String[]> benchParams = br.getParams().orElse(Collections.<String, String[]>emptyMap());
+
+        // TODO: sort parameters by names to ensure proper sequence of workload parameters:
+        final List<String> params = new ArrayList<>();
+        for (String p : benchParams.keySet()) {
+            params.add(p);
+        }
+        Collections.sort(params);
+        /*
+Parameter[arraySize]: [100]
+Parameter[arraySubSize]: [1, 4, 16, 64]
+Parameter[distBuilder]: [STAGGER, SAWTOTH, _RANDOM, PLATEAU, SHUFFLE]
+Parameter[dataTweaker]: [IDENT_____, REVERSE___, REVERSE_FR, REVERSE_BA, SORT______, DITHER____]
+Parameter[tSorter]: [BASELINE, DPQ_11, DPQ_18_11_21, DPQ_18_11_27, DPQ_18_11I, RADIX, MARLIN]
+         */
 
         List<WorkloadParams> ps = new ArrayList<>();
-        for (Map.Entry<String, String[]> e : benchParams.entrySet()) {
-            String k = e.getKey();
-            String[] vals = e.getValue();
 
-            Collection<String> values = options.getParameter(k).orElse(Arrays.asList(vals));
+        for (String p : params) {
+            final String[] vals = benchParams.get(p);
+
+            Collection<String> values = options.getParameter(p).orElse(Arrays.asList(vals));
             if (values.isEmpty()) {
                 throw new RunnerException("Benchmark \"" + br.getUsername()
-                        + "\" defines the parameter \"" + k + "\", but no default values.\n"
+                        + "\" defines the parameter \"" + p + "\", but no default values.\n"
                         + "Define the default values within the annotation, or provide the parameter values at runtime.");
             }
 
-            System.out.println("Parameter[" + k + "]: " + values);
+            System.out.println("Parameter[" + p + "]: " + values);
 
             if (ps.isEmpty()) {
                 int idx = 0;
                 for (String v : values) {
                     WorkloadParams al = new WorkloadParams();
-                    al.put(k, v, idx);
+                    al.put(p, v, idx);
                     ps.add(al);
                     idx++;
                 }
             } else {
-                List<WorkloadParams> newPs = new ArrayList<>();
-                for (WorkloadParams p : ps) {
+                final List<WorkloadParams> newPs = new ArrayList<>();
+                for (WorkloadParams wp : ps) {
                     int idx = 0;
                     for (String v : values) {
-                        WorkloadParams al = p.copy();
-                        al.put(k, v, idx);
+                        WorkloadParams al = wp.copy();
+                        al.put(p, v, idx);
                         newPs.add(al);
                         idx++;
                     }
@@ -617,5 +403,4 @@ public class ArraySortBenchmark2 {
         }
         return ps;
     }
-
 }
