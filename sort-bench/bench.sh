@@ -26,7 +26,7 @@ java -version
 
 # define CPU core to use
 # Note: use linux kernel GRUB_CMDLINE_LINUX="isolcpus=3" in /etc/default/grub
-CORE=3
+export CPU_CORE_IDS=3
 
 
 # define Java options
@@ -47,6 +47,5 @@ echo "Running JMH ..."
 #java -jar target/edu-sorting-bench.jar -lp
 
 # single-threaded:
-# -rf $FORMAT -rff "sort-$SIZES.out"
-taskset -c $CORE java $JAVA_OPTS -jar target/edu-sorting-bench.jar -gc $GC -wi $WITER -w $WTIME -i $ITER -r $TIME -f $FORK -t 1 $OPTS 1> "sort-$SIZES.log" 2> "sort-$SIZES.err" 
+java $JAVA_OPTS -jar target/edu-sorting-bench.jar -gc $GC -wi $WITER -w $WTIME -i $ITER -r $TIME -f $FORK -t 1 $OPTS 1> "sort-$SIZES.log" 2> "sort-$SIZES.err" 
 
