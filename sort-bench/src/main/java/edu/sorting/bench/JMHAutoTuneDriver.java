@@ -38,7 +38,7 @@ public class JMHAutoTuneDriver {
     private final static int WARMUP_INITIAL_ITER = 3 * WARMUP_PLATEAU;
     private final static int WARMUP_MAX_ADJUST = 10;
     private final static long WARMUP_INITIAL_TIME = 2L * 1000 * 1000; // 1ms in nanoseconds
-    private final static long WARMUP_MIN_OPS = 100;
+    private final static long WARMUP_MIN_OPS = 5;
     // 15% as a local minimum may happen and plateau is then difficult to have
     private final static double WARMUP_TOL = 0.10;
 
@@ -351,19 +351,12 @@ public class JMHAutoTuneDriver {
     private static List<WorkloadParams> explodeAllParams(final BenchmarkListEntry br, final Options options) throws RunnerException {
         final Map<String, String[]> benchParams = br.getParams().orElse(Collections.<String, String[]>emptyMap());
 
-        // TODO: sort parameters by names to ensure proper sequence of workload parameters:
+        // sort parameters by names to ensure proper sequence of workload parameters:
         final List<String> params = new ArrayList<>();
         for (String p : benchParams.keySet()) {
             params.add(p);
         }
         Collections.sort(params);
-        /*
-Parameter[arraySize]: [100]
-Parameter[arraySubSize]: [1, 4, 16, 64]
-Parameter[distBuilder]: [STAGGER, SAWTOTH, _RANDOM, PLATEAU, SHUFFLE]
-Parameter[dataTweaker]: [IDENT_____, REVERSE___, REVERSE_FR, REVERSE_BA, SORT______, DITHER____]
-Parameter[tSorter]: [BASELINE, DPQ_11, DPQ_18_11_21, DPQ_18_11_27, DPQ_18_11I, RADIX, MARLIN]
-         */
 
         List<WorkloadParams> ps = new ArrayList<>();
 
