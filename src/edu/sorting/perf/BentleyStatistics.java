@@ -15,8 +15,6 @@ import wildinter.net.WelfordVariance;
  */
 public final class BentleyStatistics {
 
-    private final static boolean IGNORE_LOW_CONFIDENCE = true;
-
     private final static double MIN_PREC = 1e-6; // 1ns expressed in ms
 
     private final static String HEADER_STATS = "--- STATS ---";
@@ -37,13 +35,25 @@ public final class BentleyStatistics {
         new BentleyStatistics().processFile(args[0]);
     }
 
+    // members
+    private final Set<Integer> lengths = new LinkedHashSet<Integer>();
+    private int[] myLen;
+    private final Set<String> keys = new LinkedHashSet<String>();
+    private String[] myKey;
+    private double[][] myTime;
+    private int[] myWinners;
+
+    private BentleyStatistics() {
+        // no-op
+    }
+
     private void processFile(String file) {
         final List<String> lines = BentleyDataParser.getLines(file);
         int size = lines.size();
 
         if (size > 1) {
             // parse columns
-            final List<String> columns = BentleyDataParser.processHeader(lines.remove(0));
+            final List<String> columns = BentleyDataParser.processColumns(lines.remove(0));
             size--;
 
             // skip header first columns: "Length Sub-size  Builder Tweaker"
@@ -69,17 +79,6 @@ public final class BentleyStatistics {
             }
             doAfter(sorters);
         }
-    }
-
-    private static int indexOf(final IntSorter[] sorters, final IntSorter sorter) {
-        for (int i = 0; i < sorters.length; i++) {
-            if (sorters[i] == sorter) {
-                return i;
-            }
-        }
-        System.err.println("Sorter[" + sorter + "] not found in data sorters: "
-                + Arrays.toString(sorters));
-        return -1;
     }
 
     private void doAfter(final IntSorter[] sorters) {
@@ -241,21 +240,6 @@ public final class BentleyStatistics {
         for (int i = s.length(); i < 10; ++i) {
             s += " ";
         }
-        /*        
-        String s = String.valueOf(Math.round(value * 10000.0) / 10000.0);
-        int k = s.length() - s.indexOf(".");
-
-        for (int i = k; i <= 4; ++i) {
-            s += "0";
-        }
-         */
         return s;
     }
-
-    private final Set<Integer> lengths = new LinkedHashSet<Integer>();
-    private int[] myLen;
-    private final Set<String> keys = new LinkedHashSet<String>();
-    private String[] myKey;
-    private double[][] myTime;
-    private int[] myWinners;
 }

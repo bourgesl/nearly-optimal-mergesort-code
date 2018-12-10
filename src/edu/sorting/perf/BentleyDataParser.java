@@ -45,7 +45,7 @@ public final class BentleyDataParser {
 
         if (size > 1) {
             // parse columns
-            final List<String> columns = processHeader(lines.get(0));
+            final List<String> columns = processColumns(lines.get(0));
 
             // Print header:
             final PrintStream out = System.out;
@@ -101,7 +101,7 @@ public final class BentleyDataParser {
         return lines;
     }
 
-    static List<String> processHeader(String line) {
+    static List<String> processColumns(String line) {
         final StringTokenizer stk = new StringTokenizer(line, " \t");
 
         final List<String> columns = new ArrayList<String>();
@@ -128,7 +128,7 @@ public final class BentleyDataParser {
             System.err.println("Invalid line: '" + line + "'");
             return;
         }
-//        System.out.println("-- '" + line + "'");
+        System.out.println("-- '" + line + "'");
 
         // header first columns: "Length Sub-size  Builder Tweaker"
         String value;

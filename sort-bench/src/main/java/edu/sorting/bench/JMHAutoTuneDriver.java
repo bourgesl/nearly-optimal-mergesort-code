@@ -29,7 +29,7 @@ import org.openjdk.jmh.runner.options.TimeValue;
 import org.openjdk.jmh.runner.options.VerboseMode;
 import wildinter.net.WelfordVariance;
 
-public class JMHAutoTuneDriver {
+public final class JMHAutoTuneDriver {
 
     private final static VerboseMode VERBOSITY = VerboseMode.NORMAL;
 
@@ -44,8 +44,8 @@ public class JMHAutoTuneDriver {
 
     private final static double BENCHMARK_PCT = 0.90; // 90% percentile
 
-    private final static String HEADER_COLUMNS = ">> COLUMNS:";
-    private final static DecimalFormat df = new DecimalFormat("0.0000000");
+    public final static String HEADER_COLUMNS = ">> COLUMNS:";
+    public final static DecimalFormat df = new DecimalFormat("0.0000000");
 
     private JMHAutoTuneDriver() {
         // forbidden
