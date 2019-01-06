@@ -35,9 +35,8 @@ public final class JMHAutoTuneDriver {
 
     private final static int WARMUP_BLK = 4;
     private final static int WARMUP_PLATEAU = 5;
-    private final static int WARMUP_INITIAL_ITER = 3 * WARMUP_PLATEAU;
     private final static int WARMUP_MAX_ADJUST = 10;
-    private final static long WARMUP_INITIAL_TIME = 2L * 1000 * 1000; // 1ms in nanoseconds
+    private final static long WARMUP_INITIAL_TIME = 2L * 1000 * 1000; // 2ms in nanoseconds
     private final static long WARMUP_MIN_OPS = 5;
     // 15% as a local minimum may happen and plateau is then difficult to have
     private final static double WARMUP_TOL = 0.10;
@@ -85,11 +84,14 @@ public final class JMHAutoTuneDriver {
             double[] measureTimes = null;
             final StringBuilder sb = new StringBuilder(256);
 
+            final int warmupInitialIter = Math.max(2 * distributionCount, 3 * WARMUP_PLATEAU);
+
             for (BenchmarkListEntry br : benchmarks) {
                 System.err.println(">> Benchmark: " + br.getUsername() + " " + br.getMode());
 
                 // Automatic WARMUP:
-                int warmupIter = WARMUP_INITIAL_ITER;
+                int warmupIter = warmupInitialIter;
+
                 long warmupNs = WARMUP_INITIAL_TIME;
 
                 for (int warmupAdj = 0;;) {
@@ -187,7 +189,7 @@ public final class JMHAutoTuneDriver {
                             || (minBlk == (warmupIter - 1))
                             || (belowCount < WARMUP_PLATEAU))) {
                         // try again with more warmup iterations:
-                        warmupIter += WARMUP_INITIAL_ITER;
+                        warmupIter += warmupInitialIter;
                         continue;
                     } else {
                         warmupIter = minBlk;

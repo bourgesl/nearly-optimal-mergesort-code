@@ -1,10 +1,10 @@
 #!/bin/bash
 
+source env.sh
+
 # do not force GC as setupTrial does cleanup() and sorters use pre-allocation
 GC=false
 FORK=2
-
-SIZES="100"
 
 # min iter = 10 (to sample all distributions)
 WITER=10

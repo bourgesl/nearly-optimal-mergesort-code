@@ -2,10 +2,14 @@ package edu.sorting.perf;
 
 import edu.sorting.DualPivotQuickSort2011;
 import edu.sorting.DualPivotQuicksort20181121;
+import edu.sorting.DualPivotQuicksort20181121Ext;
 import edu.sorting.DualPivotQuicksort20181121I;
 import edu.sorting.DualPivotQuicksort20181127;
 import edu.sorting.DualPivotQuicksort201811P;
+import edu.sorting.DualPivotQuicksort201901;
+import edu.sorting.DualPivotQuicksort20190105;
 import edu.sorting.RadixSort;
+import org.marlin.MarlinMergeSort;
 import org.marlin.MarlinSort;
 
 /**
@@ -69,6 +73,18 @@ public enum IntSorter {
         @Override
         public void sort(int[] a) {
             DualPivotQuicksort201811P.INSTANCE.sort(a, 0, a.length - 1);
+        }
+    },
+    DPQ_19_01 {
+        @Override
+        public void sort(int[] a) {
+            DualPivotQuicksort201901.INSTANCE.sort(a, 0, a.length - 1);
+        }
+    },
+    DPQ_19_01_05 {
+        @Override
+        public void sort(int[] a) {
+            DualPivotQuicksort20190105.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
 /*    
@@ -157,11 +173,11 @@ public enum IntSorter {
         public void sort(int[] a) {
             DualPivotQuicksort201802Ext.INSTANCE.sort(a, 0, a.length - 1);
         }
-    },
+    }, */
     DPQ_18_11_E {
         @Override
         public void sort(int[] a) {
-            DualPivotQuicksort201811211Ext.INSTANCE.sort(a, 0, a.length - 1);
+            DualPivotQuicksort20181121Ext.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
     MARLIN_M2 {
@@ -170,8 +186,8 @@ public enum IntSorter {
             MarlinMergeSort.INSTANCE.sort(a, 0, a.length - 1);
         }
     }
-     */;
-
+;
+    
     public abstract void sort(int[] a);
 
     public boolean skipCheck() {

@@ -72,7 +72,11 @@ public class ArraySortBenchmark2 {
         @Param({"STAGGER", "SAWTOTH", "_RANDOM", "PLATEAU", "SHUFFLE"})
         ParamIntArrayBuilder distBuilder;
 
-        @Param({"BASELINE", "DPQ_11", "DPQ_18_11_21", "DPQ_18_11_27", "DPQ_18_11I", "RADIX", "MARLIN"})
+        @Param({"BASELINE", "DPQ_11", "DPQ_18_11_21", "DPQ_18_11_27", "DPQ_19_01", "DPQ_19_01_05" 
+/*                                      "DPQ_18_11I", "RADIX", */
+//                                      "MARLIN",
+//                "DPQ_18_11_E", "MARLIN_M2"
+        })
         IntSorter tSorter;
 
         final int[][] inputs = new int[REP_DISTRIB][];
@@ -208,7 +212,7 @@ public class ArraySortBenchmark2 {
                 // Generate arraySubSize according to the arraySize parameter:
                 if (cmdOptions.getParameter(PARAM_SIZE).hasValue()) {
                     final Collection<String> sizes = cmdOptions.getParameter(PARAM_SIZE).get();
-                    
+
                     int max = Integer.MIN_VALUE;
                     for (String size : sizes) {
                         int v = Integer.valueOf(size);
