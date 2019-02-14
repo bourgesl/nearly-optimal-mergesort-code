@@ -72,7 +72,7 @@ public class ArraySortBenchmark2 {
         @Param({"STAGGER", "SAWTOTH", "_RANDOM", "PLATEAU", "SHUFFLE"})
         ParamIntArrayBuilder distBuilder;
 
-        @Param({"BASELINE", "DPQ_11", "DPQ_18_11_21", "DPQ_18_11_27", "DPQ_19_01", "DPQ_19_01_05" 
+        @Param({"BASELINE", "DPQ_11", "DPQ_18_11_21", "DPQ_19_01_05", "DPQ_19_02_10" 
 /*                                      "DPQ_18_11I", "RADIX", */
 //                                      "MARLIN",
 //                "DPQ_18_11_E", "MARLIN_M2"
