@@ -1,7 +1,6 @@
 package org.marlin;
 
 import wildinter.net.mergesort.Insertionsort;
-import wildinter.net.mergesort.MergesAndRuns;
 import wildinter.net.mergesort.Sorter;
 
 /**
@@ -46,27 +45,29 @@ public final class MarlinSort implements Sorter {
     static void mergeSortNoCopy(final int[] x,
                                 final int[] auxX,
                                 final int toIndex) {
-
+/*
         if ((toIndex > x.length)
                 || (toIndex > auxX.length)) {
             // explicit check to avoid bound checks within hot loops (below):
             throw new ArrayIndexOutOfBoundsException("bad arguments: toIndex="
                     + toIndex);
         }
-
+*/
         // Original's Marlin merge sort:
         // sort second part only using merge / insertion sort
         // in auxiliary storage (auxX/auxY)
         mergeSort(x, x, auxX, 0, toIndex);
+        
+        // avoid extra copy to mimic proper array swaps (minimize loops):
+        if (true) {
+            return;
+        }
 
         // final pass to merge both
         // Merge sorted parts (auxX/auxY) into x/y arrays
         // 34 occurences
         // no initial left part or both sublists (auxX, auxY) are sorted:
         // copy back data into (x, y):
-        if (MergesAndRuns.COUNT_MOVE_COSTS) {
-            MergesAndRuns.totalMoveCosts += toIndex;
-        }
         System.arraycopy(auxX, 0, x, 0, toIndex);
     }
 
@@ -87,24 +88,15 @@ public final class MarlinSort implements Sorter {
          */
         if (length <= INSERTION_SORT_THRESHOLD) {
             // Insertion sort on smallest arrays
-            if (MergesAndRuns.COUNT_MOVE_COSTS) {
-                MergesAndRuns.totalMoveCosts += 1;
-            }
             dstX[low] = refX[low];
 
             for (int i = low + 1, j, v; i < high; ++i) {
                 v = refX[i];
                 for (j = i - 1; v < dstX[j];) {
-                    if (MergesAndRuns.COUNT_MOVE_COSTS) {
-                        MergesAndRuns.totalMoveCosts += 1;
-                    }
                     dstX[j + 1] = dstX[j];
                     if (--j < low) {
                         break;
                     }
-                }
-                if (MergesAndRuns.COUNT_MOVE_COSTS) {
-                    MergesAndRuns.totalMoveCosts += 1;
                 }
                 dstX[j + 1] = v;
             }
@@ -126,9 +118,6 @@ public final class MarlinSort implements Sorter {
             final int right = high - mid;
             final int off = (left != right) ? 1 : 0;
             // swap parts:
-            if (MergesAndRuns.COUNT_MOVE_COSTS) {
-                MergesAndRuns.totalMoveCosts += left + right;
-            }
             System.arraycopy(srcX, low, dstX, mid + off, left);
             System.arraycopy(srcX, mid, dstX, low, right);
             return;
@@ -138,9 +127,6 @@ public final class MarlinSort implements Sorter {
         // optimization that results in faster sorts for nearly ordered lists.
         if (srcX[mid - 1] <= srcX[mid]) {
             // 14 occurences
-            if (MergesAndRuns.COUNT_MOVE_COSTS) {
-                MergesAndRuns.totalMoveCosts += length;
-            }
             System.arraycopy(srcX, low, dstX, low, length);
             return;
         }
@@ -148,15 +134,9 @@ public final class MarlinSort implements Sorter {
         // Merge sorted halves (now in src) into dest
         for (int i = low, p = low, q = mid; i < high; i++) {
             if ((q >= high) || ((p < mid) && (srcX[p] <= srcX[q]))) {
-                if (MergesAndRuns.COUNT_MOVE_COSTS) {
-                    MergesAndRuns.totalMoveCosts += 1;
-                }
                 dstX[i] = srcX[p];
                 p++;
             } else {
-                if (MergesAndRuns.COUNT_MOVE_COSTS) {
-                    MergesAndRuns.totalMoveCosts += 1;
-                }
                 dstX[i] = srcX[q];
                 q++;
             }

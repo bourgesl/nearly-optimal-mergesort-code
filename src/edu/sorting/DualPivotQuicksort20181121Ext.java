@@ -75,7 +75,7 @@ public final class DualPivotQuicksort20181121Ext implements wildinter.net.merges
     @Override
     public void sort(final int[] A, final int low, final int high) {
         // preallocation of temporary arrays into custom Sorter class
-        sorter.initLength(high - low + 1);
+        sorter.initBuffers(high - low + 1);
         
         final int length = high - low + 1;
         if (B == null || B.length < length) {
@@ -159,11 +159,6 @@ public final class DualPivotQuicksort20181121Ext implements wildinter.net.merges
 //  private DualPivotQuicksort() {} // TODO
 
     /**
-     * Max array size to use insertion sort.
-     */
-    private static final int MAX_INSERTION_SORT_SIZE = 26;
-
-    /**
      * Max array size to use pair insertion sort.
      */
     private static final int MAX_PAIR_INSERTION_SORT_SIZE = 114;
@@ -174,19 +169,9 @@ public final class DualPivotQuicksort20181121Ext implements wildinter.net.merges
     private static final int MAX_HEAP_SORT_SIZE = 69;
 
     /**
-     * Min array size for performing sorting in parallel.
-     */
-    private static final int MIN_PARALLEL_SORT_SIZE = 1 << 12;
-
-    /**
      * Min array size to try merging of runs.
      */
     private static final int MIN_TRY_MERGE_SIZE = 1 << 12;
-
-    /**
-     * Initial capacity of the index array for tracking runs.
-     */
-    private static final int INITIAL_RUN_CAPACITY = 32;
 
     /**
      * Min size of the first run to continue with scanning.
@@ -199,26 +184,6 @@ public final class DualPivotQuicksort20181121Ext implements wildinter.net.merges
     private static final int MIN_FIRST_RUNS_FACTOR = 6;
 
     /**
-     * Min number of runs, required by parallel merging.
-     */
-    private static final int MIN_RUN_COUNT = 4;
-
-    /**
-     * Min array size to use parallel merging of parts.
-     */
-    private static final int MIN_PARALLEL_PART_MERGE_SIZE = 1 << 12;
-
-    /**
-     * Min size of a byte array to use counting sort.
-     */
-    private static final int MIN_BYTE_COUNTING_SORT_SIZE = 41;
-
-    /**
-     * Min size of a short or char array to use counting sort.
-     */
-    private static final int MIN_SHORT_OR_CHAR_COUNTING_SORT_SIZE = 2180;
-
-    /**
      * Max double recursive partitioning depth before using heap sort.
      */
     private static final int MAX_RECURSION_DEPTH = 64 << 1;
@@ -226,7 +191,7 @@ public final class DualPivotQuicksort20181121Ext implements wildinter.net.merges
     static void sort(Sorter sorter, int[] a, int b[], int low, int high) {
         sort(sorter, a, b, 0, low, high);
     }
-        
+
     /**
      * Sorts the specified array using the Dual-Pivot Quicksort and/or
      * other sorts in special-cases, possibly with parallel partitions.
@@ -255,7 +220,7 @@ public final class DualPivotQuicksort20181121Ext implements wildinter.net.merges
              * Switch to heap sort on the leftmost part or // TODO
              * if the execution time is becoming quadratic.
              */
-            if (size < 69) {
+            if (size < MAX_HEAP_SORT_SIZE) {
                 insertionSort(a, b, low, high);
                 return;
             }
@@ -334,7 +299,7 @@ public final class DualPivotQuicksort20181121Ext implements wildinter.net.merges
                 final int pivotA2 = a[e5];
                 final int pivotB1 = b[e1];
                 final int pivotB2 = b[e5];
-            
+
                 /*
                  * The first and the last elements to be sorted are moved
                  * to the locations formerly occupied by the pivots. When
@@ -463,7 +428,7 @@ public final class DualPivotQuicksort20181121Ext implements wildinter.net.merges
                         if (ak != pivotA) {
                             final int bk = b[k];
 
-                            if (ak < pivotA) { 
+                            if (ak < pivotA) {
                                 // Move a[k] to the left side
                                 while (a[++lower] < pivotA);
 /*
@@ -484,7 +449,7 @@ public final class DualPivotQuicksort20181121Ext implements wildinter.net.merges
                                 }
                                 a[lower] = ak;
                                 b[lower] = bk;
-                            } else { 
+                            } else {
                                 // ak > pivot - Move a[k] to the right side
                                 a[k] = a[--upper];
                                 a[upper] = ak;
@@ -536,7 +501,7 @@ public final class DualPivotQuicksort20181121Ext implements wildinter.net.merges
         for (int i, k = low; ++k < high; ) {
             int ak = a[i = k];
             int bk = b[k];
-    
+
             if (ak < a[low]) {
                 while (--i >= low) {
                     a[i + 1] = a[i];
@@ -659,7 +624,7 @@ public final class DualPivotQuicksort20181121Ext implements wildinter.net.merges
      * @param right the index of the last element, inclusive, of the range
      */
     private static void pushDown(int[] a, int b[], int p, int valueA, int valueB, int left, int right) {
-        for (int k ;; a[p] = a[k], b[p] = b[k], p = k) {
+        for (int k;; a[p] = a[k], b[p] = b[k], p = k) {
             k = (p << 1) - left + 2; // Index of the right child
 
             if (k > right || a[k - 1] > a[k]) {
@@ -679,7 +644,7 @@ public final class DualPivotQuicksort20181121Ext implements wildinter.net.merges
      * @param size the array size
      * @return the max number of runs
      */
-    private static int getMaxRunCount(int size) {
+    static int getMaxRunCount(int size) {
         return size > 2048000 ? 2000 : size >> 10 | 5;
     }
 
@@ -739,7 +704,7 @@ public final class DualPivotQuicksort20181121Ext implements wildinter.net.merges
              */
             if (sorter.runInit || run == null) {
                 sorter.runInit = false; // LBO
-                
+
                 if (k == high) {
 
                     /*
@@ -758,9 +723,7 @@ public final class DualPivotQuicksort20181121Ext implements wildinter.net.merges
                     return false;
                 }
 
-//                System.out.println("alloc run");
 //                run = new int[INITIAL_RUN_CAPACITY];
-
                 run = sorter.run; // LBO: prealloc
                 run[0] = low;
 
@@ -786,14 +749,13 @@ public final class DualPivotQuicksort20181121Ext implements wildinter.net.merges
          * Check if array is highly structured and then merge runs.
          */
         if (count < max && count > 1) {
-            int[] auxA, auxB; 
+            int[] auxA = sorter.auxA;
+            int[] auxB = sorter.auxB;
             int offset = low;
 
             // LBO: prealloc
-            if (sorter == null 
-                    || (auxA = sorter.auxA) == null || auxA.length < size
-                    || (auxB = sorter.auxB) == null || auxB.length < size) {
-                System.out.println("alloc b: "+size);
+            if ((auxA.length < size || auxB.length < size)) {
+                System.out.println("alloc aux: "+size);
                 auxA = new int[size];
                 auxB = new int[size];
             }
@@ -815,7 +777,7 @@ public final class DualPivotQuicksort20181121Ext implements wildinter.net.merges
      * @return the destination where runs are merged
      */
     private static int[] mergeRuns(int[] srcA, int[] dstA, int[] srcB, int[] dstB, int offset,
-            int aim, int[] run, int lo, int hi) {
+                                   int aim, int[] run, int lo, int hi) {
 
         if (hi - lo == 1) {
             if (aim >= 0) {
@@ -842,7 +804,7 @@ public final class DualPivotQuicksort20181121Ext implements wildinter.net.merges
         int[] b1, b2;
         b1 = a1 == srcA ? srcB : dstB;
         b2 = a2 == srcA ? srcB : dstB;
-        
+
         int[] resA = a1 == srcA ? dstA : srcA;
         int[] resB = a1 == srcA ? dstB : srcB;
 
@@ -870,7 +832,7 @@ public final class DualPivotQuicksort20181121Ext implements wildinter.net.merges
      * @param hi2 the end index of the second part, exclusive
      */
     private static void mergeParts(int[] dstA, int[] dstB, int k,
-            int[] a1, int[] b1, int lo1, int hi1, int[] a2, int[] b2, int lo2, int hi2) {
+                                   int[] a1, int[] b1, int lo1, int hi1, int[] a2, int[] b2, int lo2, int hi2) {
 // ...
         /*
          * Merge small parts sequentially.
@@ -902,19 +864,20 @@ public final class DualPivotQuicksort20181121Ext implements wildinter.net.merges
         }
     }
 
-    final class Sorter{
+    static final class Sorter {
+
         final int[] run;
         int[] auxA;
         int[] auxB;
         boolean runInit;
-        
+
         Sorter() {
             // preallocate max runs:
             final int max = getMaxRunCount(Integer.MAX_VALUE) + 1;
             run = new int[max];
         }
-        
-        void initLength(int length) {
+
+        void initBuffers(int length) {
             if (auxA == null || auxA.length < length) {
                 auxA = new int[length];
             }

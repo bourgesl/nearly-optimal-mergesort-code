@@ -49,6 +49,8 @@ public class ArraySortBenchmark2 {
 
     private static final boolean TRACE = false;
 
+    private static final boolean DO_CHECKS = false;
+
     @State(Scope.Benchmark)
     public static class BenchmarkState {
 
@@ -69,14 +71,15 @@ public class ArraySortBenchmark2 {
         IntArrayTweaker dataTweaker;
 
         /* ParamIntArrayBuilder.values() */
-        @Param({"STAGGER", "SAWTOTH", "_RANDOM", "PLATEAU", "SHUFFLE"})
+        @Param({"SPIRAL", "STAGGER", "SAWTOTH", "_RANDOM", "PLATEAU", "SHUFFLE"})
         ParamIntArrayBuilder distBuilder;
 
-        @Param({"BASELINE", "DPQ_11", "DPQ_18_11_21", "DPQ_19_01_05", "DPQ_19_02_10" 
-/*                                      "DPQ_18_11I", "RADIX", */
-//                                      "MARLIN",
-//                "DPQ_18_11_E", "MARLIN_M2"
-        })
+        @Param({"BASELINE", "DPQ_11",
+//                "DPQ_18_11_21", "DPQ_19_02_10", "DPQ_19_04_05", // "RADIX", 
+//     "MARLIN",
+    // "ISORT_E", 
+            "DPQ_18_11_E", "DPQ_19_02_E", "MARLIN_M2"
+    })
         IntSorter tSorter;
 
         final int[][] inputs = new int[REP_DISTRIB][];
@@ -88,7 +91,7 @@ public class ArraySortBenchmark2 {
             if (TRACE) {
                 System.out.println("\nsetUpTrial");
             }
-            if (arraySubSize > (2 * arraySize)) {
+            if (false && (arraySubSize > (2 * arraySize))) {
                 throw new IllegalStateException("Invalid arraySubSize: " + arraySubSize + " for arraySize: " + arraySize);
             }
             // Reset tweaker to have sample initial conditions (seed):
@@ -149,10 +152,10 @@ public class ArraySortBenchmark2 {
          */
         @TearDown(Level.Iteration)
         public void check() {
-            if (sorter != null && !sorter.skipCheck()) {
+            if (DO_CHECKS && sorter != null && !sorter.skipCheck()) {
                 for (int d = 0; d < distSamples; d++) {
                     // may throw runtime exception
-                    BentleyBasher.check(test, proto);
+                    BentleyBasher.check(sorter, test, proto);
                 }
             }
         }
@@ -241,11 +244,12 @@ public class ArraySortBenchmark2 {
                     .include(ArraySortBenchmark2.class.getSimpleName());
 
             if (DEBUG) {
-                builder.param(PARAM_SIZE, new String[]{"100", "1000", "10000", "100000", "1000000"});
-                builder.param(PARAM_SUB_SIZE, "64");
-                builder.param(PARAM_DATA_TWEAKER, "DITHER____");
-                builder.param(PARAM_DIST_BUILDER, "_RANDOM");
-                builder.param(PARAM_SORTER, new String[]{"BASELINE", "DPQ_11", "DPQ_18_11_21"});
+                builder.param(PARAM_SIZE, new String[]{"12", "24", "32", "48", "64", "96"});
+                builder.param(PARAM_SUB_SIZE, "128");
+                // "REVERSE___", "REVERSE_FR", "REVERSE_BA", 
+                builder.param(PARAM_DATA_TWEAKER, new String[]{"IDENT_____", "REVERSE___", "SORT______", "DITHER____"});
+                // builder.param(PARAM_DIST_BUILDER, new String[]{"STAGGER", "SAWTOTH", "_RANDOM", "PLATEAU", "SHUFFLE"});
+                // builder.param(PARAM_SORTER, new String[]{"BASELINE", "DPQ_11", "DPQ_18_11_21"});
             } else {
                 if (subSizes != null) {
                     builder.param(PARAM_SUB_SIZE, subSizes);

@@ -67,31 +67,7 @@ public final class MarlinMergeSort implements Sorter {
         mergeSortNoCopy(A, B, auxX, auxY, right + 1, 0);
     }
 
-    // insertion sort threshold
-    private static final int INSERTION_SORT_THRESHOLD = 14;
-
-    public static final boolean SORT_TIME = false;
-
-    private static final boolean USE_BOTTOM_UP = false;
-
-    public static final boolean USE_QSORT = false;
-    public static final boolean USE_INPLACE = false || !USE_BOTTOM_UP;
-    // insertion sort threshold
-    private static final int QSORT_ISORT_RUN = 16;
-
-    private static final boolean USE_QSORTE = true;
-
     private static final boolean CHECK_SORTED = false;
-
-    static {
-        System.out.println("CHECK_SORTED: " + CHECK_SORTED);
-        System.out.println("USE_BOTTOM_UP: " + USE_BOTTOM_UP);
-        /*        
-        System.out.println("USE_QSORT: " + USE_QSORT);
-        System.out.println("USE_QSORTE: " + USE_QSORTE);
-        System.out.println("USE_INPLACE: " + USE_INPLACE);
-         */
-    }
 
     /**
      * Modified merge sort:
@@ -103,61 +79,22 @@ public final class MarlinMergeSort implements Sorter {
                                 final int[] auxX, final int[] auxY,
                                 final int toIndex,
                                 final int insertionSortIndex) {
+/*
         if ((toIndex > x.length) || (toIndex > y.length)
                 || (toIndex > auxX.length) || (toIndex > auxY.length)) {
             // explicit check to avoid bound checks within hot loops (below):
             throw new ArrayIndexOutOfBoundsException("bad arguments: toIndex="
                     + toIndex);
         }
-
-        if (USE_QSORT) {
-            final long start = (SORT_TIME) ? System.nanoTime() : 0;
-
-            if (USE_QSORTE) {
-                if (USE_INPLACE) {
-                    qsorte(x, y, 0, toIndex - 1,
-                            (toIndex >> 1)); // pivot = value at middle key
-                } else {
-                    qsorte(auxX, auxY, insertionSortIndex, toIndex - 1,
-                            (insertionSortIndex + toIndex >> 1)); // pivot = value at middle key
-                }
-            } else {
-                if (USE_INPLACE) {
-                    mQuickSort(x, y, 0, toIndex - 1, x[toIndex - 1]); // last key
-                } else {
-                    mQuickSort(auxX, auxY, insertionSortIndex, toIndex - 1,
-                            auxX[toIndex - 1]); // last key
-                }
-            }
-
-            if (SORT_TIME) {
-                System.out.println("qSort[" + insertionSortIndex + " - " + toIndex + "] : "
-                        + (1e-6d * (System.nanoTime() - start)) + " ms");
-            }
-
-            if (CHECK_SORTED) {
-                // validate:
-                checkRange(x, 0, toIndex);
-            }
-            if (USE_INPLACE) {
-                return;
-            }
-        } else {
-            final long start = (SORT_TIME) ? System.nanoTime() : 0;
-
-            // Original's Marlin merge sort:
-            // sort second part only using merge / insertion sort
-            // in auxiliary storage (auxX/auxY)
-            if (USE_BOTTOM_UP) {
-                bottomUpMergesort(auxX, x, auxY, y, insertionSortIndex, toIndex);
-            } else {
-                mergeSort(x, y, x, auxX, y, auxY, insertionSortIndex, toIndex);
-            }
-
-            if (SORT_TIME) {
-                System.out.println("mergeSort[" + insertionSortIndex + " - " + toIndex + "] : "
-                        + (1e-6d * (System.nanoTime() - start)) + " ms");
-            }
+*/
+        // Original's Marlin merge sort:
+        // sort second part only using merge / insertion sort
+        // in auxiliary storage (auxX/auxY)
+        mergeSort(x, y, x, auxX, y, auxY, insertionSortIndex, toIndex);
+        
+        // avoid extra copy to mimic proper array swaps (minimize loops):
+        if (true) {
+            return;
         }
 
         // final pass to merge both
@@ -169,10 +106,12 @@ public final class MarlinMergeSort implements Sorter {
             // copy back data into (x, y):
             System.arraycopy(auxX, 0, x, 0, toIndex);
             System.arraycopy(auxY, 0, y, 0, toIndex);
+
+            if (CHECK_SORTED) {
+                checkRange(x, 0, toIndex);
+            }
             return;
         }
-
-        final long start = (SORT_TIME) ? System.nanoTime() : 0;
 
         for (int i = 0, p = 0, q = insertionSortIndex; i < toIndex; i++) {
             if ((q >= toIndex) || ((p < insertionSortIndex)
@@ -187,38 +126,15 @@ public final class MarlinMergeSort implements Sorter {
             }
         }
 
-        if (SORT_TIME) {
-            System.out.println("merge[0 - " + toIndex + "] : "
-                    + (1e-6d * (System.nanoTime() - start)) + " ms");
-        }
-
         if (CHECK_SORTED) {
             // validate:
             checkRange(x, 0, toIndex);
         }
     }
 
-    /*
+    // insertion sort threshold for MergeSort()
+    private static final int INSERTION_SORT_THRESHOLD = 14;
 
-    private static int minRunLen = 24;
-
-    public static void mergesortCheckSorted(int[] A, int left, int right) {
-        int n = right - left + 1;
-        int[] B = new int[n];
-        if (minRunLen != 1) {
-            for (int len = minRunLen, i = left; i <= right; i += len) {
-                Insertionsort.insertionsort(A, i, min(i + len - 1, right));
-            }
-        }
-        for (int len = minRunLen; len < n; len *= 2) {
-            for (int i = left; i <= right - len; i += len + len) {
-                if (A[i + len - 1] > A[i + len]) {
-                    mergeRuns(A, i, i + len, min(i + len + len - 1, right), B);
-                }
-            }
-        }
-    }
-     */
     /**
      * Src is the source array that starts at index 0
      * Dest is the (possibly larger) array destination with a possible offset
@@ -299,334 +215,6 @@ public final class MarlinMergeSort implements Sorter {
                 dstX[i] = srcX[q];
                 dstY[i] = srcY[q];
                 q++;
-            }
-        }
-    }
-
-    private static final int MIN_RUN_LEN = 16;
-
-    private static void bottomUpMergesort(final int[] srcX, final int[] auxX,
-                                          final int[] srcY, final int[] auxY,
-                                          final int low, final int high) {
-
-        for (int len = MIN_RUN_LEN, left = low, right; left < high; left += len) {
-            if (false) {
-                insertionsort(srcX, srcY, left, Math.min(left + len, high));
-            } else {
-                right = Math.min(left + len, high);
-                for (int i = left + 1, j, x, y, curx = srcX[left]; i < right; ++i) {
-                    x = srcX[i];
-
-                    if (x < curx) {
-                        y = srcY[i];
-
-                        for (j = i - 1; x < srcX[j];) {
-                            srcX[j + 1] = srcX[j];
-                            srcY[j + 1] = srcY[j];
-                            if (--j < left) {
-                                break;
-                            }
-                        }
-                        srcX[j + 1] = x;
-                        srcY[j + 1] = y;
-                    } else {
-                        curx = x;
-                    }
-                }
-            }
-        }
-        for (int len = MIN_RUN_LEN, maxLen = high - low; len < maxLen; len *= 2) {
-            for (int left = low, mid, right, i, j; left < high - len; left += len + len) {
-                mid = left + len;
-                if (srcX[mid - 1] > srcX[mid]) {
-                    right = Math.min(mid + len, high);
-                    if (false) {
-                        mergeRuns(srcX, auxX, srcY, auxY, left, mid - 1, right);
-                    } else {
-                        mid--;
-                        for (i = mid + 1; i > left; --i) {
-                            auxX[i - 1] = srcX[i - 1];
-                            auxY[i - 1] = srcY[i - 1];
-                        }
-                        final int r = right - 1;
-                        for (j = mid; j < r; ++j) {
-                            auxX[r + mid - j] = srcX[j + 1];
-                            auxY[r + mid - j] = srcY[j + 1];
-                        }
-                        for (int k = left; k <= r; ++k) {
-                            if (auxX[j] < auxX[i]) {
-                                srcX[k] = auxX[j];
-                                srcY[k] = auxY[j];
-                                j--;
-                            } else {
-                                srcX[k] = auxX[i];
-                                srcY[k] = auxY[i];
-                                i++;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        if (CHECK_SORTED) {
-            // validate:
-            checkRange(srcX, low, high);
-        }
-    }
-
-    /** Sort A[left..right] by straight-insertion sort */
-    private static void insertionsort(final int[] srcX, final int[] srcY, final int low, final int high) {
-        for (int i = low + 1, j, x, y, curx = srcX[low]; i < high; ++i) {
-            x = srcX[i];
-
-            if (x < curx) {
-                y = srcY[i];
-
-                for (j = i - 1; x < srcX[j];) {
-                    srcX[j + 1] = srcX[j];
-                    srcY[j + 1] = srcY[j];
-                    if (--j < low) {
-                        break;
-                    }
-                }
-                srcX[j + 1] = x;
-                srcY[j + 1] = y;
-            } else {
-                curx = x;
-            }
-        }
-    }
-
-    /**
-     * Merges runs A[l..m-1] and A[m..r] in-place into A[l..r]
-     * with Sedgewick's bitonic merge (Program 8.2 in Algorithms in C++)
-     * using B as temporary storage.
-     * B.length must be at least r+1.
-     */
-    private static void mergeRuns(final int[] srcX, final int[] auxX,
-                                  final int[] srcY, final int[] auxY,
-                                  final int low, final int middle, final int high) {
-        int i, j;
-        for (i = middle + 1; i > low; --i) {
-            auxX[i - 1] = srcX[i - 1];
-            auxY[i - 1] = srcY[i - 1];
-        }
-        final int r = high - 1;
-        for (j = middle; j < r; ++j) {
-            auxX[r + middle - j] = srcX[j + 1];
-            auxY[r + middle - j] = srcY[j + 1];
-        }
-        for (int k = low; k <= r; ++k) {
-            if (auxX[j] < auxX[i]) {
-                srcX[k] = auxX[j];
-                srcY[k] = auxY[j];
-                j--;
-            } else {
-                srcX[k] = auxX[i];
-                srcY[k] = auxY[i];
-                i++;
-            }
-        }
-    }
-
-
-    /* From Mainwright 1987
-    Quicksort algorithms with an early exit for sorted subfiles
-     */
-    private static void qsorte(final int[] srcX,
-                               final int[] srcY,
-                               final int m, final int n, int pivot_loc) {
-
-        final int len = n - m;
-        if (len > 0) {
-            if (true && (len <= QSORT_ISORT_RUN)) {
-                // Insertion sort on smallest arrays
-                for (int i = m + 1, j, x, y, curx = srcX[m]; i <= n; i++) {
-                    x = srcX[i];
-
-                    if (x < curx) {
-                        y = srcY[i];
-                        j = i - 1;
-                        for (;;) {
-                            // swap element
-                            srcX[j + 1] = srcX[j];
-                            srcY[j + 1] = srcY[j];
-                            if ((j-- == m) || (x >= srcX[j])) {
-                                break;
-                            }
-                        }
-                        srcX[j + 1] = x;
-                        srcY[j + 1] = y;
-                    } else {
-                        curx = x;
-                    }
-                }
-            } else {
-                boolean flag = true;
-
-                int pivot = srcX[pivot_loc];
-                int i = m;
-                int j = n;
-                boolean lsorted = true, rsorted = true;
-                int t;
-
-                while (flag) {
-                    while (srcX[i] < pivot) {
-                        if (lsorted) {
-                            if (i > m) {
-                                if (srcX[i] < srcX[i - 1]) {
-                                    lsorted = false;
-                                }
-                            }
-                        }
-                        i += 1;
-                    }
-
-                    while ((j >= m) && (srcX[j] >= pivot)) {
-                        if (rsorted) {
-                            if (j < n) {
-                                if (srcX[j] > srcX[j + 1]) {
-                                    rsorted = false;
-                                }
-                            }
-                        }
-                        j -= 1;
-                    }
-
-                    if (i < j) {
-                        // swap elements i and j
-                        t = srcX[i];
-                        srcX[i] = srcX[j];
-                        srcX[j] = t;
-
-                        t = srcY[i];
-                        srcY[i] = srcY[j];
-                        srcY[j] = t;
-
-                        if (i == pivot_loc) {
-                            pivot_loc = j;
-                        }
-
-                        if (lsorted) {
-                            if (i > m) {
-                                if (srcX[i] < srcX[i - 1]) {
-                                    lsorted = false;
-                                }
-                            }
-                        }
-                        if (rsorted) {
-                            if (j < n) {
-                                if (srcX[j] > srcX[j + 1]) {
-                                    rsorted = false;
-                                }
-                            }
-                        }
-                    } else {
-                        flag = false;
-                    }
-                } // while flag
-
-                if (!rsorted) {
-                    // swap elements i and pivot_loc
-                    t = srcX[i];
-                    srcX[i] = srcX[pivot_loc];
-                    srcX[pivot_loc] = t;
-
-                    t = srcY[i];
-                    srcY[i] = srcY[pivot_loc];
-                    srcY[pivot_loc] = t;
-
-                    i += 1;
-                }
-
-                if (!lsorted) {
-                    qsorte(srcX, srcY, m, j, (m + j) >> 1);
-                }
-                if (!rsorted) {
-                    qsorte(srcX, srcY, i, n, (i + n) >> 1);
-                }
-            }
-        }
-    }
-
-    /*
-    From Wulfenia journal:
-    Enhancing Quicksort algorithm using a dynamic pivot selection technique
-     */
-    private static void mQuickSort(final int[] srcX,
-                                   final int[] srcY,
-                                   final int low, final int high, final int pivot) {
-
-        final int len = high - low;
-        if (len > 0) {
-            if (len <= QSORT_ISORT_RUN) {
-                // Insertion sort on smallest arrays
-                for (int i = low + 1, j, x, y, curx = srcX[low]; i <= high; i++) {
-                    x = srcX[i];
-
-                    if (x < curx) {
-                        y = srcY[i];
-                        j = i - 1;
-                        for (;;) {
-                            // swap element
-                            srcX[j + 1] = srcX[j];
-                            srcY[j + 1] = srcY[j];
-                            if ((j-- == low) || (x >= srcX[j])) {
-                                break;
-                            }
-                        }
-                        srcX[j + 1] = x;
-                        srcY[j + 1] = y;
-                    } else {
-                        curx = x;
-                    }
-                }
-            } else {
-                boolean sorted = true; // n
-                int i = low;
-                int j = high;
-
-                int countLess = 0, countLarger = 0;
-                long sumLess = 0L, sumLarger = 0L;
-                int k = srcX[high];
-                int t;
-
-                while (i <= j) {
-                    if (srcX[i] <= pivot) {
-                        countLess++;
-                        sumLess += srcX[i];
-
-                        if (sorted && (k >= (pivot - srcX[i]))) {
-                            // k increasing => elements are increasing in sorted order
-                            k = (pivot - srcX[i]);
-                        } else {
-                            sorted = false;
-                        }
-                        i++;
-                    } else {
-                        countLarger++;
-                        sumLarger += srcX[i];
-
-                        // swap elements i and j
-                        t = srcX[i];
-                        srcX[i] = srcX[j];
-                        srcX[j] = t;
-
-                        t = srcY[i];
-                        srcY[i] = srcY[j];
-                        srcY[j] = t;
-                        j--;
-                    }
-                }
-                if (countLess != 0) {
-                    if (!sorted) {
-                        // subarray is not sorted
-                        mQuickSort(srcX, srcY, low, i - 1, (int) (sumLess / countLess));
-                    }
-                }
-                if (countLarger != 0) {
-                    mQuickSort(srcX, srcY, i, high, (int) (sumLarger / countLarger));
-                }
             }
         }
     }

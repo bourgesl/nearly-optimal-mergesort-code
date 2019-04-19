@@ -31,6 +31,8 @@ import wildinter.net.WelfordVariance;
 
 public final class JMHAutoTuneDriver {
 
+    private final static boolean QUICK_TEST = false;
+
     private final static VerboseMode VERBOSITY = VerboseMode.NORMAL;
 
     private final static int WARMUP_BLK = 4;
@@ -205,8 +207,8 @@ public final class JMHAutoTuneDriver {
                         + " ms");
 
                 // 4 x 3 = 12 per distribution:
-                final int forks = 4;
-                final int measureIter = distributionCount * 3;
+                final int forks = (QUICK_TEST) ? 1 : 4;
+                final int measureIter = ((QUICK_TEST) ? 1 : 3) * distributionCount;
                 final long measureNs = warmupNs * 2;
 
                 System.err.println(">> Adjusted test: " + measureIter + " iterations, time: " + (1E-6 * measureNs)

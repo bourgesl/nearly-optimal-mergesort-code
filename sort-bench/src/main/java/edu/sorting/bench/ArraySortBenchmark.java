@@ -141,7 +141,7 @@ public class ArraySortBenchmark {
             if (sorter != null && !sorter.skipCheck()) {
                 for (int d = 0; d < REP_DISTRIB; d++) {
                     // may throw runtime exception
-                    BentleyBasher.check(test, proto);
+                    BentleyBasher.check(sorter, test, proto);
                 }
             }
         }

@@ -7,6 +7,11 @@ import java.util.Random;
  */
 public enum ParamIntArrayBuilder {
 
+    SPIRAL {
+        int element(int i, int m, int n) {
+            return n + i * ((i % (m + 1) > (m / 2)) ? 1 : -1);
+        }
+    },
     STAGGER {
         int element(int i, int m, int n) {
             return (i * m + i) % n;

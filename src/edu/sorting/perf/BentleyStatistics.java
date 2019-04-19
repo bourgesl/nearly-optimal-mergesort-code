@@ -205,7 +205,7 @@ public final class BentleyStatistics {
 // Data parsing:
         for (int j = 0; j < sorters.length; j++) {
             myTime[j][i] = BentleyDataParser.parseTime(stk);
-//System.out.print("Line " + i + ": " + value + " " + myTime[j][i]);
+            // System.out.println("Line " + i + ": " + value + " " + myTime[j][i]);
         }
 
         int winnerIndex = getWinner(sorters, i);

@@ -15,14 +15,14 @@ public final class BentleyBasher {
     public static final long SEC_IN_NS = 1000 * 1000 * 1000; // 1s in ns;
 
     // Small array lengths:
-//    private static final int[] LENGTHS = {50, 100, 200, 500, 1000, 2000, 5000, 10000};
+    private static final int[] LENGTHS = {50, 100, 200, 500, 1000, 2000, 5000, 10000};
     // Large array lengths:
-    private static final int[] LENGTHS = {50 * 1000, 100 * 1000, 500 * 1000};
+//    private static final int[] LENGTHS = {50 * 1000, 100 * 1000, 500 * 1000};
     // Very large array lengths:
 //    private static final int[] LENGTHS = {1000 * 1000, 10 * 1000 * 1000};
 
-//    private static final long MAX_LOOP_TIME = 3 * SEC_IN_NS; // 3s max per test (small)
-    private static final long MAX_LOOP_TIME = 10 * SEC_IN_NS; // 30s max per test (large)    
+    private static final long MAX_LOOP_TIME = 3 * SEC_IN_NS; // 3s max per test (small)
+//    private static final long MAX_LOOP_TIME = 10 * SEC_IN_NS; // 30s max per test (large)    
 
     private static final double ERR_DIST_TH = 2.0; // 2% max per timing loop
     private static final double CONFIDENCE_AVG = 4.0; // 4 sigma confidence on mean estimation
@@ -32,7 +32,7 @@ public final class BentleyBasher {
 
     private final static boolean DO_WARMUP = true;
 
-    private final static boolean REPORT_VERBOSE = false;
+    private final static boolean REPORT_VERBOSE = true;
     private final static boolean REPORT_DEBUG_ESTIMATOR = REPORT_VERBOSE && false;
 
     private final static boolean REPORT_TIME_ERR = false;
@@ -424,7 +424,7 @@ public final class BentleyBasher {
                                 } // inner-loop (timing)
 
                                 if (!sorter.skipCheck()) {
-                                    check(test, proto);
+                                    check(sorter, test, proto);
                                 }
                             } // distribution sampling
 
@@ -542,10 +542,10 @@ public final class BentleyBasher {
         return loopCount / sorters.length;
     }
 
-    public static void check(int[] a1, int[] ref) {
+    public static void check(IntSorter sorter, int[] a1, int[] ref) {
         for (int i = 0; i < a1.length - 1; i++) {
             if (a1[i] > a1[i + 1]) {
-                throw new RuntimeException("!!! Array is not sorted at: " + i);
+                throw new RuntimeException(sorter.name() + " !!! Array is not sorted at: " + i);
             }
         }
         int plusCheckSum1 = 0;
@@ -560,10 +560,10 @@ public final class BentleyBasher {
             xorCheckSum2 ^= ref[i];
         }
         if (plusCheckSum1 != plusCheckSum2) {
-            throw new RuntimeException("!!! Array is not sorted correctly [+].");
+            throw new RuntimeException(sorter.name() + " !!! Array is not sorted correctly [+].");
         }
         if (xorCheckSum1 != xorCheckSum2) {
-            throw new RuntimeException("!!! Array is not sorted correctly [^].");
+            throw new RuntimeException(sorter.name() + " !!! Array is not sorted correctly [^].");
         }
     }
 

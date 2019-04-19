@@ -9,6 +9,9 @@ import edu.sorting.DualPivotQuicksort201811P;
 import edu.sorting.DualPivotQuicksort201901;
 import edu.sorting.DualPivotQuicksort20190105;
 import edu.sorting.DualPivotQuicksort20190210;
+import edu.sorting.DualPivotQuicksort20190210Ext;
+import edu.sorting.DualPivotQuicksort20190405;
+import edu.sorting.InsertionSortExt;
 import edu.sorting.RadixSort;
 import org.marlin.MarlinMergeSort;
 import org.marlin.MarlinSort;
@@ -94,7 +97,13 @@ public enum IntSorter {
             DualPivotQuicksort20190210.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
-/*    
+    DPQ_19_04_05 {
+        @Override
+        public void sort(int[] a) {
+            DualPivotQuicksort20190405.INSTANCE.sort(a, 0, a.length - 1);
+        }
+    },
+    /*    
     DPQ_18_2 {
         @Override
         public void sort(int[] a) {
@@ -112,6 +121,11 @@ public enum IntSorter {
         @Override
         public void sort(int[] a) {
             MarlinSort.INSTANCE.sort(a, 0, a.length - 1);
+        }
+        
+        @Override
+        public final boolean skipCheck() {
+            return true;
         }
     }, /*
     QSORTE {
@@ -181,10 +195,34 @@ public enum IntSorter {
             DualPivotQuicksort201802Ext.INSTANCE.sort(a, 0, a.length - 1);
         }
     }, */
+    /*
+    // Straight Insertion-Sort (very slow on large size)
+    ISORT_E {
+        @Override
+        public void sort(int[] a) {
+            InsertionSortExt.INSTANCE.sort(a, 0, a.length - 1);
+        }
+    },
+    */
+    /*
+    // Buggy
+    P_ISORT_E {
+        @Override
+        public void sort(int[] a) {
+            PairInsertionSortExt.INSTANCE.sort(a, 0, a.length - 1);
+        }
+    },    
+     */
     DPQ_18_11_E {
         @Override
         public void sort(int[] a) {
             DualPivotQuicksort20181121Ext.INSTANCE.sort(a, 0, a.length - 1);
+        }
+    },
+    DPQ_19_02_E {
+        @Override
+        public void sort(int[] a) {
+            DualPivotQuicksort20190210Ext.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
     MARLIN_M2 {
@@ -192,9 +230,13 @@ public enum IntSorter {
         public void sort(int[] a) {
             MarlinMergeSort.INSTANCE.sort(a, 0, a.length - 1);
         }
-    }
-;
-    
+
+        @Override
+        public final boolean skipCheck() {
+            return true;
+        }
+    };
+
     public abstract void sort(int[] a);
 
     public boolean skipCheck() {

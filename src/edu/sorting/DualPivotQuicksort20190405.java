@@ -35,9 +35,9 @@ import java.util.Arrays; // TODO
  * offers O(n log(n)) performance on all data sets, and is typically
  * faster than traditional (one-pivot) Quicksort implementations.
  *
- * There are also additional algorithms such as parallel merge sort,
- * pair insertion sort, merging of runs, heap sort and counting sort
- * invoked from the Dual-Pivot Quicksort.
+ * There are also additional algorithms, invoked from the Dual-Pivot
+ * Quicksort, such as mixed insertion sort, merging of runs and heap
+ * sort, counting sort and parallel merge sort.
  *
  * @author Vladimir Yaroslavskiy
  * @author Jon Bentley
@@ -46,16 +46,16 @@ import java.util.Arrays; // TODO
  *
  * @version 2018.08.18
  *
- * @since 1.7 * 12
+ * @since 1.7 * 13
  */
-public final class DualPivotQuicksort20190210 implements wildinter.net.mergesort.Sorter {
+public final class DualPivotQuicksort20190405 implements wildinter.net.mergesort.Sorter {
 
-    public final static wildinter.net.mergesort.Sorter INSTANCE = new DualPivotQuicksort20190210();
+    public final static wildinter.net.mergesort.Sorter INSTANCE = new DualPivotQuicksort20190405();
 
     /**
      * Prevents instantiation.
      */
-    private DualPivotQuicksort20190210() {
+    private DualPivotQuicksort20190405() {
     }
 
     // avoid alloc
@@ -75,26 +75,22 @@ public final class DualPivotQuicksort20190210 implements wildinter.net.mergesort
     }
 
     /* 
-    From OpenJDK12 source code
+    From OpenJDK13 source code
      */
     /**
      * Prevents instantiation.
      */
-//  private DualPivotQuicksort() {} // TODO
+//  private DualPivotQuicksort() {}
+
+    /**
+     * Max array size to use mixed insertion sort.
+     */
+    private static final int MAX_MIXED_INSERTION_SORT_SIZE = 114;
+
     /**
      * Max array size to use insertion sort.
      */
-    private static final int MAX_INSERTION_SORT_SIZE = 74;
-
-    /**
-     * Max array size to use pair insertion sort.
-     */
-    private static final int MAX_PAIR_INSERTION_SORT_SIZE = 193;
-
-    /**
-     * Max array size to use heap sort for the leftmost part.
-     */
-    private static final int MAX_HEAP_SORT_SIZE = 34;
+    private static final int MAX_INSERTION_SORT_SIZE = 33;
 
     /**
      * Min array size to try merging of runs.
@@ -109,7 +105,7 @@ public final class DualPivotQuicksort20190210 implements wildinter.net.mergesort
     /**
      * Min factor for the first runs to continue scanning.
      */
-    private static final int MIN_FIRST_RUNS_FACTOR = 6;
+    private static final int MIN_FIRST_RUNS_FACTOR = 7;
 
     /**
      * Max double recursive partitioning depth before using heap sort.
@@ -132,18 +128,27 @@ public final class DualPivotQuicksort20190210 implements wildinter.net.mergesort
             int end = high - 1, size = high - low;
 
             /*
-             * Run pair insertion sort on small non-leftmost parts.
+             * Run mixed insertion sort on small non-leftmost parts.
              */
-            if (size < MAX_PAIR_INSERTION_SORT_SIZE && (bits & 1) > 0) {
-                pairInsertionSort(a, low, high - 3 * (size >> 5 << 3), high);
+            if (size < MAX_MIXED_INSERTION_SORT_SIZE && (bits & 1) > 0) {
+                mixedInsertionSort(a, low, high - 3 * (size >> 5 << 3), high);
                 return;
             }
 
             /*
-             * Invoke insertion sort on the leftmost part.
+             * Invoke insertion sort on small leftmost part.
              */
-            if (size < MAX_INSERTION_SORT_SIZE && bits < 6) {
+            if (size < MAX_INSERTION_SORT_SIZE) {
                 insertionSort(a, low, high);
+                return;
+            }
+
+            /*
+             * Check if the whole array or large non-leftmost
+             * parts are nearly sorted and then merge runs.
+             */
+            if ((bits == 0 || size > MIN_TRY_MERGE_SIZE && (bits & 1) > 0)
+                    && tryMergeRuns(sorter, a, low, size)) {
                 return;
             }
 
@@ -151,20 +156,10 @@ public final class DualPivotQuicksort20190210 implements wildinter.net.mergesort
              * Switch to heap sort if execution
              * time is becoming quadratic.
              */
-            if (size < MAX_HEAP_SORT_SIZE || (bits += 2) > MAX_RECURSION_DEPTH) {
+            if ((bits += 2) > MAX_RECURSION_DEPTH) {
                 heapSort(a, low, end);
                 return;
             }
-
-            /*
-             * Check if the whole array or non-left parts
-             * are nearly sorted and then merge runs.
-             */
-            if ( (bits == 2 || ((bits & 1) > 0  && size > MIN_TRY_MERGE_SIZE))
-                    && tryMergeRuns(sorter, a, low, size)) {
-                return;
-            }
-
 
             /*
              * Use an inexpensive approximation of the golden ratio
@@ -305,11 +300,11 @@ public final class DualPivotQuicksort20190210 implements wildinter.net.mergesort
                 int pivot = a[e3];
 
                 /*
-                 * The first element to be sorted is moved to
-                 * the location formerly occupied by the pivot.
-                 * When partitioning is completed, the pivot is
-                 * swapped back into its final position, and
-                 * excluded from the next subsequent sorting.
+                 * The first element to be sorted is moved to the
+                 * location formerly occupied by the pivot. After
+                 * completion of partitioning the pivot is swapped
+                 * back into its final position, and excluded from
+                 * the next subsequent sorting.
                  */
                 a[e3] = a[lower];
 
@@ -374,6 +369,115 @@ public final class DualPivotQuicksort20190210 implements wildinter.net.mergesort
     }
 
     /**
+     * Sorts the specified range of the array using mixed insertion sort.
+     *
+     * Mixed insertion sort is combination of simple insertion sort,
+     * pin insertion sort and pair insertion sort.
+     *
+     * In the context of Dual-Pivot Quicksort, the pivot element
+     * from the left part plays the role of sentinel, because it
+     * is less than any elements from the given part. Therefore,
+     * expensive check of the left range can be skipped on each
+     * iteration unless it is the leftmost call.
+     *
+     * @param a the array to be sorted
+     * @param low the index of the first element, inclusive, to be sorted
+     * @param end the index of the last element for simple insertion sort
+     * @param high the index of the last element, exclusive, to be sorted
+     */
+    private static void mixedInsertionSort(int[] a, int low, int end, int high) {
+        if (end == high) {
+
+            /*
+             * Invoke simple insertion sort on tiny array.
+             */
+            for (int i; ++low < end; ) {
+                int ak = a[i = low];
+
+                while (ak < a[--i]) {
+                    a[i + 1] = a[i];
+                }
+                a[i + 1] = ak;
+            }
+        } else {
+
+            /*
+             * Start with pin insertion sort on small part.
+             */
+            int pin = a[end];
+
+            for (int i, p = high; ++low < end; ) {
+                int ak = a[i = low];
+
+                if (ak < a[i - 1]) {
+                    /*
+                     * Insert small element at the beginning.
+                     */
+                    a[i] = a[--i];
+
+                    while (ak < a[--i]) {
+                        a[i + 1] = a[i];
+                    }
+                    a[i + 1] = ak;
+
+                } else if (p > i && ak > pin) {
+                    /*
+                     * Move large element to the end.
+                     */
+                    while (a[--p] > pin);
+
+                    if (p > i) {
+                        ak = a[p];
+                        a[p] = a[i];
+                    }
+
+                    while (ak < a[--i]) {
+                        a[i + 1] = a[i];
+                    }
+                    a[i + 1] = ak;
+                 }
+            }
+
+            /*
+             * Continue with pair insertion sort on remain part.
+             */
+            for (int i; low < high; ++low) {
+                int a1 = a[i = low], a2 = a[++low];
+
+                /*
+                 * Insert two elements per iteration: at first, insert the
+                 * larger element and then insert the smaller element, but
+                 * from the position where the larger element was inserted.
+                 */
+                if (a1 > a2) {
+
+                    while (a1 < a[--i]) {
+                        a[i + 2] = a[i];
+                    }
+                    a[++i + 1] = a1;
+
+                    while (a2 < a[--i]) {
+                        a[i + 1] = a[i];
+                    }
+                    a[i + 1] = a2;
+
+                } else if (a1 < a[i - 1]) {
+
+                    while (a2 < a[--i]) {
+                        a[i + 2] = a[i];
+                    }
+                    a[++i + 1] = a2;
+
+                    while (a1 < a[--i]) {
+                        a[i + 1] = a[i];
+                    }
+                    a[i + 1] = a1;
+                }
+            }
+        }
+    }
+
+    /**
      * Sorts the specified range of the array using insertion sort.
      *
      * @param a the array to be sorted
@@ -384,103 +488,16 @@ public final class DualPivotQuicksort20190210 implements wildinter.net.mergesort
         for (int i, k = low; ++k < high; ) {
             int ak = a[i = k];
 
-            if (ak < a[k - 1]) {      // TODO [3k]
-
-                if (ak < a[low]) {
-                    while (--i >= low) {
-                        a[i + 1] = a[i];
-                    }
-                } else {
-                    while (ak < a[--i]) {
-                        a[i + 1] = a[i];
-                    }
+            if (ak < a[low]) {
+                while (--i >= low) {
+                    a[i + 1] = a[i];
                 }
-                a[i + 1] = ak;
-            }
-        }
-    }
-
-    /**
-     * Sorts the specified range of the array using pair insertion sort.
-     *
-     * In the context of Quicksort, the pivot element between given
-     * parts plays the role of sentinel. Therefore, expensive check
-     * of the left range on each iteration can be skipped unless it
-     * is the leftmost call. For initial array up to threshold, use
-     * plain insertion sort. For remainder, insert two elements per
-     * iteration, first, the greater element then the lesser, but
-     * from position where the greater element was inserted.
-     *
-     * @param a the array to be sorted
-     * @param left the index of the first element, inclusive, to be sorted // TODO
-     * @param end the index of the last element for simple insertion sort
-     * @param last the index of the last element, exclusive, to be sorted
-     */
-    private static void pairInsertionSort(int[] a, int left, int end, int last) {
-        if (end == last) {
-
-            for (int k; ++left < end; ) {        // TODO: i <-> k   or ak <-> ai
-                int ak = a[k = left];
-
-                if (ak < a[k - 1]) {      // TODO [3k]
-                    while (ak < a[--k]) {
-                        a[k + 1] = a[k];
-                    }
-                    a[k + 1] = ak;
+            } else {
+                while (ak < a[--i]) {
+                    a[i + 1] = a[i];
                 }
             }
-
-        } else {
-
-            int pivot = a[end];
-
-            for (int k, r = last; ++left < end; ) {        // TODO: i <-> k   or ak <-> ai
-                int ak = a[k = left];
-
-                if (r > k && ak > pivot) { // todo [1A]
-
-                    while (a[--r] > pivot);   // [i]
-
-                    if (r > k) {
-                        ak = a[r];
-                        a[r /* -- */] = a[k];
-                    }
-                }
-
-                while (ak < a[--k]) {
-                    a[k + 1] = a[k];
-                }
-                a[k + 1] = ak;
-            }
-
-            for (int k; left < last; ++left) {             // TODO: i <-> k
-                int a1 = a[k = left], a2 = a[++left];
-
-                if (a1 > a2) {
-
-                    while (a1 < a[--k]) {
-                        a[k + 2] = a[k];
-                    }
-                    a[++k + 1] = a1;
-
-                    while (a2 < a[--k]) {
-                        a[k + 1] = a[k];
-                    }
-                    a[k + 1] = a2;
-
-                } else if (a1 < a[k - 1]) {
-
-                    while (a2 < a[--k]) {
-                        a[k + 2] = a[k];
-                    }
-                    a[++k + 1] = a2;
-
-                    while (a1 < a[--k]) {
-                        a[k + 1] = a[k];
-                    }
-                    a[k + 1] = a1;
-                }
-            }
+            a[i + 1] = ak;
         }
     }
 
@@ -523,16 +540,6 @@ public final class DualPivotQuicksort20190210 implements wildinter.net.mergesort
                 return;
             }
         }
-    }
-
-    /**
-     * Calculates the max number of runs.
-     *
-     * @param size the array size
-     * @return the max number of runs
-     */
-    private static int getMaxRunCount(int size) {
-        return size > 2048000 ? 2000 : size >> 10 | 5;
     }
 
     /**
@@ -664,7 +671,7 @@ public final class DualPivotQuicksort20190210 implements wildinter.net.mergesort
      * @return the destination where runs are merged
      */
     private static int[] mergeRuns(int[] a, int[] b, int offset,
-                                   int aim, /*boolean parallel,*/ int[] run, int lo, int hi) {
+            int aim, /*boolean parallel,*/ int[] run, int lo, int hi) {
 
         if (hi - lo == 1) {
             if (aim >= 0) {
@@ -695,12 +702,12 @@ public final class DualPivotQuicksort20190210 implements wildinter.net.mergesort
         {
 */
         a1 = mergeRuns(a, b, offset, -aim, /*false,*/ run, lo, mi);
-        a2 = mergeRuns(a, b, offset, 0, /*false,*/ run, mi, hi);
+        a2 = mergeRuns(a, b, offset,    0, /*false,*/ run, mi, hi);
 //        }
 
         int[] dst = a1 == a ? b : a;
 
-        int k = a1 == a ? run[lo] - offset : run[lo];
+        int k   = a1 == a ? run[lo] - offset : run[lo];
         int lo1 = a1 == b ? run[lo] - offset : run[lo];
         int hi1 = a1 == b ? run[mi] - offset : run[mi];
         int lo2 = a2 == b ? run[mi] - offset : run[mi];
@@ -730,7 +737,7 @@ public final class DualPivotQuicksort20190210 implements wildinter.net.mergesort
      * @param hi2 the end index of the second part, exclusive
      */
     private static void mergeParts(/*Merger merger,*/int[] dst, int k,
-                                                                      int[] a1, int lo1, int hi1, int[] a2, int lo2, int hi2) {
+            int[] a1, int lo1, int hi1, int[] a2, int lo2, int hi2) {
         /*
          * Merge small parts sequentially.
          */
@@ -770,4 +777,14 @@ public final class DualPivotQuicksort20190210 implements wildinter.net.mergesort
     }
 
 //    static final class Merger {}
+
+    /**
+     * Calculates the max number of runs.
+     *
+     * @param size the array size
+     * @return the max number of runs
+     */
+    private static int getMaxRunCount(int size) {
+        return size > 2048000 ? 2000 : size >> 10 | 5;
+    }
 }

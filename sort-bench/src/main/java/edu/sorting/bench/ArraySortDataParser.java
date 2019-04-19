@@ -182,11 +182,12 @@ public final class ArraySortDataParser {
 
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith(ROW_PREFIX)
-                        && (line.contains("SAWTOTH")
+                        && (line.contains("STAGGER")
+                        || line.contains("SAWTOTH")
                         || line.contains("_RANDOM")
-                        || line.contains("STAGGER")
                         || line.contains("PLATEAU")
-                        || line.contains("SHUFFLE"))) {
+                        || line.contains("SHUFFLE")
+                        || line.contains("SPIRAL"))) {
                     lines.add(line.substring(ROW_PREFIX.length()));
                 } else if (line.startsWith(PARAM_SORTER)) {
                     if (cols) {

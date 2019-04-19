@@ -21,7 +21,7 @@ import java.util.StringTokenizer;
  */
 public final class BentleyDataParser {
 
-    private final static boolean IGNORE_LOW_CONFIDENCE = true;
+    private final static boolean IGNORE_LOW_CONFIDENCE = false; // TODO
 
     private final static DecimalFormat df;
 
@@ -76,11 +76,12 @@ public final class BentleyDataParser {
             boolean cols = false;
 
             while ((line = reader.readLine()) != null) {
-                if (line.contains("SAWTOTH")
+                if (line.contains("STAGGER")
+                        || line.contains("SAWTOTH")
                         || line.contains("_RANDOM")
-                        || line.contains("STAGGER")
                         || line.contains("PLATEAU")
-                        || line.contains("SHUFFLE")) {
+                        || line.contains("SHUFFLE")
+                        || line.contains("SPIRAL")) {
                     lines.add(line);
                 } else if (line.startsWith(BentleyBasher.HEADER_COLUMNS)) {
                     if (cols) {
