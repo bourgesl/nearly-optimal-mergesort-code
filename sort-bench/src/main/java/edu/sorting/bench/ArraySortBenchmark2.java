@@ -75,10 +75,12 @@ public class ArraySortBenchmark2 {
         ParamIntArrayBuilder distBuilder;
 
         @Param({"BASELINE", "DPQ_11",
-//                "DPQ_18_11_21", "DPQ_19_02_10", "DPQ_19_04_05", // "RADIX", 
-//     "MARLIN",
-    // "ISORT_E", 
-            "DPQ_18_11_E", "DPQ_19_02_E", "MARLIN_M2"
+//                "DPQ_18_11_21", 
+                "DPQ_19_02_10", "DPQ_19_04_05", 
+//                "RADIX", 
+//                "MARLIN",
+//                "ISORT_E", 
+//                "DPQ_18_11_E", "DPQ_19_02_E", "MARLIN_M2"
     })
         IntSorter tSorter;
 
