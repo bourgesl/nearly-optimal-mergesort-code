@@ -1,0 +1,330 @@
+--- STATS ---
+Winners: 
+DPQ_19_05_01 : 11
+ISORT_E : 0
+DPQ_19_05_E : 0
+MARLIN_M2 : 3
+
+--- STATS ---
+Comparing sorters DPQ_19_05_01 vs ISORT_E
+winners  : 11 / 0
+avg   (%): 59.7526   
+stats (%): [14: µ=64.46497 σ=22.666254 rms=87.131226 min=23.345833 max=90.16393]
+
+Stats per keys:
+IDENT_____:SPIRAL stats (%): [7: µ=53.638107 σ=25.44936 rms=79.08747 min=23.345833 max=89.47369]
+IDENT_____:STAGGER stats (%): [7: µ=75.29183 σ=13.854937 rms=89.14677 min=51.918953 max=90.16393]
+
+stats per keys and sizes:
+- size = 12
+stats (%): [2: µ=89.81881 σ=0.48808062 rms=90.30689 min=89.47369 max=90.16393]
+IDENT_____:SPIRAL stats (%): [1: µ=89.47369 σ=NaN rms=NaN min=89.47369 max=89.47369]
+IDENT_____:STAGGER stats (%): [1: µ=90.16393 σ=NaN rms=NaN min=90.16393 max=90.16393]
+
+
+- size = 24
+stats (%): [2: µ=80.70567 σ=7.2955027 rms=88.001175 min=75.546974 max=85.86437]
+IDENT_____:SPIRAL stats (%): [1: µ=75.546974 σ=NaN rms=NaN min=75.546974 max=75.546974]
+IDENT_____:STAGGER stats (%): [1: µ=85.86437 σ=NaN rms=NaN min=85.86437 max=85.86437]
+
+
+- size = 32
+stats (%): [2: µ=76.3549 σ=6.1865993 rms=82.5415 min=71.98031 max=80.729485]
+IDENT_____:SPIRAL stats (%): [1: µ=71.98031 σ=NaN rms=NaN min=71.98031 max=71.98031]
+IDENT_____:STAGGER stats (%): [1: µ=80.729485 σ=NaN rms=NaN min=80.729485 max=80.729485]
+
+
+- size = 48
+stats (%): [2: µ=61.61827 σ=20.467562 rms=82.08583 min=47.14552 max=76.09102]
+IDENT_____:SPIRAL stats (%): [1: µ=47.14552 σ=NaN rms=NaN min=47.14552 max=47.14552]
+IDENT_____:STAGGER stats (%): [1: µ=76.09102 σ=NaN rms=NaN min=76.09102 max=76.09102]
+
+
+- size = 64
+stats (%): [2: µ=60.240055 σ=29.826029 rms=90.066086 min=39.149868 max=81.330246]
+IDENT_____:SPIRAL stats (%): [1: µ=39.149868 σ=NaN rms=NaN min=39.149868 max=39.149868]
+IDENT_____:STAGGER stats (%): [1: µ=81.330246 σ=NaN rms=NaN min=81.330246 max=81.330246]
+
+
+- size = 96
+stats (%): [2: µ=44.884693 σ=22.712442 rms=67.59714 min=28.824572 max=60.944817]
+IDENT_____:SPIRAL stats (%): [1: µ=28.824572 σ=NaN rms=NaN min=28.824572 max=28.824572]
+IDENT_____:STAGGER stats (%): [1: µ=60.944817 σ=NaN rms=NaN min=60.944817 max=60.944817]
+
+
+- size = 128
+stats (%): [2: µ=37.632393 σ=20.204247 rms=57.83664 min=23.345833 max=51.918953]
+IDENT_____:SPIRAL stats (%): [1: µ=23.345833 σ=NaN rms=NaN min=23.345833 max=23.345833]
+IDENT_____:STAGGER stats (%): [1: µ=51.918953 σ=NaN rms=NaN min=51.918953 max=51.918953]
+
+
+
+--- STATS ---
+Comparing sorters DPQ_19_05_01 vs DPQ_19_05_E
+winners  : 11 / 0
+avg   (%): 67.7392   
+stats (%): [14: µ=67.88731 σ=4.659484 rms=72.54679 min=59.45946 max=76.83761]
+
+Stats per keys:
+IDENT_____:SPIRAL stats (%): [7: µ=68.19906 σ=3.6315227 rms=71.830574 min=62.274998 max=74.58867]
+IDENT_____:STAGGER stats (%): [7: µ=67.575554 σ=5.798734 rms=73.37429 min=59.45946 max=76.83761]
+
+stats per keys and sizes:
+- size = 12
+stats (%): [2: µ=67.02406 σ=10.697964 rms=77.72202 min=59.45946 max=74.58867]
+IDENT_____:SPIRAL stats (%): [1: µ=74.58867 σ=NaN rms=NaN min=74.58867 max=74.58867]
+IDENT_____:STAGGER stats (%): [1: µ=59.45946 σ=NaN rms=NaN min=59.45946 max=59.45946]
+
+
+- size = 24
+stats (%): [2: µ=73.07052 σ=5.3274717 rms=78.39799 min=69.30342 max=76.83761]
+IDENT_____:SPIRAL stats (%): [1: µ=69.30342 σ=NaN rms=NaN min=69.30342 max=69.30342]
+IDENT_____:STAGGER stats (%): [1: µ=76.83761 σ=NaN rms=NaN min=76.83761 max=76.83761]
+
+
+- size = 32
+stats (%): [2: µ=69.57105 σ=3.6255536 rms=73.19661 min=67.0074 max=72.13471]
+IDENT_____:SPIRAL stats (%): [1: µ=67.0074 σ=NaN rms=NaN min=67.0074 max=67.0074]
+IDENT_____:STAGGER stats (%): [1: µ=72.13471 σ=NaN rms=NaN min=72.13471 max=72.13471]
+
+
+- size = 48
+stats (%): [2: µ=69.17017 σ=0.8098998 rms=69.98007 min=68.59749 max=69.74286]
+IDENT_____:SPIRAL stats (%): [1: µ=68.59749 σ=NaN rms=NaN min=68.59749 max=68.59749]
+IDENT_____:STAGGER stats (%): [1: µ=69.74286 σ=NaN rms=NaN min=69.74286 max=69.74286]
+
+
+- size = 64
+stats (%): [2: µ=64.34222 σ=2.9234898 rms=67.26571 min=62.274998 max=66.40943]
+IDENT_____:SPIRAL stats (%): [1: µ=62.274998 σ=NaN rms=NaN min=62.274998 max=62.274998]
+IDENT_____:STAGGER stats (%): [1: µ=66.40943 σ=NaN rms=NaN min=66.40943 max=66.40943]
+
+
+- size = 96
+stats (%): [2: µ=65.82243 σ=3.1375687 rms=68.96001 min=63.60384 max=68.04103]
+IDENT_____:SPIRAL stats (%): [1: µ=68.04103 σ=NaN rms=NaN min=68.04103 max=68.04103]
+IDENT_____:STAGGER stats (%): [1: µ=63.60384 σ=NaN rms=NaN min=63.60384 max=63.60384]
+
+
+- size = 128
+stats (%): [2: µ=66.210686 σ=1.9370412 rms=68.14773 min=64.84099 max=67.580376]
+IDENT_____:SPIRAL stats (%): [1: µ=67.580376 σ=NaN rms=NaN min=67.580376 max=67.580376]
+IDENT_____:STAGGER stats (%): [1: µ=64.84099 σ=NaN rms=NaN min=64.84099 max=64.84099]
+
+
+
+--- STATS ---
+Comparing sorters DPQ_19_05_01 vs MARLIN_M2
+winners  : 11 / 3
+avg   (%): 66.9464   
+stats (%): [14: µ=71.50998 σ=28.589104 rms=100.09908 min=45.265045 max=124.88474]
+
+Stats per keys:
+IDENT_____:SPIRAL stats (%): [7: µ=50.348625 σ=4.2706 rms=54.61923 min=45.265045 max=55.813953]
+IDENT_____:STAGGER stats (%): [7: µ=92.67134 σ=26.604225 rms=119.275566 min=58.407078 max=124.88474]
+
+stats per keys and sizes:
+- size = 12
+stats (%): [2: µ=57.110516 σ=1.8336171 rms=58.944134 min=55.813953 max=58.407078]
+IDENT_____:SPIRAL stats (%): [1: µ=55.813953 σ=NaN rms=NaN min=55.813953 max=55.813953]
+IDENT_____:STAGGER stats (%): [1: µ=58.407078 σ=NaN rms=NaN min=58.407078 max=58.407078]
+
+
+- size = 24
+stats (%): [2: µ=64.908646 σ=17.806864 rms=82.71551 min=52.31729 max=77.5]
+IDENT_____:SPIRAL stats (%): [1: µ=52.31729 σ=NaN rms=NaN min=52.31729 max=52.31729]
+IDENT_____:STAGGER stats (%): [1: µ=77.5 σ=NaN rms=NaN min=77.5 max=77.5]
+
+
+- size = 32
+stats (%): [2: µ=61.05709 σ=7.462204 rms=68.519295 min=55.780518 max=66.333664]
+IDENT_____:SPIRAL stats (%): [1: µ=55.780518 σ=NaN rms=NaN min=55.780518 max=55.780518]
+IDENT_____:STAGGER stats (%): [1: µ=66.333664 σ=NaN rms=NaN min=66.333664 max=66.333664]
+
+
+- size = 48
+stats (%): [2: µ=70.35399 σ=31.812738 rms=102.166725 min=47.858986 max=92.84899]
+IDENT_____:SPIRAL stats (%): [1: µ=47.858986 σ=NaN rms=NaN min=47.858986 max=47.858986]
+IDENT_____:STAGGER stats (%): [1: µ=92.84899 σ=NaN rms=NaN min=92.84899 max=92.84899]
+
+
+- size = 64
+stats (%): [2: µ=76.293945 σ=40.795353 rms=117.0893 min=47.447273 max=105.14062]
+IDENT_____:SPIRAL stats (%): [1: µ=47.447273 σ=NaN rms=NaN min=47.447273 max=47.447273]
+IDENT_____:STAGGER stats (%): [1: µ=105.14062 σ=NaN rms=NaN min=105.14062 max=105.14062]
+
+
+- size = 96
+stats (%): [2: µ=85.77079 σ=53.476326 rms=139.24712 min=47.95732 max=123.58427]
+IDENT_____:SPIRAL stats (%): [1: µ=47.95732 σ=NaN rms=NaN min=47.95732 max=47.95732]
+IDENT_____:STAGGER stats (%): [1: µ=123.58427 σ=NaN rms=NaN min=123.58427 max=123.58427]
+
+
+- size = 128
+stats (%): [2: µ=85.0749 σ=56.299625 rms=141.37453 min=45.265045 max=124.88474]
+IDENT_____:SPIRAL stats (%): [1: µ=45.265045 σ=NaN rms=NaN min=45.265045 max=45.265045]
+IDENT_____:STAGGER stats (%): [1: µ=124.88474 σ=NaN rms=NaN min=124.88474 max=124.88474]
+
+
+
+--- STATS ---
+Comparing sorters ISORT_E vs DPQ_19_05_E
+winners  : 0 / 0
+avg   (%): 113.3662  
+stats (%): [14: µ=124.6884 σ=64.60426 rms=189.29266 min=65.945946 max=289.47513]
+
+Stats per keys:
+IDENT_____:SPIRAL stats (%): [7: µ=156.89825 σ=79.268936 rms=236.16719 min=83.3638 max=289.47513]
+IDENT_____:STAGGER stats (%): [7: µ=92.47854 σ=18.40383 rms=110.88237 min=65.945946 max=124.88886]
+
+stats per keys and sizes:
+- size = 12
+stats (%): [2: µ=74.65488 σ=12.316284 rms=86.97116 min=65.945946 max=83.3638]
+IDENT_____:SPIRAL stats (%): [1: µ=83.3638 σ=NaN rms=NaN min=83.3638 max=83.3638]
+IDENT_____:STAGGER stats (%): [1: µ=65.945946 σ=NaN rms=NaN min=65.945946 max=65.945946]
+
+
+- size = 24
+stats (%): [2: µ=90.61136 σ=1.589829 rms=92.20119 min=89.48718 max=91.735535]
+IDENT_____:SPIRAL stats (%): [1: µ=91.735535 σ=NaN rms=NaN min=91.735535 max=91.735535]
+IDENT_____:STAGGER stats (%): [1: µ=89.48718 σ=NaN rms=NaN min=89.48718 max=89.48718]
+
+
+- size = 32
+stats (%): [2: µ=91.22245 σ=2.6429398 rms=93.865395 min=89.353615 max=93.09129]
+IDENT_____:SPIRAL stats (%): [1: µ=93.09129 σ=NaN rms=NaN min=93.09129 max=93.09129]
+IDENT_____:STAGGER stats (%): [1: µ=89.353615 σ=NaN rms=NaN min=89.353615 max=89.353615]
+
+
+- size = 48
+stats (%): [2: µ=118.57938 σ=38.073784 rms=156.65315 min=91.65714 max=145.5016]
+IDENT_____:SPIRAL stats (%): [1: µ=145.5016 σ=NaN rms=NaN min=145.5016 max=145.5016]
+IDENT_____:STAGGER stats (%): [1: µ=91.65714 σ=NaN rms=NaN min=91.65714 max=91.65714]
+
+
+- size = 64
+stats (%): [2: µ=120.36114 σ=54.740086 rms=175.10123 min=81.654045 max=159.06822]
+IDENT_____:SPIRAL stats (%): [1: µ=159.06822 σ=NaN rms=NaN min=159.06822 max=159.06822]
+IDENT_____:STAGGER stats (%): [1: µ=81.654045 σ=NaN rms=NaN min=81.654045 max=81.654045]
+
+
+- size = 96
+stats (%): [2: µ=170.2076 σ=93.11832 rms=263.3259 min=104.363 max=236.05219]
+IDENT_____:SPIRAL stats (%): [1: µ=236.05219 σ=NaN rms=NaN min=236.05219 max=236.05219]
+IDENT_____:STAGGER stats (%): [1: µ=104.363 σ=NaN rms=NaN min=104.363 max=104.363]
+
+
+- size = 128
+stats (%): [2: µ=207.18199 σ=116.380066 rms=323.56207 min=124.88886 max=289.47513]
+IDENT_____:SPIRAL stats (%): [1: µ=289.47513 σ=NaN rms=NaN min=289.47513 max=289.47513]
+IDENT_____:STAGGER stats (%): [1: µ=124.88886 σ=NaN rms=NaN min=124.88886 max=124.88886]
+
+
+
+--- STATS ---
+Comparing sorters ISORT_E vs MARLIN_M2
+winners  : 0 / 3
+avg   (%): 112.0394  
+stats (%): [14: µ=123.1373 σ=57.079796 rms=180.2171 min=62.380302 max=240.53787]
+
+Stats per keys:
+IDENT_____:SPIRAL stats (%): [7: µ=113.15697 σ=50.5437 rms=163.70067 min=62.380302 max=193.88919]
+IDENT_____:STAGGER stats (%): [7: µ=133.11763 σ=65.361626 rms=198.47926 min=64.77876 max=240.53787]
+
+stats per keys and sizes:
+- size = 12
+stats (%): [2: µ=63.579533 σ=1.6959674 rms=65.2755 min=62.380302 max=64.77876]
+IDENT_____:SPIRAL stats (%): [1: µ=62.380302 σ=NaN rms=NaN min=62.380302 max=62.380302]
+IDENT_____:STAGGER stats (%): [1: µ=64.77876 σ=NaN rms=NaN min=64.77876 max=64.77876]
+
+
+- size = 24
+stats (%): [2: µ=79.75498 σ=14.854393 rms=94.609375 min=69.251335 max=90.25862]
+IDENT_____:SPIRAL stats (%): [1: µ=69.251335 σ=NaN rms=NaN min=69.251335 max=69.251335]
+IDENT_____:STAGGER stats (%): [1: µ=90.25862 σ=NaN rms=NaN min=90.25862 max=90.25862]
+
+
+- size = 32
+stats (%): [2: µ=79.83098 σ=3.3048055 rms=83.13579 min=77.49413 max=82.16783]
+IDENT_____:SPIRAL stats (%): [1: µ=77.49413 σ=NaN rms=NaN min=77.49413 max=77.49413]
+IDENT_____:STAGGER stats (%): [1: µ=82.16783 σ=NaN rms=NaN min=82.16783 max=82.16783]
+
+
+- size = 48
+stats (%): [2: µ=111.768456 σ=14.502941 rms=126.27139 min=101.51333 max=122.02358]
+IDENT_____:SPIRAL stats (%): [1: µ=101.51333 σ=NaN rms=NaN min=101.51333 max=101.51333]
+IDENT_____:STAGGER stats (%): [1: µ=122.02358 σ=NaN rms=NaN min=122.02358 max=122.02358]
+
+
+- size = 64
+stats (%): [2: µ=125.23506 σ=5.7149806 rms=130.95004 min=121.19396 max=129.27617]
+IDENT_____:SPIRAL stats (%): [1: µ=121.19396 σ=NaN rms=NaN min=121.19396 max=121.19396]
+IDENT_____:STAGGER stats (%): [1: µ=129.27617 σ=NaN rms=NaN min=129.27617 max=129.27617]
+
+
+- size = 96
+stats (%): [2: µ=184.57857 σ=25.74157 rms=210.32013 min=166.37653 max=202.78061]
+IDENT_____:SPIRAL stats (%): [1: µ=166.37653 σ=NaN rms=NaN min=166.37653 max=166.37653]
+IDENT_____:STAGGER stats (%): [1: µ=202.78061 σ=NaN rms=NaN min=202.78061 max=202.78061]
+
+
+- size = 128
+stats (%): [2: µ=217.21353 σ=32.985596 rms=250.19913 min=193.88919 max=240.53787]
+IDENT_____:SPIRAL stats (%): [1: µ=193.88919 σ=NaN rms=NaN min=193.88919 max=193.88919]
+IDENT_____:STAGGER stats (%): [1: µ=240.53787 σ=NaN rms=NaN min=240.53787 max=240.53787]
+
+
+
+--- STATS ---
+Comparing sorters DPQ_19_05_E vs MARLIN_M2
+winners  : 0 / 3
+avg   (%): 98.8296   
+stats (%): [14: µ=106.17085 σ=45.11538 rms=151.28622 min=66.97957 max=194.30315]
+
+Stats per keys:
+IDENT_____:SPIRAL stats (%): [7: µ=73.85497 σ=5.363448 rms=79.218414 min=66.97957 max=83.24531]
+IDENT_____:STAGGER stats (%): [7: µ=138.48674 σ=44.096745 rms=182.58348 min=91.95804 max=194.30315]
+
+stats per keys and sizes:
+- size = 12
+stats (%): [2: µ=86.52955 σ=16.547068 rms=103.076614 min=74.829 max=98.23009]
+IDENT_____:SPIRAL stats (%): [1: µ=74.829 σ=NaN rms=NaN min=74.829 max=74.829]
+IDENT_____:STAGGER stats (%): [1: µ=98.23009 σ=NaN rms=NaN min=98.23009 max=98.23009]
+
+
+- size = 24
+stats (%): [2: µ=88.17613 σ=17.940624 rms=106.11675 min=75.4902 max=100.86207]
+IDENT_____:SPIRAL stats (%): [1: µ=75.4902 σ=NaN rms=NaN min=75.4902 max=75.4902]
+IDENT_____:STAGGER stats (%): [1: µ=100.86207 σ=NaN rms=NaN min=100.86207 max=100.86207]
+
+
+- size = 32
+stats (%): [2: µ=87.60168 σ=6.1608353 rms=93.76251 min=83.24531 max=91.95804]
+IDENT_____:SPIRAL stats (%): [1: µ=83.24531 σ=NaN rms=NaN min=83.24531 max=83.24531]
+IDENT_____:STAGGER stats (%): [1: µ=91.95804 σ=NaN rms=NaN min=91.95804 max=91.95804]
+
+
+- size = 48
+stats (%): [2: µ=101.44916 σ=44.804142 rms=146.2533 min=69.767845 max=133.13046]
+IDENT_____:SPIRAL stats (%): [1: µ=69.767845 σ=NaN rms=NaN min=69.767845 max=69.767845]
+IDENT_____:STAGGER stats (%): [1: µ=133.13046 σ=NaN rms=NaN min=133.13046 max=133.13046]
+
+
+- size = 64
+stats (%): [2: µ=117.25587 σ=58.076008 rms=175.33188 min=76.189926 max=158.32181]
+IDENT_____:SPIRAL stats (%): [1: µ=76.189926 σ=NaN rms=NaN min=76.189926 max=76.189926]
+IDENT_____:STAGGER stats (%): [1: µ=158.32181 σ=NaN rms=NaN min=158.32181 max=158.32181]
+
+
+- size = 96
+stats (%): [2: µ=132.39305 σ=87.55411 rms=219.94716 min=70.48294 max=194.30315]
+IDENT_____:SPIRAL stats (%): [1: µ=70.48294 σ=NaN rms=NaN min=70.48294 max=70.48294]
+IDENT_____:STAGGER stats (%): [1: µ=194.30315 σ=NaN rms=NaN min=194.30315 max=194.30315]
+
+
+- size = 128
+stats (%): [2: µ=129.79056 σ=88.82815 rms=218.6187 min=66.97957 max=192.60153]
+IDENT_____:SPIRAL stats (%): [1: µ=66.97957 σ=NaN rms=NaN min=66.97957 max=66.97957]
+IDENT_____:STAGGER stats (%): [1: µ=192.60153 σ=NaN rms=NaN min=192.60153 max=192.60153]
+
+

@@ -22,19 +22,13 @@
  * or visit www.oracle.com if you need additional information or have any
  * questions.
  */
-
 package edu.sorting;
 
-import static edu.sorting.DualPivotQuicksort20181121Ext.checkSorted;
-import static edu.sorting.DualPivotQuicksort20190210Ext.insertionSort;
-
 /**
-* InsertionSort only
-*/
+ * InsertionSort only
+ */
 public final class InsertionSortExt implements wildinter.net.mergesort.Sorter {
 
-    private final static boolean DO_CHECK = false;
-        
     public final static wildinter.net.mergesort.Sorter INSTANCE = new InsertionSortExt();
 
     /**
@@ -46,9 +40,7 @@ public final class InsertionSortExt implements wildinter.net.mergesort.Sorter {
     // avoid alloc
     // fake B (ancillary data ie indices)
     private int[] B = null;
-    private int[] auxA = null;
-    private int[] auxB = null;
-    
+
     // checks only
     private static int[] A_REF = null;
     private static int[] B_REF = null;
@@ -74,11 +66,11 @@ public final class InsertionSortExt implements wildinter.net.mergesort.Sorter {
             }
         }
 
-        insertionSort(A, B, low, high + 1); // exclusive
+        DualPivotQuicksort20190501Ext.insertionSort(A, B, low, high + 1); // exclusive
 
         if (DO_CHECK) {
-            checkSorted("sort(root)", A, B, low, high);
-        }        
+            ArrayUtils.checkSorted("sort(root)", A, B, A_REF, B_REF, low, high);
+        }
     }
 
     @Override

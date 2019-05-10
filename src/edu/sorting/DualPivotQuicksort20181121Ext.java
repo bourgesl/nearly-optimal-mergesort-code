@@ -51,8 +51,6 @@ import java.util.Arrays; // TODO
  */
 public final class DualPivotQuicksort20181121Ext implements wildinter.net.mergesort.Sorter {
 
-    private final static boolean DO_CHECK = false;
-
     public final static wildinter.net.mergesort.Sorter INSTANCE = new DualPivotQuicksort20181121Ext();
 
     /**
@@ -64,8 +62,6 @@ public final class DualPivotQuicksort20181121Ext implements wildinter.net.merges
     // avoid alloc
     // fake B (ancillary data ie indices)
     private int[] B = null;
-    private int[] auxA = null;
-    private int[] auxB = null;
     private final Sorter sorter = new Sorter();
     
     // checks only
@@ -99,49 +95,8 @@ public final class DualPivotQuicksort20181121Ext implements wildinter.net.merges
         sort(sorter, A, B, 0, low, high + 1);
 
         if (DO_CHECK) {
-            checkSorted("sort(root)", A, B, low, high);
+            ArrayUtils.checkSorted("sort(root)", A, B, A_REF, B_REF, low, high);
         }        
-    }
-
-    static void checkSorted(String msg, int[] A, int[] B, int low, int high) {
-        for (int i = low; i < high - 1; i++) {
-            if (A[i + 1] < A[i]) {
-                System.err.println(msg + " A NOT SORTED at " + i + " :: "+Arrays.toString(A));
-                return;
-            }
-            if (A_REF[B[i]] != A[i]) {
-                System.err.println(msg + " A NOT EQUAL TO A[B] at " + i);
-                return;
-            }
-            if (A_REF[B[i + 1]] < A_REF[B[i]]) {
-                System.err.println(msg + " B NOT SORTED at " + i);
-                return;
-            }
-        }
-        check(A, A_REF, low, high + 1);
-        check(B, B_REF, low, high + 1);
-//        System.out.println(msg + " checkSorted OK");
-    }
-    private static void check(int[] a, int[] ref, int low, int high) {
-        long plusCheckSum1 = 0;
-        long plusCheckSum2 = 0;
-        long xorCheckSum1 = 0;
-        long xorCheckSum2 = 0;
-        
-        for (int i = low; i < high; i++) {
-            plusCheckSum1 += a[i];
-            plusCheckSum2 += ref[i];
-            xorCheckSum1 ^= a[i];
-            xorCheckSum2 ^= ref[i];
-        }
-        if (plusCheckSum1 != plusCheckSum2) {
-            System.out.println("A: "+Arrays.toString(a));
-            System.out.println("R: "+Arrays.toString(ref));
-            throw new RuntimeException("!!! Array is not sorted correctly [+].");
-        }
-        if (xorCheckSum1 != xorCheckSum2) {
-            throw new RuntimeException("!!! Array is not sorted correctly [^].");
-        }
     }
 
     @Override

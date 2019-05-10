@@ -67,8 +67,6 @@ public final class MarlinMergeSort implements Sorter {
         mergeSortNoCopy(A, B, auxX, auxY, right + 1, 0);
     }
 
-    private static final boolean CHECK_SORTED = false;
-
     /**
      * Modified merge sort:
      * Input arrays are in both auxX/auxY (sorted: 0 to insertionSortIndex)
@@ -107,7 +105,7 @@ public final class MarlinMergeSort implements Sorter {
             System.arraycopy(auxX, 0, x, 0, toIndex);
             System.arraycopy(auxY, 0, y, 0, toIndex);
 
-            if (CHECK_SORTED) {
+            if (DO_CHECK) {
                 checkRange(x, 0, toIndex);
             }
             return;
@@ -126,7 +124,7 @@ public final class MarlinMergeSort implements Sorter {
             }
         }
 
-        if (CHECK_SORTED) {
+        if (DO_CHECK) {
             // validate:
             checkRange(x, 0, toIndex);
         }

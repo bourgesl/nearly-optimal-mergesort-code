@@ -45,7 +45,7 @@ public class ArraySortBenchmark2 {
 
     private final static int TWEAK_INC = 4; // 2 originally
 
-    private final static boolean DEBUG = false;
+    private final static boolean DEBUG = true;
 
     private static final boolean TRACE = false;
 
@@ -75,13 +75,13 @@ public class ArraySortBenchmark2 {
         ParamIntArrayBuilder distBuilder;
 
         @Param({"BASELINE", "DPQ_11",
-//                "DPQ_18_11_21", 
-                "DPQ_19_02_10", "DPQ_19_04_05", 
-//                "RADIX", 
-//                "MARLIN",
-//                "ISORT_E", 
-//                "DPQ_18_11_E", "DPQ_19_02_E", "MARLIN_M2"
-    })
+                //                "DPQ_18_11_21", 
+                //                "DPQ_19_04_05", "DPQ_19_05_01",  
+                //                "RADIX", 
+                //                "MARLIN",
+                //                "ISORT_E", 
+                "DPQ_18_11_E", /*"DPQ_19_02_E",*/ "DPQ_19_05_E", "MARLIN_M2"
+        })
         IntSorter tSorter;
 
         final int[][] inputs = new int[REP_DISTRIB][];
@@ -246,12 +246,30 @@ public class ArraySortBenchmark2 {
                     .include(ArraySortBenchmark2.class.getSimpleName());
 
             if (DEBUG) {
-                builder.param(PARAM_SIZE, new String[]{"12", "24", "32", "48", "64", "96"});
-                builder.param(PARAM_SUB_SIZE, "128");
-                // "REVERSE___", "REVERSE_FR", "REVERSE_BA", 
-                builder.param(PARAM_DATA_TWEAKER, new String[]{"IDENT_____", "REVERSE___", "SORT______", "DITHER____"});
-                // builder.param(PARAM_DIST_BUILDER, new String[]{"STAGGER", "SAWTOTH", "_RANDOM", "PLATEAU", "SHUFFLE"});
-                // builder.param(PARAM_SORTER, new String[]{"BASELINE", "DPQ_11", "DPQ_18_11_21"});
+                // TEST 2 array variants:
+                builder.param(PARAM_SIZE, new String[]{
+//                    "12", "24", "32", 
+                    "48", "64", "96", "128", "256"
+//                        , "384", "512", "768", "1024"
+                });
+                builder.param(PARAM_SUB_SIZE, "1");
+
+                // "REVERSE___", "SORT______", "DITHER____", "REVERSE___", "REVERSE_FR", "REVERSE_BA", 
+                builder.param(PARAM_DATA_TWEAKER, new String[]{
+                    "IDENT_____"
+                });
+
+                // "STAGGER", "SAWTOTH", "_RANDOM", "PLATEAU", "SHUFFLE"
+                builder.param(PARAM_DIST_BUILDER, new String[]{
+                    "SPIRAL", "STAGGER"
+                });
+
+                builder.param(PARAM_SORTER, new String[]{
+                    "BASELINE", "DPQ_19_05_01",
+                    "ISORT_E", 
+                    "DPQ_19_05_E", "MARLIN_M2"
+                });
+
             } else {
                 if (subSizes != null) {
                     builder.param(PARAM_SUB_SIZE, subSizes);

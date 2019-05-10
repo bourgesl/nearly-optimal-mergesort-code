@@ -41,8 +41,6 @@ import wildinter.net.mergesort.Sorter;
  * @since 1.7
  */
 public final class DualPivotQuicksort201802Ext implements Sorter {
-
-    private final static boolean DO_CHECK = false;
     
     public final static Sorter INSTANCE = new DualPivotQuicksort201802Ext();
 
