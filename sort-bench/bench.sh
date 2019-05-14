@@ -36,9 +36,12 @@ export CPU_CORE_IDS=3
 # -XX:+PrintGCApplicationStoppedTime
 # -XX:-TieredCompilation to disable C1/C2 tiered compilation
 # -XX:TieredStopAtLevel=1 to disable C2 ie only C1
-JAVA_OPTS="-Xms1g -Xmx1g -XX:-BackgroundCompilation"
+JAVA_OPTS="-Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation"
 #JAVA_OPTS="-Xms1g -Xmx1g -XX:+UnlockDiagnosticVMOptions -XX:GuaranteedSafepointInterval=300000"
 #JAVA_OPTS="-Xms1g -Xmx1g -XX:-TieredCompilation -XX:+UnlockDiagnosticVMOptions -XX:GuaranteedSafepointInterval=300000"
+
+#JAVA_OPTS="-Xms1g -Xmx1g -XX:+UseParallelGC -XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCI -XX:+UseJVMCICompiler"
+
 echo "JAVA_OPTS: $JAVA_OPTS"
 
 echo "Running JMH ..." 

@@ -91,7 +91,7 @@ public final class MarlinMergeSort implements Sorter {
         mergeSort(x, y, x, auxX, y, auxY, insertionSortIndex, toIndex);
         
         // avoid extra copy to mimic proper array swaps (minimize loops):
-        if (true) {
+        if (false) {
             return;
         }
 

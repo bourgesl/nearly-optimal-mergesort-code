@@ -240,11 +240,6 @@ public enum IntSorter {
         public void sort(int[] a) {
             MarlinMergeSort.INSTANCE.sort(a, 0, a.length - 1);
         }
-
-        @Override
-        public final boolean skipCheck() {
-            return true;
-        }
     };
 
     public abstract void sort(int[] a);
