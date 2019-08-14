@@ -59,12 +59,12 @@ public final class DualPivotQuicksort201811P implements wildinter.net.mergesort.
 
     // avoid alloc
     private final Sorter sorter = new Sorter();
-    
+
     @Override
     public void sort(final int[] A, final int low, final int high) {
         // preallocation of temporary arrays into custom Sorter class
         sorter.initLength(high - low + 1);
-        
+
         sort(sorter, A, 0, low, high + 1); // exclusive
     }
 
@@ -73,7 +73,7 @@ public final class DualPivotQuicksort201811P implements wildinter.net.mergesort.
         return getClass().getSimpleName();
     }
 
-    /* 
+    /*
     From OpenJDK12 source code
      */
     /**
@@ -163,7 +163,7 @@ public final class DualPivotQuicksort201811P implements wildinter.net.mergesort.
     private static void sort(Sorter sorter, int[] a, int low, int high) {
         sort(sorter, a, 0, low, high);
     }
-        
+
     /**
      * Sorts the specified array using the Dual-Pivot Quicksort and/or
      * other sorts in special-cases, possibly with parallel partitions.
@@ -192,7 +192,7 @@ public final class DualPivotQuicksort201811P implements wildinter.net.mergesort.
              * Switch to heap sort on the leftmost part or
              * if the execution time is becoming quadratic.
              */
-// LBO: disable heap sort on small sizes (2018.11.16):             
+// LBO: disable heap sort on small sizes (2018.11.16):
             if (/*size < MAX_HEAP_SORT_SIZE || */ (bits += 2) > MAX_RECURSION_DEPTH) {
                 heapSort(a, low, end);
                 return;
@@ -327,12 +327,12 @@ public final class DualPivotQuicksort201811P implements wildinter.net.mergesort.
                  * Sort non-left parts recursively (possibly in parallel),
                  * excluding known pivots.
                  */
-/*                
+/*
                 if (size > MIN_PARALLEL_SORT_SIZE && sorter != null) {
                     sorter.forkSorter(bits | 1, lower + 1, upper);
                     sorter.forkSorter(bits | 1, upper + 1, high);
-                } else 
-*/                    
+                } else
+*/
                 {
                     sort(sorter, a, bits | 1, lower + 1, upper);
                     sort(sorter, a, bits | 1, upper + 1, high);
@@ -403,11 +403,11 @@ public final class DualPivotQuicksort201811P implements wildinter.net.mergesort.
                  * known pivot. All elements from the central part are
                  * equal and therefore already sorted.
                  */
-/*                
+/*
                 if (size > MIN_PARALLEL_SORT_SIZE && sorter != null) {
                     sorter.forkSorter(bits | 1, upper, high);
-                } else 
-*/                
+                } else
+*/
                 {
                     sort(sorter, a, bits | 1, upper, high);
                 }
@@ -592,7 +592,7 @@ public final class DualPivotQuicksort201811P implements wildinter.net.mergesort.
              */
             if (sorter.runInit || run == null) {
                 sorter.runInit = false; // LBO
-                
+
                 if (k == high) {
 
                     /*
@@ -694,8 +694,8 @@ public final class DualPivotQuicksort201811P implements wildinter.net.mergesort.
             RunMerger merger = new RunMerger(a, b, offset, 0, run, mi, hi).forkMe();
             a1 = mergeRuns(a, b, offset, -aim, true, run, lo, mi);
             a2 = (int[]) merger.getDestination();
-        } else 
-*/        
+        } else
+*/
         {
             a1 = mergeRuns(a, b, offset, -aim, false, run, lo, mi);
             a2 = mergeRuns(a, b, offset,    0, false, run, mi, hi);
@@ -712,8 +712,8 @@ public final class DualPivotQuicksort201811P implements wildinter.net.mergesort.
 /*
         if (parallel) {
             new Merger(null, dst, k, a1, lo1, hi1, a2, lo2, hi2).invoke();
-        } else 
-*/        
+        } else
+*/
         {
             mergeParts(null, dst, k, a1, lo1, hi1, a2, lo2, hi2);
         }
@@ -779,7 +779,7 @@ public final class DualPivotQuicksort201811P implements wildinter.net.mergesort.
                 /*
                  * Merge the right parts in parallel.
                  */
-/*                
+/*
                 merger.forkMerger(dst, k + d, a1, mi1, hi1, a2, mi2, hi2);
 */
                 /*
@@ -812,13 +812,13 @@ public final class DualPivotQuicksort201811P implements wildinter.net.mergesort.
         final int[] run;
         int[] b;
         boolean runInit;
-        
+
         Sorter() {
             // preallocate max runs:
             final int max = getMaxRunCount(Integer.MAX_VALUE) + 1;
             run = new int[max];
         }
-        
+
         void initLength(int length) {
             if (b == null || b.length < length) {
                 b = new int[length];
@@ -826,6 +826,6 @@ public final class DualPivotQuicksort201811P implements wildinter.net.mergesort.
             runInit = true;
         }
     }
-    
+
     private class Merger{}
 }

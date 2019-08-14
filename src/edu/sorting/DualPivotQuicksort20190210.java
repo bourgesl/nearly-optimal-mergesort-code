@@ -74,7 +74,7 @@ public final class DualPivotQuicksort20190210 implements wildinter.net.mergesort
         return getClass().getSimpleName();
     }
 
-    /* 
+    /*
     From OpenJDK12 source code
      */
     /**
@@ -286,7 +286,7 @@ public final class DualPivotQuicksort20190210 implements wildinter.net.mergesort
                  * Sort non-left parts recursively (possibly in parallel),
                  * excluding known pivots.
                  */
-/*                
+/*
                 if (size > MIN_PARALLEL_SORT_SIZE && sorter != null) {
                     sorter.forkSorter(bits | 1, lower + 1, upper);
                     sorter.forkSorter(bits | 1, upper + 1, high);
@@ -361,7 +361,7 @@ public final class DualPivotQuicksort20190210 implements wildinter.net.mergesort
                  * known pivot. All elements from the central part are
                  * equal and therefore already sorted.
                  */
-/*                
+/*
                 if (size > MIN_PARALLEL_SORT_SIZE && sorter != null) {
                     sorter.forkSorter(bits | 1, upper, high);
                 } else {
@@ -691,7 +691,7 @@ public final class DualPivotQuicksort20190210 implements wildinter.net.mergesort
             RunMerger merger = new RunMerger(a, b, offset, 0, run, mi, hi).forkMe();
             a1 = mergeRuns(a, b, offset, -aim, true, run, lo, mi);
             a2 = (int[]) merger.getDestination();
-        } else 
+        } else
         {
 */
         a1 = mergeRuns(a, b, offset, -aim, /*false,*/ run, lo, mi);

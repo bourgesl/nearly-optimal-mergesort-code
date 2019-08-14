@@ -46,7 +46,7 @@ public class PeekSort implements Sorter {
 		int n = r - l + 1;
 		peeksort(a, l, r, l, r, new int[n]);
 	}
-    
+
 	public static void peeksortOnlyIncreasing(final int[] a, final int l, final int r) {
 		int n = r - l + 1;
 		peeksortOnlyIncreasing(a, l, r, l, r, new int[n]);

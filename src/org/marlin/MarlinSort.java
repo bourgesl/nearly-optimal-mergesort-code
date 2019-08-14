@@ -57,7 +57,7 @@ public final class MarlinSort implements Sorter {
         // sort second part only using merge / insertion sort
         // in auxiliary storage (auxX/auxY)
         mergeSort(x, x, auxX, 0, toIndex);
-        
+
         // avoid extra copy to mimic proper array swaps (minimize loops):
         if (true) {
             return;

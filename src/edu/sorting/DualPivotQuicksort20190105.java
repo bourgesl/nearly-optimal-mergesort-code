@@ -74,7 +74,7 @@ public final class DualPivotQuicksort20190105 implements wildinter.net.mergesort
         return getClass().getSimpleName();
     }
 
-    /* 
+    /*
     From OpenJDK12 source code
      */
     /**
@@ -317,11 +317,11 @@ public final class DualPivotQuicksort20190105 implements wildinter.net.mergesort
                  * Sort non-left parts recursively (possibly in parallel),
                  * excluding known pivots.
                  */
- /*                
+ /*
                 if (size > MIN_PARALLEL_SORT_SIZE && sorter != null) {
                     sorter.forkSorter(bits | 1, lower + 1, upper);
                     sorter.forkSorter(bits | 1, upper + 1, high);
-                } else 
+                } else
                 {
                  */
                 sort(sorter, a, bits | 1, lower + 1, upper);
@@ -394,10 +394,10 @@ public final class DualPivotQuicksort20190105 implements wildinter.net.mergesort
                  * known pivot. All elements from the central part are
                  * equal and therefore already sorted.
                  */
- /*                
+ /*
                 if (size > MIN_PARALLEL_SORT_SIZE && sorter != null) {
                     sorter.forkSorter(bits | 1, upper, high);
-                } else 
+                } else
                 {
                  */
                 sort(sorter, a, bits | 1, upper, high);
@@ -462,7 +462,7 @@ public final class DualPivotQuicksort20190105 implements wildinter.net.mergesort
      * from position where the greater element was inserted.
      *
      * @param a the array to be sorted
-     
+
      * @param low the index of the first element, inclusive, to be sorted // TODO
      * @param end the index of the last element for simple insertion sort
      * @param high the index of the last element, exclusive, to be sorted
@@ -739,7 +739,7 @@ public final class DualPivotQuicksort20190105 implements wildinter.net.mergesort
             RunMerger merger = new RunMerger(a, b, offset, 0, run, mi, hi).forkMe();
             a1 = mergeRuns(a, b, offset, -aim, true, run, lo, mi);
             a2 = (int[]) merger.getDestination();
-        } else 
+        } else
         {
          */
         a1 = mergeRuns(a, b, offset, -aim, /*false,*/ run, lo, mi);
@@ -757,7 +757,7 @@ public final class DualPivotQuicksort20190105 implements wildinter.net.mergesort
         /*
         if (parallel) {
             new Merger(null, dst, k, a1, lo1, hi1, a2, lo2, hi2).invoke();
-        } else 
+        } else
         {
          */
         mergeParts(/*null,*/dst, k, a1, lo1, hi1, a2, lo2, hi2);

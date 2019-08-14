@@ -72,7 +72,7 @@ final class SortingAlgorithms201802 {
         if (length < MERGING_SORT_THRESHOLD) {
             return false;
         }
-        
+
         /*
          * Index run[i] is the start of i-th run.
          * A run is a subsequence of elements

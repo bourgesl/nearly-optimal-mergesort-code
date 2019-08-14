@@ -333,7 +333,7 @@ public class Mergesorts {
         } catch (InterruptedException ie) {
             System.out.println("thread interrupted");
         }
-        /*        
+        /*
         final long freeAfter = Runtime.getRuntime().freeMemory();
         System.out.println(String.format("cleanup (explicit Full GC): %,d / %,d bytes free.", freeBefore, freeAfter));
          */

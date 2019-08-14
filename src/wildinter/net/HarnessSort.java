@@ -42,7 +42,7 @@ public class HarnessSort {
 
     public static void harnessRandomPermutations(Sorter sort) {
         disableStdOut();
-        System.err.println("harnessRandomPermutations ..."); 
+        System.err.println("harnessRandomPermutations ...");
         final Random random = new Random();
         for (int N = 1013; N < 50000; N += 7) {
             System.err.println("N: "+N);

@@ -22,7 +22,7 @@ public final class BentleyBasher {
 //    private static final int[] LENGTHS = {1000 * 1000, 10 * 1000 * 1000};
 
     private static final long MAX_LOOP_TIME = 3 * SEC_IN_NS; // 3s max per test (small)
-//    private static final long MAX_LOOP_TIME = 10 * SEC_IN_NS; // 30s max per test (large)    
+//    private static final long MAX_LOOP_TIME = 10 * SEC_IN_NS; // 30s max per test (large)
 
     private static final double ERR_DIST_TH = 2.0; // 2% max per timing loop
     private static final double CONFIDENCE_AVG = 4.0; // 4 sigma confidence on mean estimation
@@ -593,7 +593,7 @@ public final class BentleyBasher {
         } catch (InterruptedException ie) {
             System.err.println("thread interrupted");
         }
-        /*        
+        /*
         final long freeAfter = Runtime.getRuntime().freeMemory();
         System.out.println(String.format("cleanup (explicit Full GC): %,d / %,d bytes free.", freeBefore, freeAfter));
          */

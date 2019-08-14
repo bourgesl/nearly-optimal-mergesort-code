@@ -49,7 +49,7 @@ import java.util.Arrays; // TODO
  * @since 1.7 * 13
  */
 public final class DualPivotQuicksort20190501Ext implements wildinter.net.mergesort.Sorter {
-        
+
     public final static wildinter.net.mergesort.Sorter INSTANCE = new DualPivotQuicksort20190501Ext();
 
     /**
@@ -62,7 +62,7 @@ public final class DualPivotQuicksort20190501Ext implements wildinter.net.merges
     // fake B (ancillary data ie indices)
     private int[] B = null;
     private final Sorter sorter = new Sorter();
-    
+
     // checks only
     private static int[] A_REF = null;
     private static int[] B_REF = null;
@@ -87,16 +87,16 @@ public final class DualPivotQuicksort20190501Ext implements wildinter.net.merges
                 B_REF[i] = B[i];
             }
         }
-        
+
         if (length <= MAX_INSERTION_SORT_SIZE) {
             insertionSort(A, B, low, high + 1); // exclusive
         } else {
             if (false && length <= 128) {
                 // presort blocks
                 for (int b = low; b < high; b += 24) {
-                   insertionSort(A, B, b, Math.min(b + 24, high) + 1); // exclusive 
+                   insertionSort(A, B, b, Math.min(b + 24, high) + 1); // exclusive
                 }
-            }             
+            }
             // preallocation of temporary arrays into custom Sorter class
             sorter.initBuffers(length);
             sort(sorter, A, B, 0, low, high + 1); // exclusive
@@ -104,7 +104,7 @@ public final class DualPivotQuicksort20190501Ext implements wildinter.net.merges
 
         if (DO_CHECK) {
             ArrayUtils.checkSorted("sort(root)", A, B, A_REF, B_REF, low, high);
-        }        
+        }
     }
 
     @Override
@@ -112,7 +112,7 @@ public final class DualPivotQuicksort20190501Ext implements wildinter.net.merges
         return getClass().getSimpleName();
     }
 
-    /* 
+    /*
     From OpenJDK13 source code
      */
     /**
@@ -231,8 +231,8 @@ public final class DualPivotQuicksort20190501Ext implements wildinter.net.merges
             if (a[e3] < a[e2]) { int t = a[e3]; a[e3] = a[e2]; a[e2] = t; t = b[e3]; b[e3] = b[e2]; b[e2] = t; }
             if (a[e4] < a[e3]) { int t = a[e4]; a[e4] = a[e3]; a[e3] = t; t = b[e4]; b[e4] = b[e3]; b[e3] = t;}
 
-            if (a[e1] > a[e2]) { 
-                int ta = a[e1]; a[e1] = a[e2]; a[e2] = ta; 
+            if (a[e1] > a[e2]) {
+                int ta = a[e1]; a[e1] = a[e2]; a[e2] = ta;
                 int tb = b[e1]; b[e1] = b[e2]; b[e2] = tb;
                 if (ta > a[e3]) { a[e2] = a[e3]; a[e3] = ta; b[e2] = b[e3]; b[e3] = tb;
                     if (ta > a[e4]) { a[e3] = a[e4]; a[e4] = ta; b[e3] = b[e4]; b[e4] = tb;
@@ -460,7 +460,7 @@ public final class DualPivotQuicksort20190501Ext implements wildinter.net.merges
                         a[i + 1] = a[i];
                         b[i + 1] = b[i];
                     }
-                    a[i + 1] = ai;                
+                    a[i + 1] = ai;
                     b[i + 1] = bi;
                 }
             }
@@ -586,12 +586,12 @@ public final class DualPivotQuicksort20190501Ext implements wildinter.net.merges
 
             if (ai < a[i - 1]) {
                 int bi = b[i];
-                
+
                 while (--i >= low && ai < a[i]) {
                     a[i + 1] = a[i];
                     b[i + 1] = b[i];
                 }
-                a[i + 1] = ai;                
+                a[i + 1] = ai;
                 b[i + 1] = bi;
             }
         }

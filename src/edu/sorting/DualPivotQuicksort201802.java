@@ -42,7 +42,7 @@ import wildinter.net.mergesort.Sorter;
  * @since 1.7
  */
 public final class DualPivotQuicksort201802 implements Sorter {
-    
+
     public final static Sorter INSTANCE = new DualPivotQuicksort201802();
 
     /**
@@ -50,7 +50,7 @@ public final class DualPivotQuicksort201802 implements Sorter {
      */
     private DualPivotQuicksort201802() {
     }
-    
+
     // avoid alloc
     private int[] aux = null;
     private int[] run = null;
@@ -65,10 +65,10 @@ public final class DualPivotQuicksort201802 implements Sorter {
         if (run == null || run.length < max) {
             run = new int[max];
         }
-        
+
         sort(A, LEFTMOST_BITS, low, high + 1, aux, run);
     }
-    
+
     /**
      * Sorts the specified range of the array.
      *
@@ -84,9 +84,9 @@ public final class DualPivotQuicksort201802 implements Sorter {
     public String toString() {
         return getClass().getSimpleName();
     }
-    /* 
+    /*
     From OpenJDK12 source code
-     */    
+     */
 
     /**
      * If the length of the leftmost part to be sorted is less than

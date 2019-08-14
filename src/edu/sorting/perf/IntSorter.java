@@ -13,6 +13,7 @@ import edu.sorting.DualPivotQuicksort20190210Ext;
 import edu.sorting.DualPivotQuicksort20190405;
 import edu.sorting.DualPivotQuicksort20190501;
 import edu.sorting.DualPivotQuicksort20190501Ext;
+import edu.sorting.DualPivotQuicksort20190809;
 import edu.sorting.InsertionSortExt;
 import edu.sorting.RadixSort;
 import org.marlin.MarlinMergeSort;
@@ -35,7 +36,7 @@ public enum IntSorter {
             return true;
         }
     },
-    /*    
+    /*
     SYSTEM {
         @Override
         public void sort(int[] a) {
@@ -49,7 +50,7 @@ public enum IntSorter {
             DualPivotQuickSort2011.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
-    /*    
+    /*
     DPQ_18_2 {
         @Override
         public void sort(int[] a) {
@@ -115,6 +116,12 @@ public enum IntSorter {
         @Override
         public void sort(int[] a) {
             DualPivotQuicksort20190501.INSTANCE.sort(a, 0, a.length - 1);
+        }
+    },
+    DPQ_19_08_09 {
+        @Override
+        public void sort(int[] a) {
+            DualPivotQuicksort20190809.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
     RADIX {
@@ -185,14 +192,14 @@ public enum IntSorter {
         public void sort(int[] a) {
             INSTANCE.sort(a, 0, a.length - 1);
         }
-    }, 
+    },
     POWER_SORT {
         private final Sorter INSTANCE = new PowerSort(true, false, 24);
 
         public void sort(int[] a) {
             INSTANCE.sort(a, 0, a.length - 1);
         }
-    }    
+    }
      */ // 2 arrays variants
     /*
     DPQ_18_2_E {
@@ -215,7 +222,7 @@ public enum IntSorter {
         public void sort(int[] a) {
             PairInsertionSortExt.INSTANCE.sort(a, 0, a.length - 1);
         }
-    },    
+    },
      */
     DPQ_18_11_E {
         @Override

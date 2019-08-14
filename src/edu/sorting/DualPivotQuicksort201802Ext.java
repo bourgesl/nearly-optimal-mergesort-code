@@ -41,7 +41,7 @@ import wildinter.net.mergesort.Sorter;
  * @since 1.7
  */
 public final class DualPivotQuicksort201802Ext implements Sorter {
-    
+
     public final static Sorter INSTANCE = new DualPivotQuicksort201802Ext();
 
     /**
@@ -117,7 +117,7 @@ public final class DualPivotQuicksort201802Ext implements Sorter {
         return getClass().getSimpleName();
     }
 
-    /* 
+    /*
     From OpenJDK12 source code
      */
 
@@ -468,7 +468,7 @@ public final class DualPivotQuicksort201802Ext implements Sorter {
                 if (ak != pivotA) {
                     final int bk = b[k];
 
-                    if (ak < pivotA) { 
+                    if (ak < pivotA) {
                         // Move a[k] to the left side
                         while (a[++lower] < pivotA);
 
@@ -489,7 +489,7 @@ public final class DualPivotQuicksort201802Ext implements Sorter {
                         }
                         a[lower] = ak;
                         b[lower] = bk;
-                    } else { 
+                    } else {
                         // ak > pivot - Move a[k] to the right side
                         a[k] = a[--upper];
                         a[upper] = ak;

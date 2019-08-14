@@ -47,7 +47,7 @@ import wildinter.net.mergesort.Sorter;
  * @since 1.7
  */
 public final class DualPivotQuickSort2011 implements Sorter {
-    
+
     public final static Sorter INSTANCE = new DualPivotQuickSort2011();
 
     /**
@@ -68,7 +68,7 @@ public final class DualPivotQuickSort2011 implements Sorter {
         }
         sort(A, left, right, aux, 0, aux.length, run);
     }
-    
+
     /**
      * Sorts the specified range of the array.
      *
@@ -79,12 +79,12 @@ public final class DualPivotQuickSort2011 implements Sorter {
     private static void sortORIG(int[] a, int low, int high) {
         sort(a, low, high, null, 0, 0, null); // FAIL
     }
-    
+
     @Override
     public String toString() {
         return getClass().getSimpleName();
     }
-    /* 
+    /*
     From OpenJDK11 source code
      */
  /*
