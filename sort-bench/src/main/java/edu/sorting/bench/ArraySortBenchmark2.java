@@ -75,11 +75,11 @@ public class ArraySortBenchmark2 {
         ParamIntArrayBuilder distBuilder;
 
         @Param({"BASELINE", "DPQ_11",
-                //                "DPQ_18_11_21", 
-                //                "DPQ_19_04_05", "DPQ_19_05_01",  
-                //                "RADIX", 
+                //                "DPQ_18_11_21",
+                //                "DPQ_19_04_05", "DPQ_19_05_01",
+                //                "RADIX",
                 //                "MARLIN",
-                //                "ISORT_E", 
+                //                "ISORT_E",
                 "DPQ_18_11_E", /*"DPQ_19_02_E",*/ "DPQ_19_05_E", "MARLIN_M2"
         })
         IntSorter tSorter;
@@ -248,26 +248,31 @@ public class ArraySortBenchmark2 {
             if (DEBUG) {
                 // TEST 2 array variants:
                 builder.param(PARAM_SIZE, new String[]{
-//                    "12", "24", "32", 
-                    "48", "64", "96", "128", "256"
+//                    "12", "24", "32",
+//                    "48", "64", "96", "128", "256"
 //                        , "384", "512", "768", "1024"
+                    "50", "100", 
+                    "150", "250", 
+                    "500", "1000", "2000"
                 });
-                builder.param(PARAM_SUB_SIZE, "1");
+                builder.param(PARAM_SUB_SIZE, new String[]{
+                    "1", "4", "7", "15"
+                });
 
-                // "REVERSE___", "SORT______", "DITHER____", "REVERSE___", "REVERSE_FR", "REVERSE_BA", 
+                // "REVERSE___", "SORT______", "DITHER____", "REVERSE___", "REVERSE_FR", "REVERSE_BA",
                 builder.param(PARAM_DATA_TWEAKER, new String[]{
-                    "IDENT_____"
+                    "IDENT_____", "REVERSE___", "SORT______", "DITHER____", "REVERSE___", "REVERSE_FR", "REVERSE_BA"
                 });
 
                 // "STAGGER", "SAWTOTH", "_RANDOM", "PLATEAU", "SHUFFLE"
                 builder.param(PARAM_DIST_BUILDER, new String[]{
-                    "SPIRAL", "STAGGER"
+                    "SPIRAL", "STAGGER", "SAWTOTH", "_RANDOM", "PLATEAU", "SHUFFLE"
                 });
 
                 builder.param(PARAM_SORTER, new String[]{
-                    "BASELINE", "DPQ_19_05_01",
-                    "ISORT_E", 
-                    "DPQ_19_05_E", "MARLIN_M2"
+                    "BASELINE", "DPQ_11", "DPQ_19_05_01", "DPQ_19_08_09",
+//                    "ISORT_E",
+//                    "DPQ_19_05_E", "MARLIN_M2"
                 });
 
             } else {
