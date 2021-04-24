@@ -251,12 +251,14 @@ public class ArraySortBenchmark2 {
 //                    "12", "24", "32",
 //                    "48", "64", "96", "128", "256"
 //                        , "384", "512", "768", "1024"
-                    "50", "100", 
-                    "150", "250", 
-                    "500", "1000", "2000"
+
+//                    "50", "100",  "250", "1000"
+//                    "1000", "10000", 
+                    "100000", "1000000"
                 });
                 builder.param(PARAM_SUB_SIZE, new String[]{
-                    "1", "4", "7", "15"
+//                    "1", "4", "7" // , "15"
+                    "1", "16", "256"
                 });
 
                 // "REVERSE___", "SORT______", "DITHER____", "REVERSE___", "REVERSE_FR", "REVERSE_BA",
@@ -270,9 +272,11 @@ public class ArraySortBenchmark2 {
                 });
 
                 builder.param(PARAM_SORTER, new String[]{
-                    "BASELINE", "DPQ_11", "DPQ_19_05_01", "DPQ_19_08_09",
-//                    "ISORT_E",
-//                    "DPQ_19_05_E", "MARLIN_M2"
+                    "BASELINE", "DPQ_11", "DPQ_19_11_12", "DPQ_21_04_24", "RADIX",
+//                     "DPQ_11", 
+//                    "DPQ_19_01_05", "DPQ_19_11_12", "RADIX"
+//                    "ISORT_E", "DPQ_19_05_E", 
+//                    "DPQ_19_11_E", "MARLIN_M2"
                 });
 
             } else {

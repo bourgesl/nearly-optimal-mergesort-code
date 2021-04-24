@@ -14,8 +14,12 @@ import edu.sorting.DualPivotQuicksort20190405;
 import edu.sorting.DualPivotQuicksort20190501;
 import edu.sorting.DualPivotQuicksort20190501Ext;
 import edu.sorting.DualPivotQuicksort20190809;
+import edu.sorting.DualPivotQuicksort20191112;
+import edu.sorting.DualPivotQuicksort20191112Ext;
+import edu.sorting.DualPivotQuicksort20210424;
 import edu.sorting.InsertionSortExt;
 import edu.sorting.RadixSort;
+import java.util.Arrays;
 import org.marlin.MarlinMergeSort;
 import org.marlin.MarlinSort;
 
@@ -36,14 +40,12 @@ public enum IntSorter {
             return true;
         }
     },
-    /*
     SYSTEM {
         @Override
         public void sort(int[] a) {
-            Sorter.SYSTEMSORT.sort(a, 0, a.length - 1);
+            Arrays.sort(a, 0, a.length - 1);
         }
     },
-     */
     DPQ_11 {
         @Override
         public void sort(int[] a) {
@@ -122,6 +124,18 @@ public enum IntSorter {
         @Override
         public void sort(int[] a) {
             DualPivotQuicksort20190809.INSTANCE.sort(a, 0, a.length - 1);
+        }
+    },
+    DPQ_19_11_12 {
+        @Override
+        public void sort(int[] a) {
+            DualPivotQuicksort20191112.INSTANCE.sort(a, 0, a.length - 1);
+        }
+    },
+    DPQ_21_04_24 {
+        @Override
+        public void sort(int[] a) {
+            DualPivotQuicksort20210424.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
     RADIX {
@@ -240,6 +254,12 @@ public enum IntSorter {
         @Override
         public void sort(int[] a) {
             DualPivotQuicksort20190501Ext.INSTANCE.sort(a, 0, a.length - 1);
+        }
+    },
+    DPQ_19_11_E {
+        @Override
+        public void sort(int[] a) {
+            DualPivotQuicksort20191112Ext.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
     MARLIN_M2 {
