@@ -16,6 +16,7 @@ import edu.sorting.DualPivotQuicksort20190501Ext;
 import edu.sorting.DualPivotQuicksort20190809;
 import edu.sorting.DualPivotQuicksort20191112;
 import edu.sorting.DualPivotQuicksort20191112Ext;
+import edu.sorting.DualPivotQuicksort20191112Fixed;
 import edu.sorting.DualPivotQuicksort20210424;
 import edu.sorting.InsertionSortExt;
 import edu.sorting.RadixSort;
@@ -130,6 +131,12 @@ public enum IntSorter {
         @Override
         public void sort(int[] a) {
             DualPivotQuicksort20191112.INSTANCE.sort(a, 0, a.length - 1);
+        }
+    },
+    DPQ_19_11_12_FIX {
+        @Override
+        public void sort(int[] a) {
+            DualPivotQuicksort20191112Fixed.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
     DPQ_21_04_24 {

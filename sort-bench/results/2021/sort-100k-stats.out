@@ -1,0 +1,378 @@
+--- STATS ---
+Winners: 
+DPQ_11 : 0
+DPQ_19_11_12 : 8
+DPQ_19_11_12_FIX : 8
+DPQ_21_04_24 : 8
+
+--- STATS ---
+Comparing sorters DPQ_11 vs DPQ_19_11_12
+winners  : 0 / 8
+avg   (%): 157.0419  
+stats (%): [24: µ=174.6689 σ=89.91153 rms=264.5804 min=88.31016 max=361.787]
+
+Stats per keys:
+IDENT_____:SPIRAL stats (%): [1: µ=165.88716 σ=NaN rms=NaN min=165.88716 max=165.88716]
+IDENT_____:STAGGER stats (%): [1: µ=330.67545 σ=NaN rms=NaN min=330.67545 max=330.67545]
+IDENT_____:SAWTOTH stats (%): [1: µ=126.45796 σ=NaN rms=NaN min=126.45796 max=126.45796]
+IDENT_____:_RANDOM stats (%): [1: µ=107.18573 σ=NaN rms=NaN min=107.18573 max=107.18573]
+IDENT_____:PLATEAU stats (%): [1: µ=113.4155 σ=NaN rms=NaN min=113.4155 max=113.4155]
+IDENT_____:SHUFFLE stats (%): [1: µ=256.78598 σ=NaN rms=NaN min=256.78598 max=256.78598]
+REVERSE___:SPIRAL stats (%): [1: µ=88.31016 σ=NaN rms=NaN min=88.31016 max=88.31016]
+REVERSE___:STAGGER stats (%): [1: µ=348.26056 σ=NaN rms=NaN min=348.26056 max=348.26056]
+REVERSE___:SAWTOTH stats (%): [1: µ=113.077034 σ=NaN rms=NaN min=113.077034 max=113.077034]
+REVERSE___:_RANDOM stats (%): [1: µ=112.22141 σ=NaN rms=NaN min=112.22141 max=112.22141]
+REVERSE___:PLATEAU stats (%): [1: µ=243.84637 σ=NaN rms=NaN min=243.84637 max=243.84637]
+REVERSE___:SHUFFLE stats (%): [1: µ=172.89166 σ=NaN rms=NaN min=172.89166 max=172.89166]
+DITHER____:SPIRAL stats (%): [1: µ=117.03573 σ=NaN rms=NaN min=117.03573 max=117.03573]
+DITHER____:STAGGER stats (%): [1: µ=361.787 σ=NaN rms=NaN min=361.787 max=361.787]
+DITHER____:SAWTOTH stats (%): [1: µ=101.74063 σ=NaN rms=NaN min=101.74063 max=101.74063]
+DITHER____:_RANDOM stats (%): [1: µ=107.041534 σ=NaN rms=NaN min=107.041534 max=107.041534]
+DITHER____:PLATEAU stats (%): [1: µ=117.24434 σ=NaN rms=NaN min=117.24434 max=117.24434]
+DITHER____:SHUFFLE stats (%): [1: µ=179.45135 σ=NaN rms=NaN min=179.45135 max=179.45135]
+REVERSE_BA:SPIRAL stats (%): [1: µ=152.73244 σ=NaN rms=NaN min=152.73244 max=152.73244]
+REVERSE_BA:STAGGER stats (%): [1: µ=351.76526 σ=NaN rms=NaN min=351.76526 max=351.76526]
+REVERSE_BA:SAWTOTH stats (%): [1: µ=120.28792 σ=NaN rms=NaN min=120.28792 max=120.28792]
+REVERSE_BA:_RANDOM stats (%): [1: µ=112.05167 σ=NaN rms=NaN min=112.05167 max=112.05167]
+REVERSE_BA:PLATEAU stats (%): [1: µ=113.14644 σ=NaN rms=NaN min=113.14644 max=113.14644]
+REVERSE_BA:SHUFFLE stats (%): [1: µ=178.75433 σ=NaN rms=NaN min=178.75433 max=178.75433]
+
+stats per keys and sizes:
+- size = 100000
+stats (%): [24: µ=174.6689 σ=89.91153 rms=264.5804 min=88.31016 max=361.787]
+IDENT_____:SPIRAL stats (%): [1: µ=165.88716 σ=NaN rms=NaN min=165.88716 max=165.88716]
+IDENT_____:STAGGER stats (%): [1: µ=330.67545 σ=NaN rms=NaN min=330.67545 max=330.67545]
+IDENT_____:SAWTOTH stats (%): [1: µ=126.45796 σ=NaN rms=NaN min=126.45796 max=126.45796]
+IDENT_____:_RANDOM stats (%): [1: µ=107.18573 σ=NaN rms=NaN min=107.18573 max=107.18573]
+IDENT_____:PLATEAU stats (%): [1: µ=113.4155 σ=NaN rms=NaN min=113.4155 max=113.4155]
+IDENT_____:SHUFFLE stats (%): [1: µ=256.78598 σ=NaN rms=NaN min=256.78598 max=256.78598]
+REVERSE___:SPIRAL stats (%): [1: µ=88.31016 σ=NaN rms=NaN min=88.31016 max=88.31016]
+REVERSE___:STAGGER stats (%): [1: µ=348.26056 σ=NaN rms=NaN min=348.26056 max=348.26056]
+REVERSE___:SAWTOTH stats (%): [1: µ=113.077034 σ=NaN rms=NaN min=113.077034 max=113.077034]
+REVERSE___:_RANDOM stats (%): [1: µ=112.22141 σ=NaN rms=NaN min=112.22141 max=112.22141]
+REVERSE___:PLATEAU stats (%): [1: µ=243.84637 σ=NaN rms=NaN min=243.84637 max=243.84637]
+REVERSE___:SHUFFLE stats (%): [1: µ=172.89166 σ=NaN rms=NaN min=172.89166 max=172.89166]
+DITHER____:SPIRAL stats (%): [1: µ=117.03573 σ=NaN rms=NaN min=117.03573 max=117.03573]
+DITHER____:STAGGER stats (%): [1: µ=361.787 σ=NaN rms=NaN min=361.787 max=361.787]
+DITHER____:SAWTOTH stats (%): [1: µ=101.74063 σ=NaN rms=NaN min=101.74063 max=101.74063]
+DITHER____:_RANDOM stats (%): [1: µ=107.041534 σ=NaN rms=NaN min=107.041534 max=107.041534]
+DITHER____:PLATEAU stats (%): [1: µ=117.24434 σ=NaN rms=NaN min=117.24434 max=117.24434]
+DITHER____:SHUFFLE stats (%): [1: µ=179.45135 σ=NaN rms=NaN min=179.45135 max=179.45135]
+REVERSE_BA:SPIRAL stats (%): [1: µ=152.73244 σ=NaN rms=NaN min=152.73244 max=152.73244]
+REVERSE_BA:STAGGER stats (%): [1: µ=351.76526 σ=NaN rms=NaN min=351.76526 max=351.76526]
+REVERSE_BA:SAWTOTH stats (%): [1: µ=120.28792 σ=NaN rms=NaN min=120.28792 max=120.28792]
+REVERSE_BA:_RANDOM stats (%): [1: µ=112.05167 σ=NaN rms=NaN min=112.05167 max=112.05167]
+REVERSE_BA:PLATEAU stats (%): [1: µ=113.14644 σ=NaN rms=NaN min=113.14644 max=113.14644]
+REVERSE_BA:SHUFFLE stats (%): [1: µ=178.75433 σ=NaN rms=NaN min=178.75433 max=178.75433]
+
+
+
+--- STATS ---
+Comparing sorters DPQ_11 vs DPQ_19_11_12_FIX
+winners  : 0 / 8
+avg   (%): 158.1961  
+stats (%): [24: µ=175.89507 σ=90.744865 rms=266.63992 min=101.12463 max=362.1719]
+
+Stats per keys:
+IDENT_____:SPIRAL stats (%): [1: µ=165.20032 σ=NaN rms=NaN min=165.20032 max=165.20032]
+IDENT_____:STAGGER stats (%): [1: µ=331.04147 σ=NaN rms=NaN min=331.04147 max=331.04147]
+IDENT_____:SAWTOTH stats (%): [1: µ=126.673515 σ=NaN rms=NaN min=126.673515 max=126.673515]
+IDENT_____:_RANDOM stats (%): [1: µ=101.12463 σ=NaN rms=NaN min=101.12463 max=101.12463]
+IDENT_____:PLATEAU stats (%): [1: µ=110.95098 σ=NaN rms=NaN min=110.95098 max=110.95098]
+IDENT_____:SHUFFLE stats (%): [1: µ=269.9432 σ=NaN rms=NaN min=269.9432 max=269.9432]
+REVERSE___:SPIRAL stats (%): [1: µ=112.09786 σ=NaN rms=NaN min=112.09786 max=112.09786]
+REVERSE___:STAGGER stats (%): [1: µ=359.6409 σ=NaN rms=NaN min=359.6409 max=359.6409]
+REVERSE___:SAWTOTH stats (%): [1: µ=110.895515 σ=NaN rms=NaN min=110.895515 max=110.895515]
+REVERSE___:_RANDOM stats (%): [1: µ=112.10964 σ=NaN rms=NaN min=112.10964 max=112.10964]
+REVERSE___:PLATEAU stats (%): [1: µ=243.76785 σ=NaN rms=NaN min=243.76785 max=243.76785]
+REVERSE___:SHUFFLE stats (%): [1: µ=169.31047 σ=NaN rms=NaN min=169.31047 max=169.31047]
+DITHER____:SPIRAL stats (%): [1: µ=116.751396 σ=NaN rms=NaN min=116.751396 max=116.751396]
+DITHER____:STAGGER stats (%): [1: µ=362.1719 σ=NaN rms=NaN min=362.1719 max=362.1719]
+DITHER____:SAWTOTH stats (%): [1: µ=101.90649 σ=NaN rms=NaN min=101.90649 max=101.90649]
+DITHER____:_RANDOM stats (%): [1: µ=107.333206 σ=NaN rms=NaN min=107.333206 max=107.333206]
+DITHER____:PLATEAU stats (%): [1: µ=116.11065 σ=NaN rms=NaN min=116.11065 max=116.11065]
+DITHER____:SHUFFLE stats (%): [1: µ=179.72241 σ=NaN rms=NaN min=179.72241 max=179.72241]
+REVERSE_BA:SPIRAL stats (%): [1: µ=153.69786 σ=NaN rms=NaN min=153.69786 max=153.69786]
+REVERSE_BA:STAGGER stats (%): [1: µ=347.90146 σ=NaN rms=NaN min=347.90146 max=347.90146]
+REVERSE_BA:SAWTOTH stats (%): [1: µ=121.12141 σ=NaN rms=NaN min=121.12141 max=121.12141]
+REVERSE_BA:_RANDOM stats (%): [1: µ=112.13878 σ=NaN rms=NaN min=112.13878 max=112.13878]
+REVERSE_BA:PLATEAU stats (%): [1: µ=110.748314 σ=NaN rms=NaN min=110.748314 max=110.748314]
+REVERSE_BA:SHUFFLE stats (%): [1: µ=179.12148 σ=NaN rms=NaN min=179.12148 max=179.12148]
+
+stats per keys and sizes:
+- size = 100000
+stats (%): [24: µ=175.89507 σ=90.744865 rms=266.63992 min=101.12463 max=362.1719]
+IDENT_____:SPIRAL stats (%): [1: µ=165.20032 σ=NaN rms=NaN min=165.20032 max=165.20032]
+IDENT_____:STAGGER stats (%): [1: µ=331.04147 σ=NaN rms=NaN min=331.04147 max=331.04147]
+IDENT_____:SAWTOTH stats (%): [1: µ=126.673515 σ=NaN rms=NaN min=126.673515 max=126.673515]
+IDENT_____:_RANDOM stats (%): [1: µ=101.12463 σ=NaN rms=NaN min=101.12463 max=101.12463]
+IDENT_____:PLATEAU stats (%): [1: µ=110.95098 σ=NaN rms=NaN min=110.95098 max=110.95098]
+IDENT_____:SHUFFLE stats (%): [1: µ=269.9432 σ=NaN rms=NaN min=269.9432 max=269.9432]
+REVERSE___:SPIRAL stats (%): [1: µ=112.09786 σ=NaN rms=NaN min=112.09786 max=112.09786]
+REVERSE___:STAGGER stats (%): [1: µ=359.6409 σ=NaN rms=NaN min=359.6409 max=359.6409]
+REVERSE___:SAWTOTH stats (%): [1: µ=110.895515 σ=NaN rms=NaN min=110.895515 max=110.895515]
+REVERSE___:_RANDOM stats (%): [1: µ=112.10964 σ=NaN rms=NaN min=112.10964 max=112.10964]
+REVERSE___:PLATEAU stats (%): [1: µ=243.76785 σ=NaN rms=NaN min=243.76785 max=243.76785]
+REVERSE___:SHUFFLE stats (%): [1: µ=169.31047 σ=NaN rms=NaN min=169.31047 max=169.31047]
+DITHER____:SPIRAL stats (%): [1: µ=116.751396 σ=NaN rms=NaN min=116.751396 max=116.751396]
+DITHER____:STAGGER stats (%): [1: µ=362.1719 σ=NaN rms=NaN min=362.1719 max=362.1719]
+DITHER____:SAWTOTH stats (%): [1: µ=101.90649 σ=NaN rms=NaN min=101.90649 max=101.90649]
+DITHER____:_RANDOM stats (%): [1: µ=107.333206 σ=NaN rms=NaN min=107.333206 max=107.333206]
+DITHER____:PLATEAU stats (%): [1: µ=116.11065 σ=NaN rms=NaN min=116.11065 max=116.11065]
+DITHER____:SHUFFLE stats (%): [1: µ=179.72241 σ=NaN rms=NaN min=179.72241 max=179.72241]
+REVERSE_BA:SPIRAL stats (%): [1: µ=153.69786 σ=NaN rms=NaN min=153.69786 max=153.69786]
+REVERSE_BA:STAGGER stats (%): [1: µ=347.90146 σ=NaN rms=NaN min=347.90146 max=347.90146]
+REVERSE_BA:SAWTOTH stats (%): [1: µ=121.12141 σ=NaN rms=NaN min=121.12141 max=121.12141]
+REVERSE_BA:_RANDOM stats (%): [1: µ=112.13878 σ=NaN rms=NaN min=112.13878 max=112.13878]
+REVERSE_BA:PLATEAU stats (%): [1: µ=110.748314 σ=NaN rms=NaN min=110.748314 max=110.748314]
+REVERSE_BA:SHUFFLE stats (%): [1: µ=179.12148 σ=NaN rms=NaN min=179.12148 max=179.12148]
+
+
+
+--- STATS ---
+Comparing sorters DPQ_11 vs DPQ_21_04_24
+winners  : 0 / 8
+avg   (%): 223.6834  
+stats (%): [24: µ=267.82605 σ=169.4035 rms=437.22955 min=98.72344 max=620.795]
+
+Stats per keys:
+IDENT_____:SPIRAL stats (%): [1: µ=165.49965 σ=NaN rms=NaN min=165.49965 max=165.49965]
+IDENT_____:STAGGER stats (%): [1: µ=331.07593 σ=NaN rms=NaN min=331.07593 max=331.07593]
+IDENT_____:SAWTOTH stats (%): [1: µ=126.62968 σ=NaN rms=NaN min=126.62968 max=126.62968]
+IDENT_____:_RANDOM stats (%): [1: µ=596.47266 σ=NaN rms=NaN min=596.47266 max=596.47266]
+IDENT_____:PLATEAU stats (%): [1: µ=110.97874 σ=NaN rms=NaN min=110.97874 max=110.97874]
+IDENT_____:SHUFFLE stats (%): [1: µ=217.56355 σ=NaN rms=NaN min=217.56355 max=217.56355]
+REVERSE___:SPIRAL stats (%): [1: µ=112.08422 σ=NaN rms=NaN min=112.08422 max=112.08422]
+REVERSE___:STAGGER stats (%): [1: µ=359.60327 σ=NaN rms=NaN min=359.60327 max=359.60327]
+REVERSE___:SAWTOTH stats (%): [1: µ=110.8811 σ=NaN rms=NaN min=110.8811 max=110.8811]
+REVERSE___:_RANDOM stats (%): [1: µ=598.6752 σ=NaN rms=NaN min=598.6752 max=598.6752]
+REVERSE___:PLATEAU stats (%): [1: µ=243.71577 σ=NaN rms=NaN min=243.71577 max=243.71577]
+REVERSE___:SHUFFLE stats (%): [1: µ=158.53583 σ=NaN rms=NaN min=158.53583 max=158.53583]
+DITHER____:SPIRAL stats (%): [1: µ=265.6619 σ=NaN rms=NaN min=265.6619 max=265.6619]
+DITHER____:STAGGER stats (%): [1: µ=361.9373 σ=NaN rms=NaN min=361.9373 max=361.9373]
+DITHER____:SAWTOTH stats (%): [1: µ=336.14316 σ=NaN rms=NaN min=336.14316 max=336.14316]
+DITHER____:_RANDOM stats (%): [1: µ=519.6368 σ=NaN rms=NaN min=519.6368 max=519.6368]
+DITHER____:PLATEAU stats (%): [1: µ=98.72344 σ=NaN rms=NaN min=98.72344 max=98.72344]
+DITHER____:SHUFFLE stats (%): [1: µ=191.70238 σ=NaN rms=NaN min=191.70238 max=191.70238]
+REVERSE_BA:SPIRAL stats (%): [1: µ=152.44629 σ=NaN rms=NaN min=152.44629 max=152.44629]
+REVERSE_BA:STAGGER stats (%): [1: µ=346.8982 σ=NaN rms=NaN min=346.8982 max=346.8982]
+REVERSE_BA:SAWTOTH stats (%): [1: µ=120.96792 σ=NaN rms=NaN min=120.96792 max=120.96792]
+REVERSE_BA:_RANDOM stats (%): [1: µ=620.795 σ=NaN rms=NaN min=620.795 max=620.795]
+REVERSE_BA:PLATEAU stats (%): [1: µ=110.74995 σ=NaN rms=NaN min=110.74995 max=110.74995]
+REVERSE_BA:SHUFFLE stats (%): [1: µ=170.447 σ=NaN rms=NaN min=170.447 max=170.447]
+
+stats per keys and sizes:
+- size = 100000
+stats (%): [24: µ=267.82605 σ=169.4035 rms=437.22955 min=98.72344 max=620.795]
+IDENT_____:SPIRAL stats (%): [1: µ=165.49965 σ=NaN rms=NaN min=165.49965 max=165.49965]
+IDENT_____:STAGGER stats (%): [1: µ=331.07593 σ=NaN rms=NaN min=331.07593 max=331.07593]
+IDENT_____:SAWTOTH stats (%): [1: µ=126.62968 σ=NaN rms=NaN min=126.62968 max=126.62968]
+IDENT_____:_RANDOM stats (%): [1: µ=596.47266 σ=NaN rms=NaN min=596.47266 max=596.47266]
+IDENT_____:PLATEAU stats (%): [1: µ=110.97874 σ=NaN rms=NaN min=110.97874 max=110.97874]
+IDENT_____:SHUFFLE stats (%): [1: µ=217.56355 σ=NaN rms=NaN min=217.56355 max=217.56355]
+REVERSE___:SPIRAL stats (%): [1: µ=112.08422 σ=NaN rms=NaN min=112.08422 max=112.08422]
+REVERSE___:STAGGER stats (%): [1: µ=359.60327 σ=NaN rms=NaN min=359.60327 max=359.60327]
+REVERSE___:SAWTOTH stats (%): [1: µ=110.8811 σ=NaN rms=NaN min=110.8811 max=110.8811]
+REVERSE___:_RANDOM stats (%): [1: µ=598.6752 σ=NaN rms=NaN min=598.6752 max=598.6752]
+REVERSE___:PLATEAU stats (%): [1: µ=243.71577 σ=NaN rms=NaN min=243.71577 max=243.71577]
+REVERSE___:SHUFFLE stats (%): [1: µ=158.53583 σ=NaN rms=NaN min=158.53583 max=158.53583]
+DITHER____:SPIRAL stats (%): [1: µ=265.6619 σ=NaN rms=NaN min=265.6619 max=265.6619]
+DITHER____:STAGGER stats (%): [1: µ=361.9373 σ=NaN rms=NaN min=361.9373 max=361.9373]
+DITHER____:SAWTOTH stats (%): [1: µ=336.14316 σ=NaN rms=NaN min=336.14316 max=336.14316]
+DITHER____:_RANDOM stats (%): [1: µ=519.6368 σ=NaN rms=NaN min=519.6368 max=519.6368]
+DITHER____:PLATEAU stats (%): [1: µ=98.72344 σ=NaN rms=NaN min=98.72344 max=98.72344]
+DITHER____:SHUFFLE stats (%): [1: µ=191.70238 σ=NaN rms=NaN min=191.70238 max=191.70238]
+REVERSE_BA:SPIRAL stats (%): [1: µ=152.44629 σ=NaN rms=NaN min=152.44629 max=152.44629]
+REVERSE_BA:STAGGER stats (%): [1: µ=346.8982 σ=NaN rms=NaN min=346.8982 max=346.8982]
+REVERSE_BA:SAWTOTH stats (%): [1: µ=120.96792 σ=NaN rms=NaN min=120.96792 max=120.96792]
+REVERSE_BA:_RANDOM stats (%): [1: µ=620.795 σ=NaN rms=NaN min=620.795 max=620.795]
+REVERSE_BA:PLATEAU stats (%): [1: µ=110.74995 σ=NaN rms=NaN min=110.74995 max=110.74995]
+REVERSE_BA:SHUFFLE stats (%): [1: µ=170.447 σ=NaN rms=NaN min=170.447 max=170.447]
+
+
+
+--- STATS ---
+Comparing sorters DPQ_19_11_12 vs DPQ_19_11_12_FIX
+winners  : 8 / 8
+avg   (%): 100.7349  
+stats (%): [24: µ=100.87952 σ=5.885259 rms=106.76478 min=94.34524 max=126.936554]
+
+Stats per keys:
+IDENT_____:SPIRAL stats (%): [1: µ=99.58596 σ=NaN rms=NaN min=99.58596 max=99.58596]
+IDENT_____:STAGGER stats (%): [1: µ=100.11069 σ=NaN rms=NaN min=100.11069 max=100.11069]
+IDENT_____:SAWTOTH stats (%): [1: µ=100.17045 σ=NaN rms=NaN min=100.17045 max=100.17045]
+IDENT_____:_RANDOM stats (%): [1: µ=94.34524 σ=NaN rms=NaN min=94.34524 max=94.34524]
+IDENT_____:PLATEAU stats (%): [1: µ=97.827 σ=NaN rms=NaN min=97.827 max=97.827]
+IDENT_____:SHUFFLE stats (%): [1: µ=105.12381 σ=NaN rms=NaN min=105.12381 max=105.12381]
+REVERSE___:SPIRAL stats (%): [1: µ=126.936554 σ=NaN rms=NaN min=126.936554 max=126.936554]
+REVERSE___:STAGGER stats (%): [1: µ=103.26776 σ=NaN rms=NaN min=103.26776 max=103.26776]
+REVERSE___:SAWTOTH stats (%): [1: µ=98.07076 σ=NaN rms=NaN min=98.07076 max=98.07076]
+REVERSE___:_RANDOM stats (%): [1: µ=99.9004 σ=NaN rms=NaN min=99.9004 max=99.9004]
+REVERSE___:PLATEAU stats (%): [1: µ=99.9678 σ=NaN rms=NaN min=99.9678 max=99.9678]
+REVERSE___:SHUFFLE stats (%): [1: µ=97.92866 σ=NaN rms=NaN min=97.92866 max=97.92866]
+DITHER____:SPIRAL stats (%): [1: µ=99.75706 σ=NaN rms=NaN min=99.75706 max=99.75706]
+DITHER____:STAGGER stats (%): [1: µ=100.1064 σ=NaN rms=NaN min=100.1064 max=100.1064]
+DITHER____:SAWTOTH stats (%): [1: µ=100.16302 σ=NaN rms=NaN min=100.16302 max=100.16302]
+DITHER____:_RANDOM stats (%): [1: µ=100.272484 σ=NaN rms=NaN min=100.272484 max=100.272484]
+DITHER____:PLATEAU stats (%): [1: µ=99.03305 σ=NaN rms=NaN min=99.03305 max=99.03305]
+DITHER____:SHUFFLE stats (%): [1: µ=100.15104 σ=NaN rms=NaN min=100.15104 max=100.15104]
+REVERSE_BA:SPIRAL stats (%): [1: µ=100.63211 σ=NaN rms=NaN min=100.63211 max=100.63211]
+REVERSE_BA:STAGGER stats (%): [1: µ=98.901596 σ=NaN rms=NaN min=98.901596 max=98.901596]
+REVERSE_BA:SAWTOTH stats (%): [1: µ=100.69291 σ=NaN rms=NaN min=100.69291 max=100.69291]
+REVERSE_BA:_RANDOM stats (%): [1: µ=100.077736 σ=NaN rms=NaN min=100.077736 max=100.077736]
+REVERSE_BA:PLATEAU stats (%): [1: µ=97.880516 σ=NaN rms=NaN min=97.880516 max=97.880516]
+REVERSE_BA:SHUFFLE stats (%): [1: µ=100.20539 σ=NaN rms=NaN min=100.20539 max=100.20539]
+
+stats per keys and sizes:
+- size = 100000
+stats (%): [24: µ=100.87952 σ=5.885259 rms=106.76478 min=94.34524 max=126.936554]
+IDENT_____:SPIRAL stats (%): [1: µ=99.58596 σ=NaN rms=NaN min=99.58596 max=99.58596]
+IDENT_____:STAGGER stats (%): [1: µ=100.11069 σ=NaN rms=NaN min=100.11069 max=100.11069]
+IDENT_____:SAWTOTH stats (%): [1: µ=100.17045 σ=NaN rms=NaN min=100.17045 max=100.17045]
+IDENT_____:_RANDOM stats (%): [1: µ=94.34524 σ=NaN rms=NaN min=94.34524 max=94.34524]
+IDENT_____:PLATEAU stats (%): [1: µ=97.827 σ=NaN rms=NaN min=97.827 max=97.827]
+IDENT_____:SHUFFLE stats (%): [1: µ=105.12381 σ=NaN rms=NaN min=105.12381 max=105.12381]
+REVERSE___:SPIRAL stats (%): [1: µ=126.936554 σ=NaN rms=NaN min=126.936554 max=126.936554]
+REVERSE___:STAGGER stats (%): [1: µ=103.26776 σ=NaN rms=NaN min=103.26776 max=103.26776]
+REVERSE___:SAWTOTH stats (%): [1: µ=98.07076 σ=NaN rms=NaN min=98.07076 max=98.07076]
+REVERSE___:_RANDOM stats (%): [1: µ=99.9004 σ=NaN rms=NaN min=99.9004 max=99.9004]
+REVERSE___:PLATEAU stats (%): [1: µ=99.9678 σ=NaN rms=NaN min=99.9678 max=99.9678]
+REVERSE___:SHUFFLE stats (%): [1: µ=97.92866 σ=NaN rms=NaN min=97.92866 max=97.92866]
+DITHER____:SPIRAL stats (%): [1: µ=99.75706 σ=NaN rms=NaN min=99.75706 max=99.75706]
+DITHER____:STAGGER stats (%): [1: µ=100.1064 σ=NaN rms=NaN min=100.1064 max=100.1064]
+DITHER____:SAWTOTH stats (%): [1: µ=100.16302 σ=NaN rms=NaN min=100.16302 max=100.16302]
+DITHER____:_RANDOM stats (%): [1: µ=100.272484 σ=NaN rms=NaN min=100.272484 max=100.272484]
+DITHER____:PLATEAU stats (%): [1: µ=99.03305 σ=NaN rms=NaN min=99.03305 max=99.03305]
+DITHER____:SHUFFLE stats (%): [1: µ=100.15104 σ=NaN rms=NaN min=100.15104 max=100.15104]
+REVERSE_BA:SPIRAL stats (%): [1: µ=100.63211 σ=NaN rms=NaN min=100.63211 max=100.63211]
+REVERSE_BA:STAGGER stats (%): [1: µ=98.901596 σ=NaN rms=NaN min=98.901596 max=98.901596]
+REVERSE_BA:SAWTOTH stats (%): [1: µ=100.69291 σ=NaN rms=NaN min=100.69291 max=100.69291]
+REVERSE_BA:_RANDOM stats (%): [1: µ=100.077736 σ=NaN rms=NaN min=100.077736 max=100.077736]
+REVERSE_BA:PLATEAU stats (%): [1: µ=97.880516 σ=NaN rms=NaN min=97.880516 max=97.880516]
+REVERSE_BA:SHUFFLE stats (%): [1: µ=100.20539 σ=NaN rms=NaN min=100.20539 max=100.20539]
+
+
+
+--- STATS ---
+Comparing sorters DPQ_19_11_12 vs DPQ_21_04_24
+winners  : 8 / 8
+avg   (%): 142.4354  
+stats (%): [24: µ=186.35857 σ=167.14812 rms=353.50668 min=84.20316 max=556.4851]
+
+Stats per keys:
+IDENT_____:SPIRAL stats (%): [1: µ=99.7664 σ=NaN rms=NaN min=99.7664 max=99.7664]
+IDENT_____:STAGGER stats (%): [1: µ=100.12111 σ=NaN rms=NaN min=100.12111 max=100.12111]
+IDENT_____:SAWTOTH stats (%): [1: µ=100.13578 σ=NaN rms=NaN min=100.13578 max=100.13578]
+IDENT_____:_RANDOM stats (%): [1: µ=556.4851 σ=NaN rms=NaN min=556.4851 max=556.4851]
+IDENT_____:PLATEAU stats (%): [1: µ=97.85147 σ=NaN rms=NaN min=97.85147 max=97.85147]
+IDENT_____:SHUFFLE stats (%): [1: µ=84.72563 σ=NaN rms=NaN min=84.72563 max=84.72563]
+REVERSE___:SPIRAL stats (%): [1: µ=126.9211 σ=NaN rms=NaN min=126.9211 max=126.9211]
+REVERSE___:STAGGER stats (%): [1: µ=103.256966 σ=NaN rms=NaN min=103.256966 max=103.256966]
+REVERSE___:SAWTOTH stats (%): [1: µ=98.05802 σ=NaN rms=NaN min=98.05802 max=98.05802]
+REVERSE___:_RANDOM stats (%): [1: µ=533.4768 σ=NaN rms=NaN min=533.4768 max=533.4768]
+REVERSE___:PLATEAU stats (%): [1: µ=99.94644 σ=NaN rms=NaN min=99.94644 max=99.94644]
+REVERSE___:SHUFFLE stats (%): [1: µ=91.69663 σ=NaN rms=NaN min=91.69663 max=91.69663]
+DITHER____:SPIRAL stats (%): [1: µ=226.99213 σ=NaN rms=NaN min=226.99213 max=226.99213]
+DITHER____:STAGGER stats (%): [1: µ=100.04155 σ=NaN rms=NaN min=100.04155 max=100.04155]
+DITHER____:SAWTOTH stats (%): [1: µ=330.39224 σ=NaN rms=NaN min=330.39224 max=330.39224]
+DITHER____:_RANDOM stats (%): [1: µ=485.4534 σ=NaN rms=NaN min=485.4534 max=485.4534]
+DITHER____:PLATEAU stats (%): [1: µ=84.20316 σ=NaN rms=NaN min=84.20316 max=84.20316]
+DITHER____:SHUFFLE stats (%): [1: µ=106.82693 σ=NaN rms=NaN min=106.82693 max=106.82693]
+REVERSE_BA:SPIRAL stats (%): [1: µ=99.81265 σ=NaN rms=NaN min=99.81265 max=99.81265]
+REVERSE_BA:STAGGER stats (%): [1: µ=98.61639 σ=NaN rms=NaN min=98.61639 max=98.61639]
+REVERSE_BA:SAWTOTH stats (%): [1: µ=100.565315 σ=NaN rms=NaN min=100.565315 max=100.565315]
+REVERSE_BA:_RANDOM stats (%): [1: µ=554.02563 σ=NaN rms=NaN min=554.02563 max=554.02563]
+REVERSE_BA:PLATEAU stats (%): [1: µ=97.88196 σ=NaN rms=NaN min=97.88196 max=97.88196]
+REVERSE_BA:SHUFFLE stats (%): [1: µ=95.35266 σ=NaN rms=NaN min=95.35266 max=95.35266]
+
+stats per keys and sizes:
+- size = 100000
+stats (%): [24: µ=186.35857 σ=167.14812 rms=353.50668 min=84.20316 max=556.4851]
+IDENT_____:SPIRAL stats (%): [1: µ=99.7664 σ=NaN rms=NaN min=99.7664 max=99.7664]
+IDENT_____:STAGGER stats (%): [1: µ=100.12111 σ=NaN rms=NaN min=100.12111 max=100.12111]
+IDENT_____:SAWTOTH stats (%): [1: µ=100.13578 σ=NaN rms=NaN min=100.13578 max=100.13578]
+IDENT_____:_RANDOM stats (%): [1: µ=556.4851 σ=NaN rms=NaN min=556.4851 max=556.4851]
+IDENT_____:PLATEAU stats (%): [1: µ=97.85147 σ=NaN rms=NaN min=97.85147 max=97.85147]
+IDENT_____:SHUFFLE stats (%): [1: µ=84.72563 σ=NaN rms=NaN min=84.72563 max=84.72563]
+REVERSE___:SPIRAL stats (%): [1: µ=126.9211 σ=NaN rms=NaN min=126.9211 max=126.9211]
+REVERSE___:STAGGER stats (%): [1: µ=103.256966 σ=NaN rms=NaN min=103.256966 max=103.256966]
+REVERSE___:SAWTOTH stats (%): [1: µ=98.05802 σ=NaN rms=NaN min=98.05802 max=98.05802]
+REVERSE___:_RANDOM stats (%): [1: µ=533.4768 σ=NaN rms=NaN min=533.4768 max=533.4768]
+REVERSE___:PLATEAU stats (%): [1: µ=99.94644 σ=NaN rms=NaN min=99.94644 max=99.94644]
+REVERSE___:SHUFFLE stats (%): [1: µ=91.69663 σ=NaN rms=NaN min=91.69663 max=91.69663]
+DITHER____:SPIRAL stats (%): [1: µ=226.99213 σ=NaN rms=NaN min=226.99213 max=226.99213]
+DITHER____:STAGGER stats (%): [1: µ=100.04155 σ=NaN rms=NaN min=100.04155 max=100.04155]
+DITHER____:SAWTOTH stats (%): [1: µ=330.39224 σ=NaN rms=NaN min=330.39224 max=330.39224]
+DITHER____:_RANDOM stats (%): [1: µ=485.4534 σ=NaN rms=NaN min=485.4534 max=485.4534]
+DITHER____:PLATEAU stats (%): [1: µ=84.20316 σ=NaN rms=NaN min=84.20316 max=84.20316]
+DITHER____:SHUFFLE stats (%): [1: µ=106.82693 σ=NaN rms=NaN min=106.82693 max=106.82693]
+REVERSE_BA:SPIRAL stats (%): [1: µ=99.81265 σ=NaN rms=NaN min=99.81265 max=99.81265]
+REVERSE_BA:STAGGER stats (%): [1: µ=98.61639 σ=NaN rms=NaN min=98.61639 max=98.61639]
+REVERSE_BA:SAWTOTH stats (%): [1: µ=100.565315 σ=NaN rms=NaN min=100.565315 max=100.565315]
+REVERSE_BA:_RANDOM stats (%): [1: µ=554.02563 σ=NaN rms=NaN min=554.02563 max=554.02563]
+REVERSE_BA:PLATEAU stats (%): [1: µ=97.88196 σ=NaN rms=NaN min=97.88196 max=97.88196]
+REVERSE_BA:SHUFFLE stats (%): [1: µ=95.35266 σ=NaN rms=NaN min=95.35266 max=95.35266]
+
+
+
+--- STATS ---
+Comparing sorters DPQ_19_11_12_FIX vs DPQ_21_04_24
+winners  : 8 / 8
+avg   (%): 141.3963  
+stats (%): [24: µ=186.6204 σ=170.84828 rms=357.4687 min=80.59605 max=589.8391]
+
+Stats per keys:
+IDENT_____:SPIRAL stats (%): [1: µ=100.1812 σ=NaN rms=NaN min=100.1812 max=100.1812]
+IDENT_____:STAGGER stats (%): [1: µ=100.010414 σ=NaN rms=NaN min=100.010414 max=100.010414]
+IDENT_____:SAWTOTH stats (%): [1: µ=99.96539 σ=NaN rms=NaN min=99.96539 max=99.96539]
+IDENT_____:_RANDOM stats (%): [1: µ=589.8391 σ=NaN rms=NaN min=589.8391 max=589.8391]
+IDENT_____:PLATEAU stats (%): [1: µ=100.02502 σ=NaN rms=NaN min=100.02502 max=100.02502]
+IDENT_____:SHUFFLE stats (%): [1: µ=80.59605 σ=NaN rms=NaN min=80.59605 max=80.59605]
+REVERSE___:SPIRAL stats (%): [1: µ=99.98782 σ=NaN rms=NaN min=99.98782 max=99.98782]
+REVERSE___:STAGGER stats (%): [1: µ=99.98954 σ=NaN rms=NaN min=99.98954 max=99.98954]
+REVERSE___:SAWTOTH stats (%): [1: µ=99.98701 σ=NaN rms=NaN min=99.98701 max=99.98701]
+REVERSE___:_RANDOM stats (%): [1: µ=534.00867 σ=NaN rms=NaN min=534.00867 max=534.00867]
+REVERSE___:PLATEAU stats (%): [1: µ=99.97864 σ=NaN rms=NaN min=99.97864 max=99.97864]
+REVERSE___:SHUFFLE stats (%): [1: µ=93.63616 σ=NaN rms=NaN min=93.63616 max=93.63616]
+DITHER____:SPIRAL stats (%): [1: µ=227.54494 σ=NaN rms=NaN min=227.54494 max=227.54494]
+DITHER____:STAGGER stats (%): [1: µ=99.93522 σ=NaN rms=NaN min=99.93522 max=99.93522]
+DITHER____:SAWTOTH stats (%): [1: µ=329.85452 σ=NaN rms=NaN min=329.85452 max=329.85452]
+DITHER____:_RANDOM stats (%): [1: µ=484.13422 σ=NaN rms=NaN min=484.13422 max=484.13422]
+DITHER____:PLATEAU stats (%): [1: µ=85.025314 σ=NaN rms=NaN min=85.025314 max=85.025314]
+DITHER____:SHUFFLE stats (%): [1: µ=106.66582 σ=NaN rms=NaN min=106.66582 max=106.66582]
+REVERSE_BA:SPIRAL stats (%): [1: µ=99.18569 σ=NaN rms=NaN min=99.18569 max=99.18569]
+REVERSE_BA:STAGGER stats (%): [1: µ=99.711624 σ=NaN rms=NaN min=99.711624 max=99.711624]
+REVERSE_BA:SAWTOTH stats (%): [1: µ=99.87328 σ=NaN rms=NaN min=99.87328 max=99.87328]
+REVERSE_BA:_RANDOM stats (%): [1: µ=553.5953 σ=NaN rms=NaN min=553.5953 max=553.5953]
+REVERSE_BA:PLATEAU stats (%): [1: µ=100.00148 σ=NaN rms=NaN min=100.00148 max=100.00148]
+REVERSE_BA:SHUFFLE stats (%): [1: µ=95.15722 σ=NaN rms=NaN min=95.15722 max=95.15722]
+
+stats per keys and sizes:
+- size = 100000
+stats (%): [24: µ=186.6204 σ=170.84828 rms=357.4687 min=80.59605 max=589.8391]
+IDENT_____:SPIRAL stats (%): [1: µ=100.1812 σ=NaN rms=NaN min=100.1812 max=100.1812]
+IDENT_____:STAGGER stats (%): [1: µ=100.010414 σ=NaN rms=NaN min=100.010414 max=100.010414]
+IDENT_____:SAWTOTH stats (%): [1: µ=99.96539 σ=NaN rms=NaN min=99.96539 max=99.96539]
+IDENT_____:_RANDOM stats (%): [1: µ=589.8391 σ=NaN rms=NaN min=589.8391 max=589.8391]
+IDENT_____:PLATEAU stats (%): [1: µ=100.02502 σ=NaN rms=NaN min=100.02502 max=100.02502]
+IDENT_____:SHUFFLE stats (%): [1: µ=80.59605 σ=NaN rms=NaN min=80.59605 max=80.59605]
+REVERSE___:SPIRAL stats (%): [1: µ=99.98782 σ=NaN rms=NaN min=99.98782 max=99.98782]
+REVERSE___:STAGGER stats (%): [1: µ=99.98954 σ=NaN rms=NaN min=99.98954 max=99.98954]
+REVERSE___:SAWTOTH stats (%): [1: µ=99.98701 σ=NaN rms=NaN min=99.98701 max=99.98701]
+REVERSE___:_RANDOM stats (%): [1: µ=534.00867 σ=NaN rms=NaN min=534.00867 max=534.00867]
+REVERSE___:PLATEAU stats (%): [1: µ=99.97864 σ=NaN rms=NaN min=99.97864 max=99.97864]
+REVERSE___:SHUFFLE stats (%): [1: µ=93.63616 σ=NaN rms=NaN min=93.63616 max=93.63616]
+DITHER____:SPIRAL stats (%): [1: µ=227.54494 σ=NaN rms=NaN min=227.54494 max=227.54494]
+DITHER____:STAGGER stats (%): [1: µ=99.93522 σ=NaN rms=NaN min=99.93522 max=99.93522]
+DITHER____:SAWTOTH stats (%): [1: µ=329.85452 σ=NaN rms=NaN min=329.85452 max=329.85452]
+DITHER____:_RANDOM stats (%): [1: µ=484.13422 σ=NaN rms=NaN min=484.13422 max=484.13422]
+DITHER____:PLATEAU stats (%): [1: µ=85.025314 σ=NaN rms=NaN min=85.025314 max=85.025314]
+DITHER____:SHUFFLE stats (%): [1: µ=106.66582 σ=NaN rms=NaN min=106.66582 max=106.66582]
+REVERSE_BA:SPIRAL stats (%): [1: µ=99.18569 σ=NaN rms=NaN min=99.18569 max=99.18569]
+REVERSE_BA:STAGGER stats (%): [1: µ=99.711624 σ=NaN rms=NaN min=99.711624 max=99.711624]
+REVERSE_BA:SAWTOTH stats (%): [1: µ=99.87328 σ=NaN rms=NaN min=99.87328 max=99.87328]
+REVERSE_BA:_RANDOM stats (%): [1: µ=553.5953 σ=NaN rms=NaN min=553.5953 max=553.5953]
+REVERSE_BA:PLATEAU stats (%): [1: µ=100.00148 σ=NaN rms=NaN min=100.00148 max=100.00148]
+REVERSE_BA:SHUFFLE stats (%): [1: µ=95.15722 σ=NaN rms=NaN min=95.15722 max=95.15722]
+
+

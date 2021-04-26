@@ -107,6 +107,11 @@ public final class ArraySortDataParser {
                 throw new IllegalStateException("Missing column in: " + columns + " !");
             }
 
+            final int blIdx = sorters.indexOf("BASELINE");
+            if (blIdx != 0) {
+                System.err.println("Missing BASELINE as first Sorter : " + blIdx);
+            }
+
             final int sorterLen = sorters.size();
             final int colLen = columns.size();
 
@@ -155,7 +160,7 @@ public final class ArraySortDataParser {
                 }
                 out.print("\t");
 
-                if (nSorter == 0) {
+                if (nSorter == blIdx) {
                     // baseline
                     timeBL = time;
                 }

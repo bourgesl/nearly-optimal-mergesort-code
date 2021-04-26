@@ -48,20 +48,14 @@ import java.util.Arrays; // TODO
  *
  * @since 1.7 * 14
  */
-public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort.Sorter {
+public final class DualPivotQuicksort20191112Fixed implements wildinter.net.mergesort.Sorter {
 
-    private final static boolean TRACE = false;
-
-    private final static boolean DPQS_ENABLE_RADIX = true;
-    private final static boolean DPQS_USE_RADIX_FOR_SEQUENTIAL = true;
-    private final static boolean DPQS_USE_RADIX_2 = true;
-
-    public final static wildinter.net.mergesort.Sorter INSTANCE = new DualPivotQuicksort20210424();
+    public final static wildinter.net.mergesort.Sorter INSTANCE = new DualPivotQuicksort20191112Fixed();
 
     /**
      * Prevents instantiation.
      */
-    private DualPivotQuicksort20210424() {
+    private DualPivotQuicksort20191112Fixed() {
     }
 
     // avoid alloc
@@ -70,7 +64,7 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
     @Override
     public void sort(final int[] A, final int low, final int high) {
         // preallocation of temporary arrays into custom Sorter class
-        sorter.initBuffers(high - low + 1, low);
+        sorter.initBuffers(high - low + 1);
 
         sort(sorter, A, 0, low, high + 1); // exclusive
     }
@@ -81,13 +75,16 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
     }
 
     /*
-    From Vladimir's 2021.04.23 source code:
+    From OpenJDK14 source code:
+    8226297: Dual-pivot quicksort improvements
+        Reviewed-by: dl, lbourges
+        Contributed-by: Vladimir Yaroslavskiy <vlv.spb.ru@mail.ru>
+     	Tue, 12 Nov 2019 13:49:40 -0800
      */
-
     /**
      * Prevents instantiation.
      */
-//  private DualPivotQuicksort() {} // TODO
+//  private DualPivotQuicksort() {}
 
     /**
      * Max array size to use mixed insertion sort.
@@ -123,8 +120,6 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
      * Threshold of mixed insertion sort is incremented by this value.
      */
     private static final int DELTA = 3 << 1;
-    private static final int DELTA4 = DELTA << 2; // TODO
-    private static final int RADIX_MIN_SIZE = 6 << 10;
 
     /**
      * Max recursive partitioning depth before using heap sort.
@@ -144,10 +139,6 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
      */
     private static void sort(Sorter sorter, int[] a, int bits, int low, int high) {
         while (true) {
-            if (TRACE) {
-                System.out.println("DPQSsort[" + a.length + "] bits = " + bits + " in [" + low + " - " + high + "]");
-            }
-
             int end = high - 1, size = high - low;
 
             /*
@@ -243,19 +234,6 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
              * Partitioning with 2 pivots in case of different elements.
              */
             if (a[e1] < a[e2] && a[e2] < a[e3] && a[e3] < a[e4] && a[e4] < a[e5]) {
-
-                if (DPQS_ENABLE_RADIX) {
-                    // TODD add comment
-                    // LBO: use radixSort for sequential sort (no parallelism):
-                    if ((DPQS_USE_RADIX_FOR_SEQUENTIAL /* || sorter == null*/ || (bits > DELTA4)) && (size > RADIX_MIN_SIZE)) {
-                        if (DPQS_USE_RADIX_2) {
-                            radixSort2(sorter, a, low, high);
-                        } else {
-                            radixSort(sorter, a, low, high);
-                        }
-                        return;
-                    }
-                }
 
                 /*
                  * Use the first and fifth of the five sorted elements as
@@ -437,9 +415,6 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
      * @param high the index of the last element, exclusive, to be sorted
      */
     private static void mixedInsertionSort(int[] a, int low, int end, int high) {
-        if (TRACE) {
-            System.out.println("mixedInsertionSort[" + a.length + "] in [" + low + " - " + high + "]");
-        }
         if (end == high) {
 
             /*
@@ -553,9 +528,6 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
      * @param high the index of the last element, exclusive, to be sorted
      */
     private static void insertionSort(int[] a, int low, int high) {
-        if (TRACE) {
-            System.out.println("insertionSort[" + a.length + "] in [" + low + " - " + high + "]");
-        }
         for (int i, k = low; ++k < high; ) {
             int ai = a[i = k];
 
@@ -568,247 +540,6 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
         }
     }
 
-    // TODO add javadoc
-    private static void radixSort(final Sorter sorter, final int[] a, final int low, final int high) {
-        if (TRACE) {
-            System.out.println("radixSort[" + a.length + "] in [" + low + " - " + high + "]");
-        }
-        final int[] count1;
-        final int[] count2;
-        final int[] count3;
-        final int[] count4;
-
-        if (sorter != null) {
-            sorter.resetRadixBuffers();
-            count1 = sorter.count1;
-            count2 = sorter.count2;
-            count3 = sorter.count3;
-            count4 = sorter.count4;
-        } else {
-            // System.out.println("alloc radix buffers(4x256)");
-            count1 = new int[256];
-            count2 = new int[256];
-            count3 = new int[256];
-            count4 = new int[256];
-        }
-
-        for (int i = low; i < high; ++i) {
-            count1[ a[i]         & 0xFF ]--;
-            count2[(a[i] >>>  8) & 0xFF ]--;
-            count3[(a[i] >>> 16) & 0xFF ]--;
-            count4[(a[i] >>> 24) ^ 0x80 ]--;
-        }
-        boolean skipByte4 = skipByte(count4, low - high, high, true);
-        boolean skipByte3 = skipByte(count3, low - high, high, skipByte4);
-        boolean skipByte2 = skipByte(count2, low - high, high, skipByte3);
-        boolean skipByte1 = skipByte(count1, low - high, high, skipByte2);
-
-        if (skipByte1) {
-            return;
-        }
-
-        int[] b; int offset = low;
-
-        // LBO: prealloc (high - low) +1 element:
-        if (sorter == null || (b = sorter.b) == null || b.length < (high - low)) {
-            // System.out.println("alloc b: " + (high - low));
-            b = new int[high - low];
-        } else {
-            offset = sorter.offset;
-//System.out.println("      offset: " + offset);
-        }
-        final int start = low - offset;
-        final int last = high - offset;
-
-
-        // 1 todo process LSD
-        for (int i = low; i < high; ++i) {
-            b[count1[a[i] & 0xFF]++ - offset] = a[i];
-        }
-
-        if (skipByte2) {
-            System.arraycopy(b, start, a, low, high - low);
-            return;
-        }
-
-        // 2
-        for (int i = start; i < last; ++i) {
-            a[count2[(b[i] >> 8) & 0xFF]++] = b[i];
-        }
-
-        if (skipByte3) {
-            return;
-        }
-
-        // 3
-        for (int i = low; i < high; ++i) {
-            b[count3[(a[i] >> 16) & 0xFF]++ - offset] = a[i];
-        }
-
-        if (skipByte4) {
-            System.arraycopy(b, start, a, low, high - low);
-            return;
-        }
-
-        // 4
-        for (int i = start; i < last; ++i) {
-            a[count4[(b[i] >>> 24) ^ 0x80]++] = b[i];
-        }
-    }
-
-    // TODO: add javadoc
-    private static boolean skipByte(final int[] count, final int total, final int high, final boolean prevSkip) {
-        if (prevSkip) {
-            for (int i = 0; i < count.length; ++i) {
-                if (count[i] != 0) {
-                    if (count[i] == total) {
-                        return true;
-                    }
-                    break;
-                }
-            }
-        }
-        // todo create historgam
-        count[255] += high;
-
-        for (int i = 255; i > 0; --i) {
-            count[i - 1] += count[i];
-        }
-        return false;
-    }
-
-    // LBO variant:
-    private static void radixSort2(final Sorter sorter, final int[] a, final int low, final int high) {
-        if (TRACE) {
-            System.out.println("radixSort2[" + a.length + "] in [" + low + " - " + high + "]");
-        }
-        final int[] count1;
-        final int[] count2;
-        final int[] count3;
-        final int[] count4;
-
-        if (sorter != null) {
-            sorter.resetRadixBuffers();
-            count1 = sorter.count1;
-            count2 = sorter.count2;
-            count3 = sorter.count3;
-            count4 = sorter.count4;
-        } else {
-            // System.out.println("alloc radix buffers(4x256)");
-            count1 = new int[256];
-            count2 = new int[256];
-            count3 = new int[256];
-            count4 = new int[256];
-        }
-
-        for (int i = low; i < high; ++i) {
-            count1[ a[i]         & 0xFF ]--;
-            count2[(a[i] >>>  8) & 0xFF ]--;
-            count3[(a[i] >>> 16) & 0xFF ]--;
-            count4[(a[i] >>> 24) ^ 0x80 ]--;
-        }
-
-        final int total = low - high;
-        final boolean skipLevel4 = canSkipLevel2(count4, total);
-        final boolean skipLevel3 = canSkipLevel2(count3, total);
-        final boolean skipLevel2 = canSkipLevel2(count2, total);
-        final boolean skipLevel1 = canSkipLevel2(count1, total);
-
-        if (skipLevel1 && skipLevel2 && skipLevel3 && skipLevel4) {
-            // all equal:
-            return;
-        }
-        
-        int[] b;
-        // LBO: prealloc (high - low) +1 element:
-        if (sorter == null || (b = sorter.b) == null || b.length < (high - low)) {
-            // System.out.println("alloc b: " + (high - low));
-            b = new int[high - low];
-        }
-
-        count1[255] += high;
-        count2[255] += high;
-        count3[255] += high;
-        count4[255] += high;
-
-        int[] source = a;
-        int[] dest = b;
-        
-        // TODO: handle b[0 to high-low] ie shift by -low
-
-        if (!skipLevel1) {
-            // 1 todo process LSD
-            for (int i = 255; i > 0; --i) {
-                count1[i - 1] += count1[i];
-            }
-
-            for (int i = low; i < high; ++i) {
-                dest[count1[source[i] & 0xFF]++] = source[i];
-            }
-            if (!skipLevel2 || !skipLevel3 || !skipLevel4) {
-                final int[] tmp = dest;
-                dest = source;
-                source = tmp;
-            }
-        }
-
-        if (!skipLevel2) {
-            // 2
-            for (int i = 255; i > 0; --i) {
-                count2[i - 1] += count2[i];
-            }
-
-            for (int i = low; i < high; ++i) {
-                dest[count2[(source[i] >> 8) & 0xFF]++] = source[i];
-            }
-            if (!skipLevel3 || !skipLevel4) {
-                final int[] tmp = dest;
-                dest = source;
-                source = tmp;
-            }
-        }
-
-        if (!skipLevel3) {
-            // 3
-            for (int i = 255; i > 0; --i) {
-                count3[i - 1] += count3[i];
-            }
-
-            for (int i = low; i < high; ++i) {
-                dest[count3[(source[i] >> 16) & 0xFF]++] = source[i];
-            }
-            if (!skipLevel4) {
-                final int[] tmp = dest;
-                dest = source;
-                source = tmp;
-            }
-        }
-
-        if (!skipLevel4) {
-            // 4
-            for (int i = 255; i > 0; --i) {
-                count4[i - 1] += count4[i];
-            }
-
-            for (int i = low; i < high; ++i) {
-                dest[count4[(source[i] >>> 24) ^ 0x80]++] = source[i];
-            }
-        }
-        if (dest != a) {
-            System.arraycopy(dest, low, a, low, high - low);
-        }
-    }
-
-    // TODO: add javadoc
-    private static boolean canSkipLevel2(final int[] count, final int total) {
-        for (int i = 0; i < count.length; ++i) {
-            if (count[i] != 0) {
-                return (count[i] == total);
-            }
-        }
-        return false;
-    }
-
     /**
      * Sorts the specified range of the array using heap sort.
      *
@@ -817,9 +548,6 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
      * @param high the index of the last element, exclusive, to be sorted
      */
     private static void heapSort(int[] a, int low, int high) {
-        if (TRACE) {
-            System.out.println("heapSort[" + a.length + "] in [" + low + " - " + high + "]");
-        }
         for (int k = (low + high) >>> 1; k > low; ) {
             pushDown(a, --k, a[k], low, high);
         }
@@ -866,9 +594,7 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
      * @return true if finally sorted, false otherwise
      */
     private static boolean tryMergeRuns(Sorter sorter, int[] a, int low, int size) {
-        if (TRACE) {
-            System.out.println("tryMergeRuns[" + a.length + "] in [" + low + " - " + (low + size) + "]");
-        }
+
         /*
          * The run array is constructed only if initial runs are
          * long enough to continue, run[i] then holds start index
@@ -965,10 +691,6 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
                     run = Arrays.copyOf(run, count << 1);
                 }
             }
-            if (false && TRACE) {
-                System.out.println("last: " + last + " k-1: "+(k-1));
-                System.out.println("a[last]: "+a[last] + " a[k-1]: "+a[k-1]);
-            }
             run[count] = (last = k);
             
             if (true) {
@@ -983,15 +705,6 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
          * Merge runs of highly structured array.
          */
         if (count > 1) {
-            if (TRACE) {
-                System.out.println("Merge runs:");
-                int prev = run[0];
-                for (int i = 1; i < count; i++) {
-                    System.out.println("run " + i + " in [" + prev + " - " + run[i] + "] <=> [" + a[prev] + " - " + a[run[i]] + "]");
-                    prev = run[i];
-                }
-            }
-            
             int[] b; int offset = low;
 
             // LBO: prealloc
@@ -1020,10 +733,6 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
      */
     private static int[] mergeRuns(int[] a, int[] b, int offset,
             int aim, /*boolean parallel,*/ int[] run, int lo, int hi) {
-        
-        if (TRACE) {
-            System.out.println("mergeRuns[" + a.length + "] in [" + run[lo] + " - " + run[hi] + "]");
-        }
 
         if (hi - lo == 1) {
             if (aim >= 0) {
@@ -1111,39 +820,18 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
 
         final int[] run;
         int[] b;
-        int offset;
         boolean runInit;
-
-        int[] count1 = null;
-        int[] count2 = null;
-        int[] count3 = null;
-        int[] count4 = null;
 
         Sorter() {
             // preallocate max runs:
             run = new int[MAX_RUN_CAPACITY];
         }
 
-        void initBuffers(int length, int offset) {
+        void initBuffers(int length) {
             if (b == null || b.length < length) {
                 b = new int[length];
             }
-            this.runInit = true;
-            this.offset = offset;
-        }
-
-        void resetRadixBuffers() {
-            if (count1 == null) {
-                count1 = new int[256];
-                count2 = new int[256];
-                count3 = new int[256];
-                count4 = new int[256];
-            } else {
-                Arrays.fill(count1, 0);
-                Arrays.fill(count2, 0);
-                Arrays.fill(count3, 0);
-                Arrays.fill(count4, 0);
-            }
+            runInit = true;
         }
     }
 }
