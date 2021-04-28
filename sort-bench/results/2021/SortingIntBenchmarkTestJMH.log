@@ -1,0 +1,735 @@
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay
+# Parameters: (listType = pairFlipZeroPairFlip)
+
+# Run progress: 0,00% complete, ETA 00:05:08
+# Fork: 1 of 1
+# Warmup Iteration   1: 15,336 ops/s
+# Warmup Iteration   2: 18,134 ops/s
+# Warmup Iteration   3: 18,207 ops/s
+# Warmup Iteration   4: 18,277 ops/s
+Iteration   1: 18,198 ops/s
+Iteration   2: 18,192 ops/s
+Iteration   3: 18,315 ops/s
+Iteration   4: 18,312 ops/s
+Iteration   5: 18,313 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay":
+  18,266 ±(99.9%) 0,250 ops/s [Average]
+  (min, avg, max) = (18,192, 18,266, 18,315), stdev = 0,065
+  CI (99.9%): [18,016, 18,516] (assumes normal distribution)
+
+
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay
+# Parameters: (listType = pairFlipOneHundredPairFlip)
+
+# Run progress: 4,55% complete, ETA 00:05:13
+# Fork: 1 of 1
+# Warmup Iteration   1: 15,516 ops/s
+# Warmup Iteration   2: 22,697 ops/s
+# Warmup Iteration   3: 22,727 ops/s
+# Warmup Iteration   4: 22,649 ops/s
+Iteration   1: 22,660 ops/s
+Iteration   2: 22,656 ops/s
+Iteration   3: 22,733 ops/s
+Iteration   4: 22,678 ops/s
+Iteration   5: 22,600 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay":
+  22,666 ±(99.9%) 0,184 ops/s [Average]
+  (min, avg, max) = (22,600, 22,666, 22,733), stdev = 0,048
+  CI (99.9%): [22,481, 22,850] (assumes normal distribution)
+
+
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay
+# Parameters: (listType = zeroHi)
+
+# Run progress: 9,09% complete, ETA 00:04:57
+# Fork: 1 of 1
+# Warmup Iteration   1: 16,320 ops/s
+# Warmup Iteration   2: 18,488 ops/s
+# Warmup Iteration   3: 18,485 ops/s
+# Warmup Iteration   4: 18,502 ops/s
+Iteration   1: 18,490 ops/s
+Iteration   2: 18,532 ops/s
+Iteration   3: 18,528 ops/s
+Iteration   4: 18,531 ops/s
+Iteration   5: 18,509 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay":
+  18,518 ±(99.9%) 0,071 ops/s [Average]
+  (min, avg, max) = (18,490, 18,518, 18,532), stdev = 0,018
+  CI (99.9%): [18,447, 18,589] (assumes normal distribution)
+
+
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay
+# Parameters: (listType = hiZeroLow)
+
+# Run progress: 13,64% complete, ETA 00:04:42
+# Fork: 1 of 1
+# Warmup Iteration   1: 15,519 ops/s
+# Warmup Iteration   2: 21,731 ops/s
+# Warmup Iteration   3: 21,752 ops/s
+# Warmup Iteration   4: 21,743 ops/s
+Iteration   1: 21,754 ops/s
+Iteration   2: 21,755 ops/s
+Iteration   3: 21,760 ops/s
+Iteration   4: 21,850 ops/s
+Iteration   5: 21,851 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay":
+  21,794 ±(99.9%) 0,199 ops/s [Average]
+  (min, avg, max) = (21,754, 21,794, 21,851), stdev = 0,052
+  CI (99.9%): [21,595, 21,993] (assumes normal distribution)
+
+
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay
+# Parameters: (listType = hiFlatLow)
+
+# Run progress: 18,18% complete, ETA 00:04:27
+# Fork: 1 of 1
+# Warmup Iteration   1: 16,676 ops/s
+# Warmup Iteration   2: 22,699 ops/s
+# Warmup Iteration   3: 22,731 ops/s
+# Warmup Iteration   4: 22,846 ops/s
+Iteration   1: 22,834 ops/s
+Iteration   2: 22,740 ops/s
+Iteration   3: 22,742 ops/s
+Iteration   4: 22,775 ops/s
+Iteration   5: 22,833 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay":
+  22,785 ±(99.9%) 0,179 ops/s [Average]
+  (min, avg, max) = (22,740, 22,785, 22,834), stdev = 0,047
+  CI (99.9%): [22,606, 22,964] (assumes normal distribution)
+
+
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay
+# Parameters: (listType = identical)
+
+# Run progress: 22,73% complete, ETA 00:04:11
+# Fork: 1 of 1
+# Warmup Iteration   1: 19,967 ops/s
+# Warmup Iteration   2: 22,511 ops/s
+# Warmup Iteration   3: 22,518 ops/s
+# Warmup Iteration   4: 22,560 ops/s
+Iteration   1: 22,569 ops/s
+Iteration   2: 22,528 ops/s
+Iteration   3: 22,552 ops/s
+Iteration   4: 22,386 ops/s
+Iteration   5: 22,393 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay":
+  22,486 ±(99.9%) 0,342 ops/s [Average]
+  (min, avg, max) = (22,386, 22,486, 22,569), stdev = 0,089
+  CI (99.9%): [22,143, 22,828] (assumes normal distribution)
+
+
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay
+# Parameters: (listType = randomDups)
+
+# Run progress: 27,27% complete, ETA 00:03:56
+# Fork: 1 of 1
+# Warmup Iteration   1: 1,949 ops/s
+# Warmup Iteration   2: 19,206 ops/s
+# Warmup Iteration   3: 19,219 ops/s
+# Warmup Iteration   4: 19,230 ops/s
+Iteration   1: 19,239 ops/s
+Iteration   2: 19,233 ops/s
+Iteration   3: 19,242 ops/s
+Iteration   4: 19,245 ops/s
+Iteration   5: 19,252 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay":
+  19,242 ±(99.9%) 0,026 ops/s [Average]
+  (min, avg, max) = (19,233, 19,242, 19,252), stdev = 0,007
+  CI (99.9%): [19,216, 19,268] (assumes normal distribution)
+
+
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay
+# Parameters: (listType = randomNoDups)
+
+# Run progress: 31,82% complete, ETA 00:03:42
+# Fork: 1 of 1
+# Warmup Iteration   1: 0,624 ops/s
+# Warmup Iteration   2: 18,729 ops/s
+# Warmup Iteration   3: 18,724 ops/s
+# Warmup Iteration   4: 18,689 ops/s
+Iteration   1: 18,752 ops/s
+Iteration   2: 18,738 ops/s
+Iteration   3: 18,740 ops/s
+Iteration   4: 18,823 ops/s
+Iteration   5: 18,817 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay":
+  18,774 ±(99.9%) 0,164 ops/s [Average]
+  (min, avg, max) = (18,738, 18,774, 18,823), stdev = 0,043
+  CI (99.9%): [18,610, 18,938] (assumes normal distribution)
+
+
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay
+# Parameters: (listType = sortedReversedSorted)
+
+# Run progress: 36,36% complete, ETA 00:03:39
+# Fork: 1 of 1
+# Warmup Iteration   1: 16,366 ops/s
+# Warmup Iteration   2: 22,109 ops/s
+# Warmup Iteration   3: 22,170 ops/s
+# Warmup Iteration   4: 22,111 ops/s
+Iteration   1: 22,114 ops/s
+Iteration   2: 22,088 ops/s
+Iteration   3: 22,089 ops/s
+Iteration   4: 22,147 ops/s
+Iteration   5: 22,117 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay":
+  22,111 ±(99.9%) 0,094 ops/s [Average]
+  (min, avg, max) = (22,088, 22,111, 22,147), stdev = 0,024
+  CI (99.9%): [22,017, 22,205] (assumes normal distribution)
+
+
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay
+# Parameters: (listType = pairFlip)
+
+# Run progress: 40,91% complete, ETA 00:03:22
+# Fork: 1 of 1
+# Warmup Iteration   1: 19,790 ops/s
+# Warmup Iteration   2: 23,785 ops/s
+# Warmup Iteration   3: 23,942 ops/s
+# Warmup Iteration   4: 23,922 ops/s
+Iteration   1: 23,922 ops/s
+Iteration   2: 23,922 ops/s
+Iteration   3: 23,859 ops/s
+Iteration   4: 23,930 ops/s
+Iteration   5: 23,940 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay":
+  23,915 ±(99.9%) 0,122 ops/s [Average]
+  (min, avg, max) = (23,859, 23,915, 23,940), stdev = 0,032
+  CI (99.9%): [23,792, 24,037] (assumes normal distribution)
+
+
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay
+# Parameters: (listType = endLessThan)
+
+# Run progress: 45,45% complete, ETA 00:03:05
+# Fork: 1 of 1
+# Warmup Iteration   1: 18,728 ops/s
+# Warmup Iteration   2: 23,153 ops/s
+# Warmup Iteration   3: 23,342 ops/s
+# Warmup Iteration   4: 23,266 ops/s
+Iteration   1: 23,356 ops/s
+Iteration   2: 23,323 ops/s
+Iteration   3: 23,324 ops/s
+Iteration   4: 23,293 ops/s
+Iteration   5: 23,323 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortCurrentWay":
+  23,324 ±(99.9%) 0,087 ops/s [Average]
+  (min, avg, max) = (23,293, 23,324, 23,356), stdev = 0,022
+  CI (99.9%): [23,237, 23,410] (assumes normal distribution)
+
+
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay
+# Parameters: (listType = pairFlipZeroPairFlip)
+
+# Run progress: 50,00% complete, ETA 00:02:49
+# Fork: 1 of 1
+# Warmup Iteration   1: 22,206 ops/s
+# Warmup Iteration   2: 24,571 ops/s
+# Warmup Iteration   3: 24,585 ops/s
+# Warmup Iteration   4: 24,633 ops/s
+Iteration   1: 24,616 ops/s
+Iteration   2: 24,502 ops/s
+Iteration   3: 24,546 ops/s
+Iteration   4: 24,618 ops/s
+Iteration   5: 24,604 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay":
+  24,577 ±(99.9%) 0,198 ops/s [Average]
+  (min, avg, max) = (24,502, 24,577, 24,618), stdev = 0,051
+  CI (99.9%): [24,379, 24,775] (assumes normal distribution)
+
+
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay
+# Parameters: (listType = pairFlipOneHundredPairFlip)
+
+# Run progress: 54,55% complete, ETA 00:02:33
+# Fork: 1 of 1
+# Warmup Iteration   1: 18,622 ops/s
+# Warmup Iteration   2: 21,985 ops/s
+# Warmup Iteration   3: 22,013 ops/s
+# Warmup Iteration   4: 22,047 ops/s
+Iteration   1: 22,038 ops/s
+Iteration   2: 22,025 ops/s
+Iteration   3: 22,036 ops/s
+Iteration   4: 22,058 ops/s
+Iteration   5: 22,063 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay":
+  22,044 ±(99.9%) 0,062 ops/s [Average]
+  (min, avg, max) = (22,025, 22,044, 22,063), stdev = 0,016
+  CI (99.9%): [21,982, 22,106] (assumes normal distribution)
+
+
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay
+# Parameters: (listType = zeroHi)
+
+# Run progress: 59,09% complete, ETA 00:02:18
+# Fork: 1 of 1
+# Warmup Iteration   1: 22,156 ops/s
+# Warmup Iteration   2: 23,781 ops/s
+# Warmup Iteration   3: 23,863 ops/s
+# Warmup Iteration   4: 23,956 ops/s
+Iteration   1: 23,946 ops/s
+Iteration   2: 23,892 ops/s
+Iteration   3: 23,946 ops/s
+Iteration   4: 23,986 ops/s
+Iteration   5: 23,977 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay":
+  23,949 ±(99.9%) 0,142 ops/s [Average]
+  (min, avg, max) = (23,892, 23,949, 23,986), stdev = 0,037
+  CI (99.9%): [23,808, 24,091] (assumes normal distribution)
+
+
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay
+# Parameters: (listType = hiZeroLow)
+
+# Run progress: 63,64% complete, ETA 00:02:02
+# Fork: 1 of 1
+# Warmup Iteration   1: 18,396 ops/s
+# Warmup Iteration   2: 22,927 ops/s
+# Warmup Iteration   3: 22,970 ops/s
+# Warmup Iteration   4: 22,990 ops/s
+Iteration   1: 23,001 ops/s
+Iteration   2: 22,988 ops/s
+Iteration   3: 22,996 ops/s
+Iteration   4: 22,994 ops/s
+Iteration   5: 23,031 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay":
+  23,002 ±(99.9%) 0,066 ops/s [Average]
+  (min, avg, max) = (22,988, 23,002, 23,031), stdev = 0,017
+  CI (99.9%): [22,936, 23,068] (assumes normal distribution)
+
+
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay
+# Parameters: (listType = hiFlatLow)
+
+# Run progress: 68,18% complete, ETA 00:01:46
+# Fork: 1 of 1
+# Warmup Iteration   1: 19,498 ops/s
+# Warmup Iteration   2: 23,932 ops/s
+# Warmup Iteration   3: 24,123 ops/s
+# Warmup Iteration   4: 24,121 ops/s
+Iteration   1: 24,147 ops/s
+Iteration   2: 24,214 ops/s
+Iteration   3: 24,017 ops/s
+Iteration   4: 24,089 ops/s
+Iteration   5: 24,143 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay":
+  24,122 ±(99.9%) 0,284 ops/s [Average]
+  (min, avg, max) = (24,017, 24,122, 24,214), stdev = 0,074
+  CI (99.9%): [23,839, 24,406] (assumes normal distribution)
+
+
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay
+# Parameters: (listType = identical)
+
+# Run progress: 72,73% complete, ETA 00:01:31
+# Fork: 1 of 1
+# Warmup Iteration   1: 19,475 ops/s
+# Warmup Iteration   2: 20,469 ops/s
+# Warmup Iteration   3: 20,509 ops/s
+# Warmup Iteration   4: 20,378 ops/s
+Iteration   1: 20,401 ops/s
+Iteration   2: 20,400 ops/s
+Iteration   3: 20,381 ops/s
+Iteration   4: 20,381 ops/s
+Iteration   5: 20,485 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay":
+  20,409 ±(99.9%) 0,166 ops/s [Average]
+  (min, avg, max) = (20,381, 20,409, 20,485), stdev = 0,043
+  CI (99.9%): [20,243, 20,576] (assumes normal distribution)
+
+
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay
+# Parameters: (listType = randomDups)
+
+# Run progress: 77,27% complete, ETA 00:01:15
+# Fork: 1 of 1
+# Warmup Iteration   1: 19,750 ops/s
+# Warmup Iteration   2: 23,486 ops/s
+# Warmup Iteration   3: 23,569 ops/s
+# Warmup Iteration   4: 23,571 ops/s
+Iteration   1: 23,578 ops/s
+Iteration   2: 23,589 ops/s
+Iteration   3: 23,560 ops/s
+Iteration   4: 23,575 ops/s
+Iteration   5: 23,635 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay":
+  23,587 ±(99.9%) 0,109 ops/s [Average]
+  (min, avg, max) = (23,560, 23,587, 23,635), stdev = 0,028
+  CI (99.9%): [23,478, 23,696] (assumes normal distribution)
+
+
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay
+# Parameters: (listType = randomNoDups)
+
+# Run progress: 81,82% complete, ETA 00:01:00
+# Fork: 1 of 1
+# Warmup Iteration   1: 15,488 ops/s
+# Warmup Iteration   2: 19,481 ops/s
+# Warmup Iteration   3: 19,481 ops/s
+# Warmup Iteration   4: 19,534 ops/s
+Iteration   1: 19,525 ops/s
+Iteration   2: 19,507 ops/s
+Iteration   3: 19,527 ops/s
+Iteration   4: 19,520 ops/s
+Iteration   5: 19,511 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay":
+  19,518 ±(99.9%) 0,033 ops/s [Average]
+  (min, avg, max) = (19,507, 19,518, 19,527), stdev = 0,009
+  CI (99.9%): [19,485, 19,551] (assumes normal distribution)
+
+
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay
+# Parameters: (listType = sortedReversedSorted)
+
+# Run progress: 86,36% complete, ETA 00:00:46
+# Fork: 1 of 1
+# Warmup Iteration   1: 19,655 ops/s
+# Warmup Iteration   2: 24,078 ops/s
+# Warmup Iteration   3: 24,081 ops/s
+# Warmup Iteration   4: 24,034 ops/s
+Iteration   1: 24,041 ops/s
+Iteration   2: 24,072 ops/s
+Iteration   3: 24,030 ops/s
+Iteration   4: 24,000 ops/s
+Iteration   5: 24,158 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay":
+  24,060 ±(99.9%) 0,233 ops/s [Average]
+  (min, avg, max) = (24,000, 24,060, 24,158), stdev = 0,061
+  CI (99.9%): [23,827, 24,293] (assumes normal distribution)
+
+
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay
+# Parameters: (listType = pairFlip)
+
+# Run progress: 90,91% complete, ETA 00:00:30
+# Fork: 1 of 1
+# Warmup Iteration   1: 11,519 ops/s
+# Warmup Iteration   2: 19,544 ops/s
+# Warmup Iteration   3: 19,501 ops/s
+# Warmup Iteration   4: 19,460 ops/s
+Iteration   1: 19,554 ops/s
+Iteration   2: 19,591 ops/s
+Iteration   3: 19,631 ops/s
+Iteration   4: 19,614 ops/s
+Iteration   5: 19,595 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay":
+  19,597 ±(99.9%) 0,111 ops/s [Average]
+  (min, avg, max) = (19,554, 19,597, 19,631), stdev = 0,029
+  CI (99.9%): [19,486, 19,708] (assumes normal distribution)
+
+
+# JMH version: 1.29
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 4 iterations, 1 s each
+# Measurement: 5 iterations, 2 s each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Throughput, ops/time
+# Benchmark: edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay
+# Parameters: (listType = endLessThan)
+
+# Run progress: 95,45% complete, ETA 00:00:15
+# Fork: 1 of 1
+# Warmup Iteration   1: 20,167 ops/s
+# Warmup Iteration   2: 22,016 ops/s
+# Warmup Iteration   3: 22,064 ops/s
+# Warmup Iteration   4: 22,089 ops/s
+Iteration   1: 22,064 ops/s
+Iteration   2: 21,994 ops/s
+Iteration   3: 21,993 ops/s
+Iteration   4: 22,005 ops/s
+Iteration   5: 21,994 ops/s
+
+
+Result "edu.sorting.bench.SortingIntBenchmarkTestJMH.sortNewWay":
+  22,010 ±(99.9%) 0,118 ops/s [Average]
+  (min, avg, max) = (21,993, 22,010, 22,064), stdev = 0,031
+  CI (99.9%): [21,892, 22,128] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:05:38
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+Benchmark                                                  (listType)   Mode  Cnt   Score   Error  Units
+SortingIntBenchmarkTestJMH.sortCurrentWay        pairFlipZeroPairFlip  thrpt    5  18,266 ± 0,250  ops/s
+SortingIntBenchmarkTestJMH.sortCurrentWay  pairFlipOneHundredPairFlip  thrpt    5  22,666 ± 0,184  ops/s
+SortingIntBenchmarkTestJMH.sortCurrentWay                      zeroHi  thrpt    5  18,518 ± 0,071  ops/s
+SortingIntBenchmarkTestJMH.sortCurrentWay                   hiZeroLow  thrpt    5  21,794 ± 0,199  ops/s
+SortingIntBenchmarkTestJMH.sortCurrentWay                   hiFlatLow  thrpt    5  22,785 ± 0,179  ops/s
+SortingIntBenchmarkTestJMH.sortCurrentWay                   identical  thrpt    5  22,486 ± 0,342  ops/s
+SortingIntBenchmarkTestJMH.sortCurrentWay                  randomDups  thrpt    5  19,242 ± 0,026  ops/s
+SortingIntBenchmarkTestJMH.sortCurrentWay                randomNoDups  thrpt    5  18,774 ± 0,164  ops/s
+SortingIntBenchmarkTestJMH.sortCurrentWay        sortedReversedSorted  thrpt    5  22,111 ± 0,094  ops/s
+SortingIntBenchmarkTestJMH.sortCurrentWay                    pairFlip  thrpt    5  23,915 ± 0,122  ops/s
+SortingIntBenchmarkTestJMH.sortCurrentWay                 endLessThan  thrpt    5  23,324 ± 0,087  ops/s
+SortingIntBenchmarkTestJMH.sortNewWay            pairFlipZeroPairFlip  thrpt    5  24,577 ± 0,198  ops/s
+SortingIntBenchmarkTestJMH.sortNewWay      pairFlipOneHundredPairFlip  thrpt    5  22,044 ± 0,062  ops/s
+SortingIntBenchmarkTestJMH.sortNewWay                          zeroHi  thrpt    5  23,949 ± 0,142  ops/s
+SortingIntBenchmarkTestJMH.sortNewWay                       hiZeroLow  thrpt    5  23,002 ± 0,066  ops/s
+SortingIntBenchmarkTestJMH.sortNewWay                       hiFlatLow  thrpt    5  24,122 ± 0,284  ops/s
+SortingIntBenchmarkTestJMH.sortNewWay                       identical  thrpt    5  20,409 ± 0,166  ops/s
+SortingIntBenchmarkTestJMH.sortNewWay                      randomDups  thrpt    5  23,587 ± 0,109  ops/s
+SortingIntBenchmarkTestJMH.sortNewWay                    randomNoDups  thrpt    5  19,518 ± 0,033  ops/s
+SortingIntBenchmarkTestJMH.sortNewWay            sortedReversedSorted  thrpt    5  24,060 ± 0,233  ops/s
+SortingIntBenchmarkTestJMH.sortNewWay                        pairFlip  thrpt    5  19,597 ± 0,111  ops/s
+SortingIntBenchmarkTestJMH.sortNewWay                     endLessThan  thrpt    5  22,010 ± 0,118  ops/s

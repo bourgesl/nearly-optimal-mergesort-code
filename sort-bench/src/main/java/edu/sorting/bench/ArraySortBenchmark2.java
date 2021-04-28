@@ -253,11 +253,11 @@ public class ArraySortBenchmark2 {
 //                        , "384", "512", "768", "1024"
 
 //                    "50", "100",  "250", "1000"
-//                    "1000", "10000", 
-                    "100000"
-//                        , "1000000"
+//                    "1000", 
+                    "10000", "100000", "1000000"
                 });
                 builder.param(PARAM_SUB_SIZE, new String[]{
+                    "1", 
 //                    "1", "4", "7" // , "15"
 //                    "1", "16", 
                          "256"
@@ -267,8 +267,7 @@ public class ArraySortBenchmark2 {
                 builder.param(PARAM_DATA_TWEAKER, new String[]{
                     "IDENT_____", "REVERSE___", 
 //                    "SORT______", 
-                    "DITHER____", "REVERSE_BA"
-//                    "REVERSE_FR"
+                    "DITHER____", "REVERSE_BA", "REVERSE_FR"
                 });
 
                 // "STAGGER", "SAWTOTH", "_RANDOM", "PLATEAU", "SHUFFLE"
@@ -277,8 +276,8 @@ public class ArraySortBenchmark2 {
                 });
 
                 builder.param(PARAM_SORTER, new String[]{
-//                    "BASELINE", 
-                    "DPQ_11", "DPQ_19_11_12", "DPQ_19_11_12_FIX", "DPQ_21_04_24"
+//                    "BASELINE", "DPQ_19_11_12_FIX", 
+                    "DPQ_11", "DPQ_19_11_12", "DPQ_21_04_24"
 //                        , "RADIX",
 //                     "DPQ_11", 
 //                    "DPQ_19_01_05", "DPQ_19_11_12", "RADIX"
