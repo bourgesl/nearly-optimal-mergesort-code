@@ -45,11 +45,11 @@ import java.util.concurrent.RecursiveTask;
  * @author Josh Bloch
  * @author Doug Lea
  *
- * @version 2018.08.18
+ * @version 2021.05.01 
  *
  * @since 1.7 * 14
  */
-/* Vladimir's version: _6K_5d2 */
+/* Vladimir's version: DualPivotQuicksort_6K_7b.java */
 final class DualPivotQuicksortRef2104 {
 
     /**
@@ -587,6 +587,17 @@ final class DualPivotQuicksortRef2104 {
     // TODO add javadoc
 //  private 
     static void radixSort(Sorter sorter, int[] a, int low, int high) {
+        int[] b; int offset = low;
+
+        if (sorter == null || (b = (int[]) sorter.b) == null) {
+            b = new int[high - low];
+        } else {
+            offset = sorter.offset;
+        }
+
+        int start = low - offset;
+        int last = high - offset;
+
         int[] count1 = new int[256];
         int[] count2 = new int[256];
         int[] count3 = new int[256];
@@ -598,24 +609,11 @@ final class DualPivotQuicksortRef2104 {
             count3[(a[i] >>> 16) & 0xFF]--;
             count4[(a[i] >>> 24) ^ 0x80]--;
         }
-        boolean passLevel1 = passLevel(count1, low - high, high);
-        boolean passLevel2 = passLevel(count2, low - high, high);
-        boolean passLevel3 = passLevel(count3, low - high, high);
         boolean passLevel4 = passLevel(count4, low - high, high);
+        boolean passLevel3 = passLevel(count3, low - high, high);
+        boolean passLevel2 = passLevel(count2, low - high, high);
+        boolean passLevel1 = passLevel(count1, low - high, high);
 
-        if (!passLevel1 && !passLevel2 && !passLevel3 && !passLevel4) {
-            return;
-        }
-        int[] b; int offset = low;
-
-        if (sorter == null || (b = (int[]) sorter.b) == null) {
-            b = new int[high - low];
-        } else {
-            offset = sorter.offset;
-        }
-        int start = low - offset;
-        int last = high - offset;
-        
         // 1 todo process LSD
         if (passLevel1) {
             for (int i = low; i < high; ++i) {
