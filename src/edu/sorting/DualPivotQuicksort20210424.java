@@ -121,6 +121,7 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
      * Threshold of mixed insertion sort is incremented by this value.
      */
     private static final int DELTA = 3 << 1;
+
     private static final int DELTA4 = DELTA << 2; // TODO
     private static final int RADIX_MIN_SIZE = 6 << 10;
 
@@ -244,7 +245,7 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
 
                 // TODD add comment
                 // LBO: use radixSort for sequential sort (no parallelism):
-                if ((true /* || sorter == null*/ || (bits > DELTA4)) && size > RADIX_MIN_SIZE) {
+                if ((true /* || sorter == null*/ || bits > DELTA4) && size > RADIX_MIN_SIZE) {
                     radixSort(sorter, a, low, high);
                     return;
                 }
