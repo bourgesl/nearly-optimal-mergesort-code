@@ -47,6 +47,12 @@ public enum IntSorter {
             Arrays.sort(a, 0, a.length - 1);
         }
     },
+    NEW_DPQS_REF {
+        @Override
+        public void sort(int[] a) {
+            edu.sorting.ref.Arrays.sort(a, 0, a.length - 1);
+        }
+    },
     DPQ_11 {
         @Override
         public void sort(int[] a) {

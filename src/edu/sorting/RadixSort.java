@@ -218,29 +218,35 @@ public final class RadixSort implements Sorter {
         Arrays.fill(run, 0);
         int count = 0;
 
+
         // Check if the array is nearly sorted
         for (int k = left; k < right; run[count] = k) {
+            // Equal items in the beginning of the sequence
             while (k < right && a[k] == a[k + 1]) {
                 k++;
             }
-            // LBO: fix
             if (k == right) {
-                break;
+                break;  // Sequence finishes with equal items
             }
-            if (a[k] > a[k + 1]) { // descending
-                while (++k <= right && a[k - 1] >= a[k]) ;
-                for (int lo = run[count] - 1, hi = k; ++lo < --hi && a[lo] != a[hi];) {
-                    int t = a[lo];
-                    a[lo] = a[hi];
-                    a[hi] = t;
+            if (a[k] < a[k + 1]) { // ascending
+                while (++k <= right && a[k - 1] <= a[k]);
+            } else if (a[k] > a[k + 1]) { // descending
+                while (++k <= right && a[k - 1] >= a[k]);
+                // Transform into an ascending sequence
+                for (int lo = run[count] - 1, hi = k; ++lo < --hi; ) {
+                    int t = a[lo]; a[lo] = a[hi]; a[hi] = t;
                 }
-            } else {
-                while (++k <= right && a[k - 1] <= a[k]) ;
+            }
+
+            // Merge a transformed descending sequence followed by an
+            // ascending sequence
+            if (run[count] > left && a[run[count]] >= a[run[count] - 1]) {
+                count--;
             }
 
             /*
              * The array is not highly structured,
-             * use Radixsort instead of merge sort.
+             * use Quicksort instead of merge sort.
              */
             if (++count == MAX_RUN_COUNT) {
                 sort0(a, left, right + 1, run);
@@ -248,12 +254,26 @@ public final class RadixSort implements Sorter {
             }
         }
 
-        // Check special cases
-        // Implementation note: variable "right" is increased by 1.
-        if (run[count] == right++) { // The last run contains one element
-            run[++count] = right;
-        } else if (count == 1) { // The array is already sorted
+        // These invariants should hold true:
+        //    run[0] = 0
+        //    run[<last>] = right + 1; (terminator)
+
+        if (count == 0) {
+            // A single equal run
             return;
+        } else if (count == 1 && run[count] > right) {
+            // Either a single ascending or a transformed descending run.
+            // Always check that a final run is a proper terminator, otherwise
+            // we have an unterminated trailing run, to handle downstream.
+            return;
+        }
+        right++;
+        if (run[count] < right) {
+            // Corner case: the final run is not a terminator. This may happen
+            // if a final run is an equals run, or there is a single-element run
+            // at the end. Fix up by adding a proper terminator at the end.
+            // Note that we terminate with (right + 1), incremented earlier.
+            run[++count] = right;
         }
 
         // Determine alternation base for merge
@@ -294,15 +314,12 @@ public final class RadixSort implements Sorter {
             }
             if ((count & 1) != 0) {
                 for (int i = right, lo = run[count - 1]; --i >= lo;
-                        b[i + bo] = a[i + ao]);
+                    b[i + bo] = a[i + ao]
+                );
                 run[++last] = right;
             }
-            int[] t = a;
-            a = b;
-            b = t;
-            int o = ao;
-            ao = bo;
-            bo = o;
+            int[] t = a; a = b; b = t;
+            int o = ao; ao = bo; bo = o;
         }
     }
 }

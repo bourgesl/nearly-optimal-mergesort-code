@@ -238,11 +238,11 @@ public final class DualPivotQuickSort2011 implements Sorter {
             bo = workBase - left;
         }
 
-        // Merging
         if (TRACE) {
             System.out.println("MergeParts[" + a.length + "] in [" + left + " - " + right + "]: " + count);
         }
 
+        // Merging
         for (int last; count > 1; count = last) {
             for (int k = (last = 0) + 2; k <= count; k += 2) {
                 int hi = run[k], mi = run[k - 1];

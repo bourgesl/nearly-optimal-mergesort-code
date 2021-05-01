@@ -44,7 +44,7 @@ public final class MainInt {
 
         Locale.setDefault(new Locale("us", "US"));
 
-        if (COUNT > 1) {
+        if (!TRACING && (COUNT > 100)) {
             WARMUP = true;
             for (int i = 1; i <= WARM_PASS; i++) {
                 System.out.println("# Warmup " + i + "...");
@@ -89,17 +89,22 @@ public final class MainInt {
     };
     private final static Sortable SORT_JDK = new Sortable() {
         public final void sortArray(final int[] a, int off) {
-            Arrays.sort(a, LEFT + off, RIGHT + off);
+            Arrays.sort(a, LEFT + off, HIGH + off); // exclusive
+        }
+    };
+    private final static Sortable SORT_NEW_DPQS_REF = new Sortable() {
+        public final void sortArray(final int[] a, int off) {
+            edu.sorting.ref.Arrays.sort(a, LEFT + off, HIGH + off); // exclusive
         }
     };
     private final static Sortable SORT_DPQS_11 = new Sortable() {
         public final void sortArray(final int[] a, int off) {
-            DualPivotQuickSort2011.INSTANCE.sort(a, LEFT + off, RIGHT + off);
+            DualPivotQuickSort2011.INSTANCE.sort(a, LEFT + off, RIGHT + off); // inclusive
         }
     };
     private final static Sortable SORT_DPQS_21_04 = new Sortable() {
         public final void sortArray(final int[] a, int off) {
-            DualPivotQuicksort20210424.INSTANCE.sort(a, LEFT + off, RIGHT + off);
+            DualPivotQuicksort20210424.INSTANCE.sort(a, LEFT + off, RIGHT + off); // inclusive
         }
     };
 
@@ -109,8 +114,13 @@ public final class MainInt {
         time3 = -1.0;
 
         doSort(testName, "none", SORT_NONE);
-        doSort(testName, "dpqs11", SORT_DPQS_11);
-        doSort(testName, "dpqs21", SORT_DPQS_21_04);
+        if (true) {
+            doSort(testName, "jdk", SORT_JDK);
+            doSort(testName, "dpqsNew", SORT_NEW_DPQS_REF);
+        } else {
+            doSort(testName, "dpqs11", SORT_DPQS_11);
+            doSort(testName, "dpqs21", SORT_DPQS_21_04);
+        }
 
         if (WARMUP) {
             System.out.printf("# Warmup %s;%.2f;%.2f;%.2f;%.3f\n", testName, time1, time2, time3, (time2 - time3) / time2);
@@ -163,7 +173,9 @@ public final class MainInt {
                 results[n++] = (int)(time);
             }
              */
-//            if (CHECK && !warm) check(name, golden, test, off, LEFT, RIGHT);
+            if (CHECK) {
+                check(algoName, golden, test, off, LEFT, RIGHT);
+            }
         }
         long allTime = minTime;
         /*
@@ -176,7 +188,7 @@ public final class MainInt {
             allTime += results[i];
         }
          */
-        if (CHECK /* && !warm */) {
+        if (false && CHECK /* && !warm */) {
             check(algoName, golden, test, off, LEFT, RIGHT);
         }
 
@@ -318,8 +330,10 @@ public final class MainInt {
     }
 
     private static void common() {
-        random();
-        doIteration("random");
+        if (false) {
+            random();
+            doIteration("random");
+        }
 
         equal();
         doIteration("equal");
@@ -1992,7 +2006,7 @@ public final class MainInt {
     private static final int WARM_COUNT = 50;
     private static final int MAX_N = 100000;
 
-    private static final int COUNT = (TRACING) ? 1 : WARM_COUNT * 10;
+    private static final int COUNT = (TRACING) ? 10 : (WARM_COUNT * 10);
 
     private static int parallelism = 0;
 //  private static int parallelism = ForkJoinPool.getCommonPoolParallelism();
@@ -2019,5 +2033,6 @@ public final class MainInt {
     private static final int[] test_data = new int[MAX_N + ALIGN_MAX];
 
     private static final boolean doPrint = true;
+
     private static final boolean CHECK = true || TRACING;
 }
