@@ -53,6 +53,7 @@ import java.util.Arrays; // TODO
 public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort.Sorter {
 
     private final static boolean TRACE = false;
+    private final static boolean TRACE_ALLOC = false;
 
     public final static wildinter.net.mergesort.Sorter INSTANCE = new DualPivotQuicksort20210424();
 
@@ -563,27 +564,14 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
 
     // TODO add javadoc
 //  private 
-    static void radixSort(Sorter sorter, int[] a, int low, int high) {
+    static void radixSort(final Sorter sorter, final int[] a, 
+                          final int low, final int high) {
         if (TRACE) {
             System.out.println("radixSort[" + a.length + "] in [" + low + " - " + high + "]");
         }
-        int[] b; int offset = low;
 
-        // LBO: prealloc (high - low) +1 element:
-        if (sorter == null || (b = sorter.b) == null || b.length < (high - low)) {
-            // System.out.println("alloc b: " + (high - low));
-            b = new int[high - low];
-        } else {
-            offset = sorter.offset;
-        }
-
-        int start = low - offset;
-        int last = high - offset;
-
-        int[] count1;
-        int[] count2;
-        int[] count3;
-        int[] count4;
+        final int[] count1; final int[] count2;
+        final int[] count3; final int[] count4;
 
         if (sorter != null) {
             sorter.resetRadixBuffers();
@@ -592,7 +580,9 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
             count3 = sorter.count3;
             count4 = sorter.count4;
         } else {
-            // System.out.println("alloc radix buffers(4x256)");
+            if (TRACE_ALLOC) {
+                System.out.println("radixSort: alloc buffers (4x256)");
+            }
             count1 = new int[256];
             count2 = new int[256];
             count3 = new int[256];
@@ -600,16 +590,31 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
         }
 
         for (int i = low; i < high; ++i) {
-            count1[ a[i]         & 0xFF]--;
-            count2[(a[i] >>>  8) & 0xFF]--;
-            count3[(a[i] >>> 16) & 0xFF]--;
-            count4[(a[i] >>> 24) ^ 0x80]--;
+            --count1[ a[i]         & 0xFF];
+            --count2[(a[i] >>>  8) & 0xFF];
+            --count3[(a[i] >>> 16) & 0xFF];
+            --count4[(a[i] >>> 24) ^ 0x80];
         }
-        boolean passLevel4 = passLevel(count4, low - high, high);
-        boolean passLevel3 = passLevel(count3, low - high, high);
-        boolean passLevel2 = passLevel(count2, low - high, high);
         boolean passLevel1 = passLevel(count1, low - high, high);
+        boolean passLevel2 = passLevel(count2, low - high, high);
+        boolean passLevel3 = passLevel(count3, low - high, high);
+        boolean passLevel4 = passLevel(count4, low - high, high);
 
+        int[] b; int offset = low;
+
+        // LBO: prealloc (high - low) +1 element:
+        if (sorter == null || (b = sorter.b) == null || b.length < (high - low)) {
+            if (TRACE_ALLOC) {
+                System.out.println("radixSort: alloc b: " + (high - low));
+            }
+            b = new int[high - low];
+        } else {
+            offset = sorter.offset;
+        }
+
+        final int start = low - offset;
+        final int last = high - offset;
+        
         // 1 todo process LSD
         if (passLevel1) {
             for (int i = low; i < high; ++i) {
@@ -663,11 +668,11 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
 
     // TODO: add javadoc
     private static boolean passLevel(int[] count, int total, int high) {
-        for (int c : count) {
-            if (c == 0) {
+        for (int i = 0; i < 256; ++i) {
+            if (count[i] == 0) {
                 continue;
             }
-            if (c == total) {
+            if (count[i] == total) {
                 return false;
             }
             break;
@@ -802,9 +807,12 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
                     return false;
                 }
 
-//                System.out.println("alloc run");
-//                run = new int[((size >> 10) | 0x7F) & 0x3FF];
-                run = sorter.run; // LBO: prealloc
+                if (false && TRACE_ALLOC) {
+                    System.out.println("tryMergeRuns: alloc runs: " + (((size >> 10) | 0x7F) & 0x3FF));
+                    run = new int[((size >> 10) | 0x7F) & 0x3FF];
+                } else {
+                    run = sorter.run; // LBO: prealloc
+                }
                 run[0] = low;
 
             } else if (a[last - 1] > a[last]) { // Can't join with previous run
@@ -859,7 +867,9 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
 
             // LBO: prealloc
             if (sorter == null || (b = sorter.b) == null || b.length < size) {
-//                System.out.println("alloc b: "+size);
+                if (TRACE_ALLOC) {
+                    System.out.println("tryMergeRuns: alloc b: " + size);
+                }
                 b = new int[size];
             } else {
                 offset = sorter.offset;
@@ -988,12 +998,18 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
 
         Sorter() {
             // preallocate max runs:
+            if (TRACE_ALLOC) {
+                System.out.println("Sorter: pre-alloc runs: " + MAX_RUN_CAPACITY);
+            }
             run = new int[MAX_RUN_CAPACITY];
         }
 
-        void initBuffers(int length, int offset) {
-            if ((b == null) || (b.length < offset + length)) {
-                b = new int[offset + length]; // bug in radixSort2
+        void initBuffers(final int length, final int offset) {
+            if ((b == null) || (b.length < length)) {
+                if (TRACE_ALLOC) {
+                    System.out.println("Sorter: alloc b: " + length);
+                }
+                b = new int[length];
             }
             this.runInit = true;
             this.offset = offset;
@@ -1001,15 +1017,31 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
 
         void resetRadixBuffers() {
             if (count1 == null) {
+                if (TRACE_ALLOC) {
+                    System.out.println("Sorter: alloc buffers (4x256)");
+                }
                 count1 = new int[256];
                 count2 = new int[256];
                 count3 = new int[256];
                 count4 = new int[256];
             } else {
+                final int[] c1 = count1;
+                final int[] c2 = count2;
+                final int[] c3 = count3;
+                final int[] c4 = count4;
+                
+                for (int i = 0; i < 256; ++i) {
+                    c1[i] = 0;
+                    c2[i] = 0;
+                    c3[i] = 0;
+                    c4[i] = 0;
+                }
+/*                
                 Arrays.fill(count1, 0);
                 Arrays.fill(count2, 0);
                 Arrays.fill(count3, 0);
                 Arrays.fill(count4, 0);
+*/
             }
         }
     }
