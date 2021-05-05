@@ -49,7 +49,7 @@ import java.util.concurrent.RecursiveTask;
  *
  * @since 1.7 * 14
  */
-/* Vladimir's version: DualPivotQuicksort_6K_7b.java */
+/* Vladimir's version: DualPivotQuicksort_6K_7L.java */
 final class DualPivotQuicksortRef2104 {
 
     /**
@@ -585,6 +585,50 @@ final class DualPivotQuicksortRef2104 {
         }
     }
 
+    /**
+     * Sorts the specified range of the array using heap sort.
+     *
+     * @param a the array to be sorted
+     * @param low the index of the first element, inclusive, to be sorted
+     * @param high the index of the last element, exclusive, to be sorted
+     */
+    private static void heapSort(int[] a, int low, int high) {
+        for (int k = (low + high) >>> 1; k > low; ) {
+            pushDown(a, --k, a[k], low, high);
+        }
+        while (--high > low) {
+            int max = a[low];
+            pushDown(a, low, a[high], low, high);
+            a[high] = max;
+        }
+    }
+
+    /**
+     * Pushes specified element down during heap sort.
+     *
+     * @param a the given array
+     * @param p the start index
+     * @param value the given element
+     * @param low the index of the first element, inclusive, to be sorted
+     * @param high the index of the last element, exclusive, to be sorted
+     */
+    private static void pushDown(int[] a, int p, int value, int low, int high) {
+        for (int k ;; a[p] = a[p = k]) {
+            k = (p << 1) - low + 2; // Index of the right child
+
+            if (k > high) {
+                break;
+            }
+            if (k == high || a[k] < a[k - 1]) {
+                --k;
+            }
+            if (a[k] <= value) {
+                break;
+            }
+        }
+        a[p] = value;
+    }
+
     // TODO add javadoc
 //  private 
     static void radixSort(Sorter sorter, int[] a, int low, int high) {
@@ -684,50 +728,6 @@ final class DualPivotQuicksortRef2104 {
             count[i - 1] += count[i];
         }
         return true;
-    }
-
-    /**
-     * Sorts the specified range of the array using heap sort.
-     *
-     * @param a the array to be sorted
-     * @param low the index of the first element, inclusive, to be sorted
-     * @param high the index of the last element, exclusive, to be sorted
-     */
-    private static void heapSort(int[] a, int low, int high) {
-        for (int k = (low + high) >>> 1; k > low; ) {
-            pushDown(a, --k, a[k], low, high);
-        }
-        while (--high > low) {
-            int max = a[low];
-            pushDown(a, low, a[high], low, high);
-            a[high] = max;
-        }
-    }
-
-    /**
-     * Pushes specified element down during heap sort.
-     *
-     * @param a the given array
-     * @param p the start index
-     * @param value the given element
-     * @param low the index of the first element, inclusive, to be sorted
-     * @param high the index of the last element, exclusive, to be sorted
-     */
-    private static void pushDown(int[] a, int p, int value, int low, int high) {
-        for (int k ;; a[p] = a[p = k]) {
-            k = (p << 1) - low + 2; // Index of the right child
-
-            if (k > high) {
-                break;
-            }
-            if (k == high || a[k] < a[k - 1]) {
-                --k;
-            }
-            if (a[k] <= value) {
-                break;
-            }
-        }
-        a[p] = value;
     }
 
     /**
@@ -1141,6 +1141,12 @@ final class DualPivotQuicksortRef2104 {
              */
             if (a[e1] < a[e2] && a[e2] < a[e3] && a[e3] < a[e4] && a[e4] < a[e5]) {
 
+                // TODD add comment
+                if ((sorter == null || bits > DELTA4) && size > RADIX_MIN_SIZE) {
+                    radixSort(sorter, a, low, high);
+                    return;
+                }
+
                 /*
                  * Use the first and fifth of the five sorted elements as
                  * the pivots. These values are inexpensive approximation
@@ -1484,6 +1490,158 @@ final class DualPivotQuicksortRef2104 {
             }
         }
         a[p] = value;
+    }
+
+    // TODO add javadoc
+//  private 
+    static void radixSort(Sorter sorter, long[] a, int low, int high) {
+        long[] b; int offset = low;
+
+        if (sorter == null || (b = (long[]) sorter.b) == null) {
+            b = new long[high - low];
+        } else {
+            offset = sorter.offset;
+        }
+
+        int start = low - offset;
+        int last = high - offset;
+
+        int[] count1 = new int[256];
+        int[] count2 = new int[256];
+        int[] count3 = new int[256];
+        int[] count4 = new int[256];
+        int[] count5 = new int[256];
+        int[] count6 = new int[256];
+        int[] count7 = new int[256];
+        int[] count8 = new int[256];
+
+        for (int i = low; i < high; ++i) {
+            count1[(int)  (a[i]         & 0xFF)]--;
+            count2[(int) ((a[i] >>>  8) & 0xFF)]--;
+            count3[(int) ((a[i] >>> 16) & 0xFF)]--;
+            count4[(int) ((a[i] >>> 24) & 0xFF)]--;
+            count5[(int) ((a[i] >>> 32) & 0xFF)]--;
+            count6[(int) ((a[i] >>> 40) & 0xFF)]--;
+            count7[(int) ((a[i] >>> 48) & 0xFF)]--;
+            count8[(int) ((a[i] >>> 56) ^ 0x80)]--;
+        }
+
+        boolean passLevel8 = passLevel(count8, low - high, high);
+        boolean passLevel7 = passLevel(count7, low - high, high);
+        boolean passLevel6 = passLevel(count6, low - high, high);
+        boolean passLevel5 = passLevel(count5, low - high, high);
+        boolean passLevel4 = passLevel(count4, low - high, high);
+        boolean passLevel3 = passLevel(count3, low - high, high);
+        boolean passLevel2 = passLevel(count2, low - high, high);
+        boolean passLevel1 = passLevel(count1, low - high, high);
+
+        // 1 todo process LSD
+        if (passLevel1) {
+            for (int i = low; i < high; ++i) {
+                b[count1[(int) (a[i] & 0xFF)]++ - offset] = a[i];
+            }
+        }
+
+        // 2
+        if (passLevel2) {
+            if (passLevel1) {
+                for (int i = start; i < last; ++i) {
+                    a[count2[(int) ((b[i] >> 8) & 0xFF)]++] = b[i];
+                }
+            } else {
+                for (int i = low; i < high; ++i) {
+                    b[count2[(int) ((a[i] >> 8) & 0xFF)]++ - offset] = a[i];
+                }
+            }
+        }
+
+        // 3
+        if (passLevel3) {
+            if (passLevel1 ^ passLevel2) {
+                for (int i = start; i < last; ++i) {
+                    a[count3[(int) ((b[i] >> 16) & 0xFF)]++] = b[i];
+                }
+            } else {
+                for (int i = low; i < high; ++i) {
+                    b[count3[(int) ((a[i] >> 16) & 0xFF)]++ - offset] = a[i];
+                }
+            }
+        }
+
+        // 4
+        if (passLevel4) {
+            if (passLevel1 ^ passLevel2 ^ passLevel3) {
+                for (int i = start; i < last; ++i) {
+                    a[count4[(int) ((b[i] >> 24) & 0xFF)]++] = b[i];
+                }
+            } else {
+                for (int i = low; i < high; ++i) {
+                    b[count4[(int) ((a[i] >> 24) & 0xFF)]++ - offset] = a[i];
+                }
+            }
+        }
+
+        // 5
+        if (passLevel5) {
+            if (passLevel1 ^ passLevel2 ^ passLevel3 ^ passLevel4) {
+                for (int i = start; i < last; ++i) {
+                    a[count5[(int) ((b[i] >> 32) & 0xFF)]++] = b[i];
+                }
+            } else {
+                for (int i = low; i < high; ++i) {
+                    b[count5[(int) ((a[i] >> 32) & 0xFF)]++ - offset] = a[i];
+                }
+            }
+        }
+        
+        // 6
+        if (passLevel6) {
+            if (passLevel1 ^ passLevel2 ^ passLevel3 ^ passLevel4 ^ passLevel5) {
+                for (int i = start; i < last; ++i) {
+                    a[count6[(int) ((b[i] >> 40) & 0xFF)]++] = b[i];
+                }
+            } else {
+                for (int i = low; i < high; ++i) {
+                    b[count6[(int) ((a[i] >> 40) & 0xFF)]++ - offset] = a[i];
+                }
+            }
+        }
+
+        // 7
+        if (passLevel7) {
+            if (passLevel1 ^ passLevel2 ^ passLevel3 ^
+                passLevel4 ^ passLevel5 ^ passLevel6
+            ) {
+                for (int i = start; i < last; ++i) {
+                    a[count7[(int) ((b[i] >> 48) & 0xFF)]++] = b[i];
+                }
+            } else {
+                for (int i = low; i < high; ++i) {
+                    b[count7[(int) ((a[i] >> 48) & 0xFF)]++ - offset] = a[i];
+                }
+            }
+        }
+
+        // 8
+        if (passLevel8) {
+            if (passLevel1 ^ passLevel2 ^ passLevel3 ^
+                passLevel4 ^ passLevel5 ^ passLevel6 ^ passLevel7
+            ) {
+                for (int i = start; i < last; ++i) {
+                    a[count8[(int) ((b[i] >>> 56) ^ 0x80)]++] = b[i];
+                }
+            } else {
+                for (int i = low; i < high; ++i) {
+                    b[count8[(int) ((a[i] >>> 56) ^ 0x80)]++ - offset] = a[i];
+                }
+            }
+        }
+
+        if (passLevel1 ^ passLevel2 ^ passLevel3 ^ passLevel4 ^
+            passLevel5 ^ passLevel6 ^ passLevel7 ^ passLevel8
+        ) {
+            System.arraycopy(b, low - offset, a, low, high - low);
+        }
     }
 
     /**
