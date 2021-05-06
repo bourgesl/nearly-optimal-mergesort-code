@@ -45,17 +45,17 @@ import java.util.concurrent.RecursiveTask;
  * @author Josh Bloch
  * @author Doug Lea
  *
- * @version 2021.05.05
+ * @version 2021.05.01
  *
  * @since 1.7 * 14
  */
-/* Vladimir's version: DualPivotQuicksort_6K_9.java */
+/* Vladimir's version: DualPivotQuicksort_6K_8_f2.java */
 final class DualPivotQuicksortRef2104 {
 
     /**
      * Prevents instantiation.
      */
-    private DualPivotQuicksortRef2104() {} // TODO
+//  private DualPivotQuicksort() {} // TODO
 
     /**
      * Max array size to use mixed insertion sort.
@@ -2988,8 +2988,8 @@ final class DualPivotQuicksortRef2104 {
     }
 
     private static int fti(float f) {
-        int x = Float.floatToRawIntBits(f);
-        return x ^ ((x >> 31) | 0x80000000);
+        int v = Float.floatToRawIntBits(f);
+        return v ^ ((v >> 31) | 0x80000000);
     }
 
     // TODO add javadoc
@@ -3723,12 +3723,6 @@ final class DualPivotQuicksortRef2104 {
              */
             if (a[e1] < a[e2] && a[e2] < a[e3] && a[e3] < a[e4] && a[e4] < a[e5]) {
 
-                // TODD add comment
-                if ((bits > DELTA4 || sorter == null) && size > RADIX_MIN_SIZE) {
-                    radixSort(sorter, a, low, high);
-                    return;
-                }
-
                 /*
                  * Use the first and fifth of the five sorted elements as
                  * the pivots. These values are inexpensive approximation
@@ -3884,125 +3878,6 @@ final class DualPivotQuicksortRef2104 {
                 }
             }
             high = lower; // Iterate along the left part
-        }
-    }
-
-    private static long dtl(double d) {
-        long x = Double.doubleToRawLongBits(d);
-        return x ^ ((x >> 63) | 0x8000000000000000L);
-    }
-
-    // TODO add javadoc
-//  private 
-    static void radixSort(Sorter sorter, double[] a, int low, int high) {
-        double[] b; int offset = low;
-
-        if (sorter == null || (b = (double[]) sorter.b) == null) {
-            b = new double[high - low];
-        } else {
-            offset = sorter.offset;
-        }
-
-        int start = low - offset;
-        int last = high - offset;
-
-        int[] count1 = new int[1024];
-        int[] count2 = new int[2048];
-        int[] count3 = new int[2048];
-        int[] count4 = new int[2048];
-        int[] count5 = new int[2048];
-        int[] count6 = new int[1024];
-
-        for (int i = low; i < high; ++i) {
-            count1[(int)  ( dtl(a[i])         & 0x3FF)]--;
-            count2[(int) (( dtl(a[i]) >>> 10) & 0x7FF)]--;
-            count3[(int) (( dtl(a[i]) >>> 21) & 0x7FF)]--;
-            count4[(int) (( dtl(a[i]) >>> 32) & 0x7FF)]--;
-            count5[(int) (( dtl(a[i]) >>> 43) & 0x7FF)]--;
-            count6[(int) (( dtl(a[i]) >>> 54) & 0x3FF)]--;
-        }
-
-        boolean passLevel6 = passLevelLong(count6, 1023, low - high, high);
-        boolean passLevel5 = passLevelLong(count5, 2047, low - high, high);
-        boolean passLevel4 = passLevelLong(count4, 2047, low - high, high);
-        boolean passLevel3 = passLevelLong(count3, 2047, low - high, high);
-        boolean passLevel2 = passLevelLong(count2, 2047, low - high, high);
-        boolean passLevel1 = passLevelLong(count1, 1023, low - high, high);
-
-        // 1 todo process LSD
-        if (passLevel1) {
-            for (int i = low; i < high; ++i) {
-                b[count1[(int) (dtl(a[i]) & 0x3FF)]++ - offset] = a[i];
-            }
-        }
-
-        // 2
-        if (passLevel2) {
-            if (passLevel1) {
-                for (int i = start; i < last; ++i) {
-                    a[count2[(int) (( dtl(b[i]) >>> 10) & 0x7FF)]++] = b[i];
-                }
-            } else {
-                for (int i = low; i < high; ++i) {
-                    b[count2[(int) (( dtl(a[i]) >>> 10) & 0x7FF)]++ - offset] = a[i];
-                }
-            }
-        }
-
-        // 3
-        if (passLevel3) {
-            if (passLevel1 ^ passLevel2) {
-                for (int i = start; i < last; ++i) {
-                    a[count3[(int) (( dtl(b[i]) >>> 21) & 0x7FF)]++] = b[i];
-                }
-            } else {
-                for (int i = low; i < high; ++i) {
-                    b[count3[(int) (( dtl(a[i]) >>> 21) & 0x7FF)]++ - offset] = a[i];
-                }
-            }
-        }
-
-        // 4
-        if (passLevel4) {
-            if (passLevel1 ^ passLevel2 ^ passLevel3) {
-                for (int i = start; i < last; ++i) {
-                    a[count4[(int) (( dtl(b[i]) >>> 32) & 0x7FF)]++] = b[i];
-                }
-            } else {
-                for (int i = low; i < high; ++i) {
-                    b[count4[(int) (( dtl(a[i]) >>> 32) & 0x7FF)]++ - offset] = a[i];
-                }
-            }
-        }
-
-        // 5
-        if (passLevel5) {
-            if (passLevel1 ^ passLevel2 ^ passLevel3 ^ passLevel4) {
-                for (int i = start; i < last; ++i) {
-                    a[count5[(int) (( dtl(b[i]) >>> 43) & 0x7FF)]++] = b[i];
-                }
-            } else {
-                for (int i = low; i < high; ++i) {
-                    b[count5[(int) (( dtl(a[i]) >>> 43) & 0x7FF)]++ - offset] = a[i];
-                }
-            }
-        }
-        
-        // 6
-        if (passLevel6) {
-            if (passLevel1 ^ passLevel2 ^ passLevel3 ^ passLevel4 ^ passLevel5) {
-                for (int i = start; i < last; ++i) {
-                    a[count6[(int) ((( dtl(b[i]) >>> 54) /*& 0x1FF*/) & 0x3FF) ]++] = b[i];
-                }
-            } else {
-                for (int i = low; i < high; ++i) {
-                    b[count6[(int) ((( dtl(a[i]) >>> 54) /*& 0x1FF*/) & 0x3FF) ]++ - offset] = a[i];
-                }
-            }
-        }
-  
-        if (passLevel1 ^ passLevel2 ^ passLevel3 ^ passLevel4 ^ passLevel5 ^ passLevel6) {
-            System.arraycopy(b, low - offset, a, low, high - low);
         }
     }
 
