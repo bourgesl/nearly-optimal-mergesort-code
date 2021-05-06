@@ -76,7 +76,7 @@ public class Arrays {
      * @param a the array to be sorted
      */
     public static void sort(int[] a) {
-        DualPivotQuicksortRef2104.sort(a, 0, 0, a.length);
+        DualPivotQuicksortRef2105.sort(a, 0, 0, a.length);
     }
 
     /**
@@ -100,7 +100,7 @@ public class Arrays {
      */
     public static void sort(int[] a, int fromIndex, int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
-        DualPivotQuicksortRef2104.sort(a, 0, fromIndex, toIndex);
+        DualPivotQuicksortRef2105.sort(a, 0, fromIndex, toIndex);
     }
 
     /**
@@ -114,7 +114,7 @@ public class Arrays {
      * @param a the array to be sorted
      */
     public static void sort(long[] a) {
-        DualPivotQuicksortRef2104.sort(a, 0, 0, a.length);
+        DualPivotQuicksortRef2105.sort(a, 0, 0, a.length);
     }
 
     /**
@@ -138,7 +138,7 @@ public class Arrays {
      */
     public static void sort(long[] a, int fromIndex, int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
-        DualPivotQuicksortRef2104.sort(a, 0, fromIndex, toIndex);
+        DualPivotQuicksortRef2105.sort(a, 0, fromIndex, toIndex);
     }
 
     /**
@@ -152,7 +152,7 @@ public class Arrays {
      * @param a the array to be sorted
      */
     public static void sort(short[] a) {
-        DualPivotQuicksortRef2104.sort(a, 0, a.length);
+        DualPivotQuicksortRef2105.sort(a, 0, a.length);
     }
 
     /**
@@ -176,7 +176,7 @@ public class Arrays {
      */
     public static void sort(short[] a, int fromIndex, int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
-        DualPivotQuicksortRef2104.sort(a, fromIndex, toIndex);
+        DualPivotQuicksortRef2105.sort(a, fromIndex, toIndex);
     }
 
     /**
@@ -190,7 +190,7 @@ public class Arrays {
      * @param a the array to be sorted
      */
     public static void sort(char[] a) {
-        DualPivotQuicksortRef2104.sort(a, 0, a.length);
+        DualPivotQuicksortRef2105.sort(a, 0, a.length);
     }
 
     /**
@@ -214,7 +214,7 @@ public class Arrays {
      */
     public static void sort(char[] a, int fromIndex, int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
-        DualPivotQuicksortRef2104.sort(a, fromIndex, toIndex);
+        DualPivotQuicksortRef2105.sort(a, fromIndex, toIndex);
     }
 
     /**
@@ -228,7 +228,7 @@ public class Arrays {
      * @param a the array to be sorted
      */
     public static void sort(byte[] a) {
-        DualPivotQuicksortRef2104.sort(a, 0, a.length);
+        DualPivotQuicksortRef2105.sort(a, 0, a.length);
     }
 
     /**
@@ -252,7 +252,7 @@ public class Arrays {
      */
     public static void sort(byte[] a, int fromIndex, int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
-        DualPivotQuicksortRef2104.sort(a, fromIndex, toIndex);
+        DualPivotQuicksortRef2105.sort(a, fromIndex, toIndex);
     }
 
     /**
@@ -274,7 +274,7 @@ public class Arrays {
      * @param a the array to be sorted
      */
     public static void sort(float[] a) {
-        DualPivotQuicksortRef2104.sort(a, 0, 0, a.length);
+        DualPivotQuicksortRef2105.sort(a, 0, 0, a.length);
     }
 
     /**
@@ -306,7 +306,7 @@ public class Arrays {
      */
     public static void sort(float[] a, int fromIndex, int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
-        DualPivotQuicksortRef2104.sort(a, 0, fromIndex, toIndex);
+        DualPivotQuicksortRef2105.sort(a, 0, fromIndex, toIndex);
     }
 
     /**
@@ -328,7 +328,7 @@ public class Arrays {
      * @param a the array to be sorted
      */
     public static void sort(double[] a) {
-        DualPivotQuicksortRef2104.sort(a, 0, 0, a.length);
+        DualPivotQuicksortRef2105.sort(a, 0, 0, a.length);
     }
 
     /**
@@ -360,7 +360,7 @@ public class Arrays {
      */
     public static void sort(double[] a, int fromIndex, int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
-        DualPivotQuicksortRef2104.sort(a, 0, fromIndex, toIndex);
+        DualPivotQuicksortRef2105.sort(a, 0, fromIndex, toIndex);
     }
 
     /**
@@ -376,7 +376,7 @@ public class Arrays {
      * @since 1.8
      */
     public static void parallelSort(byte[] a) {
-        DualPivotQuicksortRef2104.sort(a, 0, a.length);
+        DualPivotQuicksortRef2105.sort(a, 0, a.length);
     }
 
     /**
@@ -402,7 +402,7 @@ public class Arrays {
      */
     public static void parallelSort(byte[] a, int fromIndex, int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
-        DualPivotQuicksortRef2104.sort(a, fromIndex, toIndex);
+        DualPivotQuicksortRef2105.sort(a, fromIndex, toIndex);
     }
 
     /**
@@ -418,7 +418,7 @@ public class Arrays {
      * @since 1.8
      */
     public static void parallelSort(char[] a) {
-        DualPivotQuicksortRef2104.sort(a, 0, a.length);
+        DualPivotQuicksortRef2105.sort(a, 0, a.length);
     }
 
     /**
@@ -444,7 +444,7 @@ public class Arrays {
      */
     public static void parallelSort(char[] a, int fromIndex, int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
-        DualPivotQuicksortRef2104.sort(a, fromIndex, toIndex);
+        DualPivotQuicksortRef2105.sort(a, fromIndex, toIndex);
     }
 
     /**
@@ -460,7 +460,7 @@ public class Arrays {
      * @since 1.8
      */
     public static void parallelSort(short[] a) {
-        DualPivotQuicksortRef2104.sort(a, 0, a.length);
+        DualPivotQuicksortRef2105.sort(a, 0, a.length);
     }
 
     /**
@@ -486,7 +486,7 @@ public class Arrays {
      */
     public static void parallelSort(short[] a, int fromIndex, int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
-        DualPivotQuicksortRef2104.sort(a, fromIndex, toIndex);
+        DualPivotQuicksortRef2105.sort(a, fromIndex, toIndex);
     }
 
     /**
@@ -502,7 +502,7 @@ public class Arrays {
      * @since 1.8
      */
     public static void parallelSort(int[] a) {
-        DualPivotQuicksortRef2104.sort(a, ForkJoinPool.getCommonPoolParallelism(), 0, a.length);
+        DualPivotQuicksortRef2105.sort(a, ForkJoinPool.getCommonPoolParallelism(), 0, a.length);
     }
 
     /**
@@ -528,7 +528,7 @@ public class Arrays {
      */
     public static void parallelSort(int[] a, int fromIndex, int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
-        DualPivotQuicksortRef2104.sort(a, ForkJoinPool.getCommonPoolParallelism(), fromIndex, toIndex);
+        DualPivotQuicksortRef2105.sort(a, ForkJoinPool.getCommonPoolParallelism(), fromIndex, toIndex);
     }
 
     /**
@@ -544,7 +544,7 @@ public class Arrays {
      * @since 1.8
      */
     public static void parallelSort(long[] a) {
-        DualPivotQuicksortRef2104.sort(a, ForkJoinPool.getCommonPoolParallelism(), 0, a.length);
+        DualPivotQuicksortRef2105.sort(a, ForkJoinPool.getCommonPoolParallelism(), 0, a.length);
     }
 
     /**
@@ -570,7 +570,7 @@ public class Arrays {
      */
     public static void parallelSort(long[] a, int fromIndex, int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
-        DualPivotQuicksortRef2104.sort(a, ForkJoinPool.getCommonPoolParallelism(), fromIndex, toIndex);
+        DualPivotQuicksortRef2105.sort(a, ForkJoinPool.getCommonPoolParallelism(), fromIndex, toIndex);
     }
 
     /**
@@ -594,7 +594,7 @@ public class Arrays {
      * @since 1.8
      */
     public static void parallelSort(float[] a) {
-        DualPivotQuicksortRef2104.sort(a, ForkJoinPool.getCommonPoolParallelism(), 0, a.length);
+        DualPivotQuicksortRef2105.sort(a, ForkJoinPool.getCommonPoolParallelism(), 0, a.length);
     }
 
     /**
@@ -628,7 +628,7 @@ public class Arrays {
      */
     public static void parallelSort(float[] a, int fromIndex, int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
-        DualPivotQuicksortRef2104.sort(a, ForkJoinPool.getCommonPoolParallelism(), fromIndex, toIndex);
+        DualPivotQuicksortRef2105.sort(a, ForkJoinPool.getCommonPoolParallelism(), fromIndex, toIndex);
     }
 
     /**
@@ -652,7 +652,7 @@ public class Arrays {
      * @since 1.8
      */
     public static void parallelSort(double[] a) {
-        DualPivotQuicksortRef2104.sort(a, ForkJoinPool.getCommonPoolParallelism(), 0, a.length);
+        DualPivotQuicksortRef2105.sort(a, ForkJoinPool.getCommonPoolParallelism(), 0, a.length);
     }
 
     /**
@@ -686,7 +686,7 @@ public class Arrays {
      */
     public static void parallelSort(double[] a, int fromIndex, int toIndex) {
         rangeCheck(a.length, fromIndex, toIndex);
-        DualPivotQuicksortRef2104.sort(a, ForkJoinPool.getCommonPoolParallelism(), fromIndex, toIndex);
+        DualPivotQuicksortRef2105.sort(a, ForkJoinPool.getCommonPoolParallelism(), fromIndex, toIndex);
     }
 
     /**
