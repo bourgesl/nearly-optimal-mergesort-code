@@ -50,12 +50,12 @@ import java.util.concurrent.RecursiveTask;
  * @since 1.7 * 14 & 17
  */
 /* Vladimir's version: final DualPivotQuicksort.java */
-final class DualPivotQuicksortRef2104 {
+final class DualPivotQuicksortRef2105 {
 
     /**
      * Prevents instantiation.
      */
-    private DualPivotQuicksortRef2104() {}
+    private DualPivotQuicksortRef2105() {}
 
     /**
      * Max array size to use mixed insertion sort.
@@ -290,7 +290,6 @@ final class DualPivotQuicksortRef2104 {
                  */
                 if ((sorter == null || bits > MIN_RADIX_SORT_DEPTH) && size > MIN_RADIX_SORT_SIZE) {
                     radixSort(sorter, a, low, high);
-                    return;
                 }
 
                 /*
