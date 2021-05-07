@@ -52,7 +52,7 @@ import java.util.Arrays; // TODO
 /* Vladimir's version: DualPivotQuicksort_6K_7b.java */
 public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort.Sorter {
 
-    private final static boolean TRACE = false;
+    private final static boolean TRACE = true;
     private final static boolean TRACE_ALLOC = false;
 
     public final static wildinter.net.mergesort.Sorter INSTANCE = new DualPivotQuicksort20210424();
@@ -244,6 +244,23 @@ public final class DualPivotQuicksort20210424 implements wildinter.net.mergesort
              */
             if (a[e1] < a[e2] && a[e2] < a[e3] && a[e3] < a[e4] && a[e4] < a[e5]) {
 
+                if (TRACE) {
+                    // Challenge: debug heuristic to estimate if almost sorted vs random data:
+                    System.out.println("Challenge: ");
+                    System.out.println("1: i[" + e1 + "] => [" + a[e1] + "]");
+                    System.out.println("2: i[" + e2 + "] => [" + a[e2] + "]");
+                    System.out.println("3: i[" + e3 + "] => [" + a[e3] + "]");
+                    System.out.println("4: i[" + e4 + "] => [" + a[e4] + "]");
+                    System.out.println("5: i[" + e5 + "] => [" + a[e5] + "]");
+
+                    System.out.println("5-1: d = [" + (a[e5] - a[e1]) + "]");
+
+                    System.out.println("1-2: d = [" + (a[e2] - a[e1]) + "]");
+                    System.out.println("2-3: d = [" + (a[e3] - a[e2]) + "]");
+                    System.out.println("3-4: d = [" + (a[e4] - a[e3]) + "]");
+                    System.out.println("4-5: d = [" + (a[e5] - a[e4]) + "]");
+                }
+                
                 // TODD add comment
                 // LBO: use radixSort for sequential sort (no parallelism):
                 if ((true /* || sorter == null*/ || bits > DELTA4) && size > RADIX_MIN_SIZE) {

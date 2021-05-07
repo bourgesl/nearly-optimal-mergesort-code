@@ -49,7 +49,7 @@ import java.util.concurrent.RecursiveTask;
  *
  * @since 1.7 * 14 & 17
  */
-/* Vladimir's version: final DualPivotQuicksort.java */
+/* Vladimir's version: final DualPivotQuicksort_6K_B.java */
 final class DualPivotQuicksortRef2105 {
 
     /**
@@ -169,7 +169,7 @@ final class DualPivotQuicksortRef2105 {
 
         if (parallelism > 1 && size > MIN_PARALLEL_SORT_SIZE) {
             int depth = getDepth(parallelism, size >> 12);
-            int[] b = depth == 0 ? null : new int[size];
+            int[] b = depth == 0 ? null : (int[]) tryAllocate(a, size);
             new Sorter(null, a, b, low, size, low, depth).invoke();
         } else {
             sort(null, a, 0, low, high);
@@ -288,8 +288,9 @@ final class DualPivotQuicksortRef2105 {
                 /*
                  * Invoke radix sort on large array.
                  */
-                if ((sorter == null || bits > MIN_RADIX_SORT_DEPTH) && size > MIN_RADIX_SORT_SIZE) {
-                    radixSort(sorter, a, low, high);
+                if ((sorter == null || bits > MIN_RADIX_SORT_DEPTH) && size > MIN_RADIX_SORT_SIZE
+                        && radixSort(sorter, a, low, high)) {
+                    return;
                 }
 
                 /*
@@ -643,12 +644,17 @@ final class DualPivotQuicksortRef2105 {
      * @param a the array to be sorted
      * @param low the index of the first element, inclusive, to be sorted
      * @param high the index of the last element, exclusive, to be sorted
+     * @return true if finally sorted, false otherwise
      */
-    static void radixSort(Sorter sorter, int[] a, int low, int high) {
+    static boolean radixSort(Sorter sorter, int[] a, int low, int high) {
         int[] b; int offset = low;
 
         if (sorter == null || (b = (int[]) sorter.b) == null) {
-            b = new int[high - low];
+            b = (int[]) tryAllocate(a, high - low);
+
+            if (b == null) {
+                return false;
+            }
         } else {
             offset = sorter.offset;
         }
@@ -718,6 +724,7 @@ final class DualPivotQuicksortRef2105 {
         if (passLevel1 ^ passLevel2 ^ passLevel3 ^ passLevel4) {
             System.arraycopy(b, low - offset, a, low, high - low);
         }
+        return true;
     }
 
     /**
@@ -740,7 +747,9 @@ final class DualPivotQuicksortRef2105 {
             break;
         }
 
-        // Compute histogram
+        /*
+         * Compute histogram.
+         */
         count[last] += high;
 
         for (int i = last; i > 0; --i) {
@@ -864,7 +873,11 @@ final class DualPivotQuicksortRef2105 {
             int[] b; int offset = low;
 
             if (sorter == null || (b = (int[]) sorter.b) == null) {
-                b = new int[size];
+                b = (int[]) tryAllocate(a, size);
+
+                if (b == null) {
+                    return false;
+                }
             } else {
                 offset = sorter.offset;
             }
@@ -1045,7 +1058,7 @@ final class DualPivotQuicksortRef2105 {
 
         if (parallelism > 1 && size > MIN_PARALLEL_SORT_SIZE) {
             int depth = getDepth(parallelism, size >> 12);
-            long[] b = depth == 0 ? null : new long[size];
+            long[] b = depth == 0 ? null : (long[]) tryAllocate(a, size);
             new Sorter(null, a, b, low, size, low, depth).invoke();
         } else {
             sort(null, a, 0, low, high);
@@ -1164,8 +1177,8 @@ final class DualPivotQuicksortRef2105 {
                 /*
                  * Invoke radix sort on large array.
                  */
-                if ((sorter == null || bits > MIN_RADIX_SORT_DEPTH) && size > MIN_RADIX_SORT_SIZE) {
-                    radixSort(sorter, a, low, high);
+                if ((sorter == null || bits > MIN_RADIX_SORT_DEPTH) && size > MIN_RADIX_SORT_SIZE
+                        && radixSort(sorter, a, low, high)) {
                     return;
                 }
 
@@ -1520,12 +1533,17 @@ final class DualPivotQuicksortRef2105 {
      * @param a the array to be sorted
      * @param low the index of the first element, inclusive, to be sorted
      * @param high the index of the last element, exclusive, to be sorted
+     * @return true if finally sorted, false otherwise
      */
-    static void radixSort(Sorter sorter, long[] a, int low, int high) {
+    static boolean radixSort(Sorter sorter, long[] a, int low, int high) {
         long[] b; int offset = low;
 
         if (sorter == null || (b = (long[]) sorter.b) == null) {
-            b = new long[high - low];
+            b = (long[]) tryAllocate(a, high - low);
+
+            if (b == null) {
+                return false;
+            }            
         } else {
             offset = sorter.offset;
         }
@@ -1625,6 +1643,7 @@ final class DualPivotQuicksortRef2105 {
         if (passLevel1 ^ passLevel2 ^ passLevel3 ^ passLevel4 ^ passLevel5 ^ passLevel6) {
             System.arraycopy(b, low - offset, a, low, high - low);
         }
+        return true;
     }
 
     /**
@@ -1742,7 +1761,11 @@ final class DualPivotQuicksortRef2105 {
             long[] b; int offset = low;
 
             if (sorter == null || (b = (long[]) sorter.b) == null) {
-                b = new long[size];
+                b = (long[]) tryAllocate(a, size);
+
+                if (b == null) {
+                    return false;
+                }
             } else {
                 offset = sorter.offset;
             }
@@ -2681,7 +2704,7 @@ final class DualPivotQuicksortRef2105 {
 
         if (parallelism > 1 && size > MIN_PARALLEL_SORT_SIZE) {
             int depth = getDepth(parallelism, size >> 12);
-            float[] b = depth == 0 ? null : new float[size];
+            float[] b = depth == 0 ? null : (float[]) tryAllocate(a, size);
             new Sorter(null, a, b, low, size, low, depth).invoke();
         } else {
             sort(null, a, 0, low, high);
@@ -2829,8 +2852,8 @@ final class DualPivotQuicksortRef2105 {
                 /*
                  * Invoke radix sort on large array.
                  */
-                if ((sorter == null || bits > MIN_RADIX_SORT_DEPTH) && size > MIN_RADIX_SORT_SIZE) {
-                    radixSort(sorter, a, low, high);
+                if ((sorter == null || bits > MIN_RADIX_SORT_DEPTH) && size > MIN_RADIX_SORT_SIZE
+                        && radixSort(sorter, a, low, high)) {
                     return;
                 }
 
@@ -3185,12 +3208,17 @@ final class DualPivotQuicksortRef2105 {
      * @param a the array to be sorted
      * @param low the index of the first element, inclusive, to be sorted
      * @param high the index of the last element, exclusive, to be sorted
+     * @return true if finally sorted, false otherwise
      */
-    static void radixSort(Sorter sorter, float[] a, int low, int high) {
+    static boolean radixSort(Sorter sorter, float[] a, int low, int high) {
         float[] b; int offset = low;
 
         if (sorter == null || (b = (float[]) sorter.b) == null) {
-            b = new float[high - low];
+            b = (float[]) tryAllocate(a, high - low);
+
+            if (b == null) {
+                return false;
+            }            
         } else {
             offset = sorter.offset;
         }
@@ -3260,6 +3288,7 @@ final class DualPivotQuicksortRef2105 {
         if (passLevel1 ^ passLevel2 ^ passLevel3 ^ passLevel4) {
             System.arraycopy(b, low - offset, a, low, high - low);
         }
+        return true;
     }
 
     /**
@@ -3388,7 +3417,11 @@ final class DualPivotQuicksortRef2105 {
             float[] b; int offset = low;
 
             if (sorter == null || (b = (float[]) sorter.b) == null) {
-                b = new float[size];
+                b = (float[]) tryAllocate(a, size);
+
+                if (b == null) {
+                    return false;
+                }
             } else {
                 offset = sorter.offset;
             }
@@ -3592,7 +3625,7 @@ final class DualPivotQuicksortRef2105 {
 
         if (parallelism > 1 && size > MIN_PARALLEL_SORT_SIZE) {
             int depth = getDepth(parallelism, size >> 12);
-            double[] b = depth == 0 ? null : new double[size];
+            double[] b = depth == 0 ? null : (double[]) tryAllocate(a, size);
             new Sorter(null, a, b, low, size, low, depth).invoke();
         } else {
             sort(null, a, 0, low, high);
@@ -3740,8 +3773,8 @@ final class DualPivotQuicksortRef2105 {
                 /*
                  * Invoke radix sort on large array.
                  */
-                if ((sorter == null || bits > MIN_RADIX_SORT_DEPTH) && size > MIN_RADIX_SORT_SIZE) {
-                    radixSort(sorter, a, low, high);
+                if ((sorter == null || bits > MIN_RADIX_SORT_DEPTH) && size > MIN_RADIX_SORT_SIZE
+                        && radixSort(sorter, a, low, high)) {
                     return;
                 }
 
@@ -4096,12 +4129,17 @@ final class DualPivotQuicksortRef2105 {
      * @param a the array to be sorted
      * @param low the index of the first element, inclusive, to be sorted
      * @param high the index of the last element, exclusive, to be sorted
+     * @return true if finally sorted, false otherwise
      */
-    static void radixSort(Sorter sorter, double[] a, int low, int high) {
+    static boolean radixSort(Sorter sorter, double[] a, int low, int high) {
         double[] b; int offset = low;
 
         if (sorter == null || (b = (double[]) sorter.b) == null) {
-            b = new double[high - low];
+            b = (double[]) tryAllocate(a, high - low);
+
+            if (b == null) {
+                return false;
+            }            
         } else {
             offset = sorter.offset;
         }
@@ -4201,6 +4239,7 @@ final class DualPivotQuicksortRef2105 {
         if (passLevel1 ^ passLevel2 ^ passLevel3 ^ passLevel4 ^ passLevel5 ^ passLevel6) {
             System.arraycopy(b, low - offset, a, low, high - low);
         }
+        return true;
     }
 
     /**
@@ -4329,7 +4368,11 @@ final class DualPivotQuicksortRef2105 {
             double[] b; int offset = low;
 
             if (sorter == null || (b = (double[]) sorter.b) == null) {
-                b = new double[size];
+                b = (double[]) tryAllocate(a, size);
+
+                if (b == null) {
+                    return false;
+                }
             } else {
                 offset = sorter.offset;
             }
@@ -4494,7 +4537,7 @@ final class DualPivotQuicksortRef2105 {
      * This class implements parallel sorting.
      */
     private static final class Sorter extends CountedCompleter<Void> {
-        private static final long serialVersionUID = 20180818L;
+        private static final long serialVersionUID = 31415926L;
         private final Object a, b;
         private final int low, size, offset, depth;
 
@@ -4506,7 +4549,7 @@ final class DualPivotQuicksortRef2105 {
             this.low = low;
             this.size = size;
             this.offset = offset;
-            this.depth = depth;
+            this.depth = (b == null) ? 0 : depth;
         }
 
         @Override
@@ -4563,7 +4606,7 @@ final class DualPivotQuicksortRef2105 {
      * This class implements parallel merging.
      */
     private static final class Merger extends CountedCompleter<Void> {
-        private static final long serialVersionUID = 20180818L;
+        private static final long serialVersionUID = 31415926L;
         private final Object dst, a1, a2;
         private final int k, lo1, hi1, lo2, hi2;
 
@@ -4612,7 +4655,7 @@ final class DualPivotQuicksortRef2105 {
      * This class implements parallel merging of runs.
      */
     private static final class RunMerger extends RecursiveTask<Object> {
-        private static final long serialVersionUID = 20180818L;
+        private static final long serialVersionUID = 31415926L;
         private final Object a, b;
         private final int[] run;
         private final int offset, aim, lo, hi;
@@ -4654,6 +4697,27 @@ final class DualPivotQuicksortRef2105 {
         private Object getDestination() {
             join();
             return getRawResult();
+        }
+    }
+
+    private static Object tryAllocate(Object a, int size) {
+        try {
+            if (a instanceof int[]) {
+                return new int[size];
+            }
+            if (a instanceof long[]) {
+                return new long[size];
+            }
+            if (a instanceof float[]) {
+                return new float[size];
+            }
+            if (a instanceof double[]) {
+                return new double[size];
+            }
+            throw new IllegalArgumentException(
+                "Unknown type of array: " + a.getClass().getName());
+        } catch (OutOfMemoryError e) {
+            return null;
         }
     }
 }
