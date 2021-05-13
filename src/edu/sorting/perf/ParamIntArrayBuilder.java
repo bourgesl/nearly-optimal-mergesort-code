@@ -42,6 +42,11 @@ public enum ParamIntArrayBuilder {
 
     public void build(int[] result, int m) {
         final int len = result.length;
+        
+        if (m <= 1) {
+            // ensure enough data (not all zero):
+            m = 2;
+        }
 
         for (int i = 0; i < len; i++) {
             result[i] = element(i, m, len);

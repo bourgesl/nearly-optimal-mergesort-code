@@ -254,10 +254,12 @@ public class ArraySortBenchmark2 {
 
 //                    "50", "100",  "250", "1000"
                     "1000", "10000", "100000", "1000000"
+//                    "100000"
                 });
                 builder.param(PARAM_SUB_SIZE, new String[]{
                     "1", 
 //                    "1", "4", "7" // , "15"
+//                    "17"
                     "16", "256"
                 });
 
@@ -275,7 +277,9 @@ public class ArraySortBenchmark2 {
 
                 builder.param(PARAM_SORTER, new String[]{
 //                    "BASELINE", 
-                    "SYSTEM", "NEW_DPQS_REF", "RADIX",
+                    "SYSTEM", "DPQS_2105_REF", "DPQS_2105_NEW"
+//                    "DPQ_21_05_HYB", "DPQ_21_05_IN", "DPQ_21_05_RA"
+//                              "RADIX",
 //                    "DPQ_11", "DPQ_19_11_12", "DPQ_21_04_24", "RADIX",
 //                     "DPQ_11", "DPQ_19_01_05", "DPQ_19_11_12", "RADIX"
 //                    "ISORT_E", "DPQ_19_05_E", 

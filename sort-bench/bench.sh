@@ -4,7 +4,7 @@ source env.sh
 
 # do not force GC as setupTrial does cleanup() and sorters use pre-allocation
 GC=false
-FORK=1
+FORK=4
 
 # min iter = 10 (to sample all distributions)
 WITER=10
@@ -26,7 +26,7 @@ java -version
 
 # define CPU core to use
 # Note: use linux kernel GRUB_CMDLINE_LINUX="isolcpus=3" in /etc/default/grub
-export CPU_CORE_IDS=3
+export CPU_CORE_IDS=2-3
 
 
 # define Java options

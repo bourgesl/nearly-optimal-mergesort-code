@@ -45,17 +45,17 @@ import java.util.concurrent.RecursiveTask;
  * @author Josh Bloch
  * @author Doug Lea
  *
- * @version 2021.05.06
+ * @version 2020.06.14
  *
  * @since 1.7 * 14 & 17
  */
-/* Vladimir's version: final DualPivotQuicksort.java */
-final class DualPivotQuicksortRef2105_LBO {
+/* Vladimir's version: final DualPivotQuicksort_7_2.java (2021.05.13) */
+final class DualPivotQuicksortRef210513 {
 
     /**
      * Prevents instantiation.
      */
-    private DualPivotQuicksortRef2105_LBO() {} // TODO
+    private DualPivotQuicksortRef210513() {}
 
     /**
      * Max array size to use mixed insertion sort.
@@ -169,17 +169,7 @@ final class DualPivotQuicksortRef2105_LBO {
 
         if (parallelism > 1 && size > MIN_PARALLEL_SORT_SIZE) {
             int depth = getDepth(parallelism, size >> 12);
-            int[] b = null;
-            // LBO: deal with low-mem footprint:
-            if (depth != 0) {
-                try {
-                    b = new int[size];
-                } catch (OutOfMemoryError oome) {
-                    System.out.println("sort: " + oome.getMessage());
-                    // ignore, fallback to in-place sort algorithms
-                    depth = 0; // b is null
-                }
-            }
+            int[] b = depth == 0 ? null : (int[]) tryAllocate(a, size);
             new Sorter(null, a, b, low, size, low, depth).invoke();
         } else {
             sort(null, a, 0, low, high);
@@ -255,6 +245,17 @@ final class DualPivotQuicksortRef2105_LBO {
             int a3 = a[e3];
 
             /*
+             * Invoke radix sort on large array.
+             */
+            if (a[e1] != a[e3] && a[e3] != a[e5]
+                && (sorter == null || bits > MIN_RADIX_SORT_DEPTH)
+                && size > MIN_RADIX_SORT_SIZE
+                && radixSort(sorter, a, low, high)
+            ) {
+                return;
+            }
+
+            /*
              * Sort these elements in place by the combination
              * of 4-element sorting network and insertion sort.
              *
@@ -286,6 +287,7 @@ final class DualPivotQuicksortRef2105_LBO {
                 }
             }
 
+
             // Pointers
             int lower = low; // The index of the last element of the left part
             int upper = end; // The index of the first element of the right part
@@ -294,15 +296,6 @@ final class DualPivotQuicksortRef2105_LBO {
              * Partitioning with two pivots in case of different elements.
              */
             if (a[e1] < a[e2] && a[e2] < a[e3] && a[e3] < a[e4] && a[e4] < a[e5]) {
-
-                /*
-                 * Invoke radix sort on large array.
-                 */
-                if ((sorter == null || bits > MIN_RADIX_SORT_DEPTH) && size > MIN_RADIX_SORT_SIZE) {
-                    if (radixSort(sorter, a, low, high)) {
-                        return;
-                    }
-                }
 
                 /*
                  * Use the first and fifth of the five sorted elements as
@@ -655,17 +648,15 @@ final class DualPivotQuicksortRef2105_LBO {
      * @param a the array to be sorted
      * @param low the index of the first element, inclusive, to be sorted
      * @param high the index of the last element, exclusive, to be sorted
+     * @return true if finally sorted, false otherwise
      */
     static boolean radixSort(Sorter sorter, int[] a, int low, int high) {
         int[] b; int offset = low;
 
         if (sorter == null || (b = (int[]) sorter.b) == null) {
-            // LBO: deal with low-mem footprint:
-            try {
-                b = new int[high - low];
-            } catch (OutOfMemoryError oome) {
-                System.out.println("radixSort: " + oome.getMessage());
-                // ignore, fallback to in-place sort algorithms
+            b = (int[]) tryAllocate(a, high - low);
+
+            if (b == null) {
                 return false;
             }
         } else {
@@ -760,7 +751,9 @@ final class DualPivotQuicksortRef2105_LBO {
             break;
         }
 
-        // Compute histogram
+        /*
+         * Compute histogram.
+         */
         count[last] += high;
 
         for (int i = last; i > 0; --i) {
@@ -884,12 +877,9 @@ final class DualPivotQuicksortRef2105_LBO {
             int[] b; int offset = low;
 
             if (sorter == null || (b = (int[]) sorter.b) == null) {
-                // LBO: deal with low-mem footprint:
-                try {
-                    b = new int[size];
-                } catch (OutOfMemoryError oome) {
-                    System.out.println("tryMergeRuns: " + oome.getMessage());
-                    // ignore, fallback to in-place sort algorithms
+                b = (int[]) tryAllocate(a, size);
+
+                if (b == null) {
                     return false;
                 }
             } else {
@@ -1072,17 +1062,7 @@ final class DualPivotQuicksortRef2105_LBO {
 
         if (parallelism > 1 && size > MIN_PARALLEL_SORT_SIZE) {
             int depth = getDepth(parallelism, size >> 12);
-            long[] b = null;
-            // LBO: deal with low-mem footprint:
-            if (depth != 0) {
-                try {
-                    b = new long[size];
-                } catch (OutOfMemoryError oome) {
-                    System.out.println("sort: " + oome.getMessage());
-                    // ignore, fallback to in-place sort algorithms
-                    depth = 0; // b is null
-                }
-            }
+            long[] b = depth == 0 ? null : (long[]) tryAllocate(a, size);
             new Sorter(null, a, b, low, size, low, depth).invoke();
         } else {
             sort(null, a, 0, low, high);
@@ -1201,10 +1181,9 @@ final class DualPivotQuicksortRef2105_LBO {
                 /*
                  * Invoke radix sort on large array.
                  */
-                if ((sorter == null || bits > MIN_RADIX_SORT_DEPTH) && size > MIN_RADIX_SORT_SIZE) {
-                    if (radixSort(sorter, a, low, high)) {
-                        return;
-                    }
+                if ((sorter == null || bits > MIN_RADIX_SORT_DEPTH) && size > MIN_RADIX_SORT_SIZE
+                        && radixSort(sorter, a, low, high)) {
+                    return;
                 }
 
                 /*
@@ -1558,19 +1537,17 @@ final class DualPivotQuicksortRef2105_LBO {
      * @param a the array to be sorted
      * @param low the index of the first element, inclusive, to be sorted
      * @param high the index of the last element, exclusive, to be sorted
+     * @return true if finally sorted, false otherwise
      */
     static boolean radixSort(Sorter sorter, long[] a, int low, int high) {
         long[] b; int offset = low;
 
         if (sorter == null || (b = (long[]) sorter.b) == null) {
-            // LBO: deal with low-mem footprint:
-            try {
-                b = new long[high - low];
-            } catch (OutOfMemoryError oome) {
-                System.out.println("radixSort: " + oome.getMessage());
-                // ignore, fallback to in-place sort algorithms
+            b = (long[]) tryAllocate(a, high - low);
+
+            if (b == null) {
                 return false;
-            }
+            }            
         } else {
             offset = sorter.offset;
         }
@@ -1788,12 +1765,9 @@ final class DualPivotQuicksortRef2105_LBO {
             long[] b; int offset = low;
 
             if (sorter == null || (b = (long[]) sorter.b) == null) {
-                // LBO: deal with low-mem footprint:
-                try {
-                    b = new long[size];
-                } catch (OutOfMemoryError oome) {
-                    System.out.println("tryMergeRuns: " + oome.getMessage());
-                    // ignore, fallback to in-place sort algorithms
+                b = (long[]) tryAllocate(a, size);
+
+                if (b == null) {
                     return false;
                 }
             } else {
@@ -2734,17 +2708,7 @@ final class DualPivotQuicksortRef2105_LBO {
 
         if (parallelism > 1 && size > MIN_PARALLEL_SORT_SIZE) {
             int depth = getDepth(parallelism, size >> 12);
-            float[] b = null;
-            // LBO: deal with low-mem footprint:
-            if (depth != 0) {
-                try {
-                    b = new float[size];
-                } catch (OutOfMemoryError oome) {
-                    System.out.println("sort: " + oome.getMessage());
-                    // ignore, fallback to in-place sort algorithms
-                    depth = 0; // b is null
-                }
-            }
+            float[] b = depth == 0 ? null : (float[]) tryAllocate(a, size);
             new Sorter(null, a, b, low, size, low, depth).invoke();
         } else {
             sort(null, a, 0, low, high);
@@ -2892,10 +2856,9 @@ final class DualPivotQuicksortRef2105_LBO {
                 /*
                  * Invoke radix sort on large array.
                  */
-                if ((sorter == null || bits > MIN_RADIX_SORT_DEPTH) && size > MIN_RADIX_SORT_SIZE) {
-                    if (radixSort(sorter, a, low, high)) {
-                        return;
-                    }
+                if ((sorter == null || bits > MIN_RADIX_SORT_DEPTH) && size > MIN_RADIX_SORT_SIZE
+                        && radixSort(sorter, a, low, high)) {
+                    return;
                 }
 
                 /*
@@ -3249,19 +3212,17 @@ final class DualPivotQuicksortRef2105_LBO {
      * @param a the array to be sorted
      * @param low the index of the first element, inclusive, to be sorted
      * @param high the index of the last element, exclusive, to be sorted
+     * @return true if finally sorted, false otherwise
      */
     static boolean radixSort(Sorter sorter, float[] a, int low, int high) {
         float[] b; int offset = low;
 
         if (sorter == null || (b = (float[]) sorter.b) == null) {
-            // LBO: deal with low-mem footprint:
-            try {
-                b = new float[high - low];
-            } catch (OutOfMemoryError oome) {
-                System.out.println("radixSort: " + oome.getMessage());
-                // ignore, fallback to in-place sort algorithms
+            b = (float[]) tryAllocate(a, high - low);
+
+            if (b == null) {
                 return false;
-            }
+            }            
         } else {
             offset = sorter.offset;
         }
@@ -3460,12 +3421,9 @@ final class DualPivotQuicksortRef2105_LBO {
             float[] b; int offset = low;
 
             if (sorter == null || (b = (float[]) sorter.b) == null) {
-                // LBO: deal with low-mem footprint:
-                try {
-                    b = new float[size];
-                } catch (OutOfMemoryError oome) {
-                    System.out.println("tryMergeRuns: " + oome.getMessage());
-                    // ignore, fallback to in-place sort algorithms
+                b = (float[]) tryAllocate(a, size);
+
+                if (b == null) {
                     return false;
                 }
             } else {
@@ -3671,17 +3629,7 @@ final class DualPivotQuicksortRef2105_LBO {
 
         if (parallelism > 1 && size > MIN_PARALLEL_SORT_SIZE) {
             int depth = getDepth(parallelism, size >> 12);
-            double[] b = null;
-            // LBO: deal with low-mem footprint:
-            if (depth != 0) {
-                try {
-                    b = new double[size];
-                } catch (OutOfMemoryError oome) {
-                    System.out.println("sort: " + oome.getMessage());
-                    // ignore, fallback to in-place sort algorithms
-                    depth = 0; // b is null
-                }
-            }
+            double[] b = depth == 0 ? null : (double[]) tryAllocate(a, size);
             new Sorter(null, a, b, low, size, low, depth).invoke();
         } else {
             sort(null, a, 0, low, high);
@@ -3829,10 +3777,9 @@ final class DualPivotQuicksortRef2105_LBO {
                 /*
                  * Invoke radix sort on large array.
                  */
-                if ((sorter == null || bits > MIN_RADIX_SORT_DEPTH) && size > MIN_RADIX_SORT_SIZE) {
-                    if (radixSort(sorter, a, low, high)) {
-                        return;
-                    }
+                if ((sorter == null || bits > MIN_RADIX_SORT_DEPTH) && size > MIN_RADIX_SORT_SIZE
+                        && radixSort(sorter, a, low, high)) {
+                    return;
                 }
 
                 /*
@@ -4186,19 +4133,17 @@ final class DualPivotQuicksortRef2105_LBO {
      * @param a the array to be sorted
      * @param low the index of the first element, inclusive, to be sorted
      * @param high the index of the last element, exclusive, to be sorted
+     * @return true if finally sorted, false otherwise
      */
     static boolean radixSort(Sorter sorter, double[] a, int low, int high) {
         double[] b; int offset = low;
 
         if (sorter == null || (b = (double[]) sorter.b) == null) {
-            // LBO: deal with low-mem footprint:
-            try {
-                b = new double[high - low];
-            } catch (OutOfMemoryError oome) {
-                System.out.println("radixSort: " + oome.getMessage());
-                // ignore, fallback to in-place sort algorithms
+            b = (double[]) tryAllocate(a, high - low);
+
+            if (b == null) {
                 return false;
-            }
+            }            
         } else {
             offset = sorter.offset;
         }
@@ -4427,12 +4372,9 @@ final class DualPivotQuicksortRef2105_LBO {
             double[] b; int offset = low;
 
             if (sorter == null || (b = (double[]) sorter.b) == null) {
-                // LBO: deal with low-mem footprint:
-                try {
-                    b = new double[size];
-                } catch (OutOfMemoryError oome) {
-                    System.out.println("tryMergeRuns: " + oome.getMessage());
-                    // ignore, fallback to in-place sort algorithms
+                b = (double[]) tryAllocate(a, size);
+
+                if (b == null) {
                     return false;
                 }
             } else {
@@ -4599,13 +4541,9 @@ final class DualPivotQuicksortRef2105_LBO {
      * This class implements parallel sorting.
      */
     private static final class Sorter extends CountedCompleter<Void> {
-        private static final long serialVersionUID = 20180818L;
-        final Object a;
-        final Object b;
-        final int low;
-        final int size;
-        final int offset;
-        final int depth;
+        private static final long serialVersionUID = 31415926L;
+        private final Object a, b;
+        private final int low, size, offset, depth;
 
         private Sorter(CountedCompleter<?> parent,
                 Object a, Object b, int low, int size, int offset, int depth) {
@@ -4615,11 +4553,11 @@ final class DualPivotQuicksortRef2105_LBO {
             this.low = low;
             this.size = size;
             this.offset = offset;
-            this.depth = depth;
+            this.depth = (b == null) ? 0 : depth;
         }
 
         @Override
-        public void compute() {
+        public final void compute() {
             if (depth < 0) {
                 setPendingCount(2);
                 int half = size >> 1;
@@ -4635,15 +4573,14 @@ final class DualPivotQuicksortRef2105_LBO {
                 } else if (a instanceof double[]) {
                     sort(this, (double[]) a, depth, low, low + size);
                 } else {
-                    throw new IllegalArgumentException(
-                        "Unknown type of array: " + a.getClass().getName());
+                    throw new IllegalArgumentException("Unknown type: " + a.getClass().getName());
                 }
             }
             tryComplete();
         }
 
         @Override
-        public void onCompletion(CountedCompleter<?> caller) {
+        public final void onCompletion(CountedCompleter<?> caller) {
             if (depth < 0) {
                 int mi = low + (size >> 1);
                 boolean src = (depth & 1) == 0;
@@ -4672,15 +4609,9 @@ final class DualPivotQuicksortRef2105_LBO {
      * This class implements parallel merging.
      */
     private static final class Merger extends CountedCompleter<Void> {
-        private static final long serialVersionUID = 20180818L;
-        private final Object dst;
-        private final Object a1;
-        private final Object a2;
-        private final int k;
-        private final int lo1;
-        private final int hi1;
-        private final int lo2;
-        private final int hi2;
+        private static final long serialVersionUID = 31415926L;
+        private final Object dst, a1, a2;
+        private final int k, lo1, hi1, lo2, hi2;
 
         private Merger(CountedCompleter<?> parent, Object dst, int k,
                 Object a1, int lo1, int hi1, Object a2, int lo2, int hi2) {
@@ -4696,7 +4627,7 @@ final class DualPivotQuicksortRef2105_LBO {
         }
 
         @Override
-        public void compute() {
+        public final void compute() {
             if (dst instanceof int[]) {
                 mergeParts(this, (int[]) dst, k,
                     (int[]) a1, lo1, hi1, (int[]) a2, lo2, hi2);
@@ -4710,8 +4641,7 @@ final class DualPivotQuicksortRef2105_LBO {
                 mergeParts(this, (double[]) dst, k,
                     (double[]) a1, lo1, hi1, (double[]) a2, lo2, hi2);
             } else {
-                throw new IllegalArgumentException(
-                    "Unknown type of array: " + dst.getClass().getName());
+                throw new IllegalArgumentException("Unknown type: " + dst.getClass().getName());
             }
             propagateCompletion();
         }
@@ -4727,14 +4657,10 @@ final class DualPivotQuicksortRef2105_LBO {
      * This class implements parallel merging of runs.
      */
     private static final class RunMerger extends RecursiveTask<Object> {
-        private static final long serialVersionUID = 20180818L;
-        private final Object a;
-        private final Object b;
+        private static final long serialVersionUID = 31415926L;
+        private final Object a, b;
         private final int[] run;
-        private final int offset;
-        private final int aim;
-        private final int lo;
-        private final int hi;
+        private final int offset, aim, lo, hi;
 
         private RunMerger(Object a, Object b, int offset,
                 int aim, int[] run, int lo, int hi) {
@@ -4748,7 +4674,7 @@ final class DualPivotQuicksortRef2105_LBO {
         }
 
         @Override
-        protected Object compute() {
+        protected final Object compute() {
             if (a instanceof int[]) {
                 return mergeRuns((int[]) a, (int[]) b, offset, aim, true, run, lo, hi);
             }
@@ -4761,8 +4687,7 @@ final class DualPivotQuicksortRef2105_LBO {
             if (a instanceof double[]) {
                 return mergeRuns((double[]) a, (double[]) b, offset, aim, true, run, lo, hi);
             }
-            throw new IllegalArgumentException(
-                "Unknown type of array: " + a.getClass().getName());
+            throw new IllegalArgumentException("Unknown type: " + a.getClass().getName());
         }
 
         private RunMerger forkMe() {
@@ -4773,6 +4698,33 @@ final class DualPivotQuicksortRef2105_LBO {
         private Object getDestination() {
             join();
             return getRawResult();
+        }
+    }
+
+    /**
+     * Tries to allocate memory for new array.
+     *
+     * @param a the array of given type
+     * @param size the new array size
+     * @return null if there is not enough memory, created array otherwise
+     */
+    private static Object tryAllocate(Object a, int size) {
+        try {
+            if (a instanceof int[]) {
+                return new int[size];
+            }
+            if (a instanceof long[]) {
+                return new long[size];
+            }
+            if (a instanceof float[]) {
+                return new float[size];
+            }
+            if (a instanceof double[]) {
+                return new double[size];
+            }
+            throw new IllegalArgumentException("Unknown type: " + a.getClass().getName());
+        } catch (OutOfMemoryError e) {
+            return null;
         }
     }
 }

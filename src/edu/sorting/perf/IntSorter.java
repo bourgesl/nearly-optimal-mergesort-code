@@ -18,6 +18,8 @@ import edu.sorting.DualPivotQuicksort20191112;
 import edu.sorting.DualPivotQuicksort20191112Ext;
 import edu.sorting.DualPivotQuicksort20191112Fixed;
 import edu.sorting.DualPivotQuicksort20210424;
+import edu.sorting.DualPivotQuicksort202105;
+import edu.sorting.DualPivotQuicksort202105InPlace;
 import edu.sorting.InsertionSortExt;
 import edu.sorting.RadixSort;
 import java.util.Arrays;
@@ -34,6 +36,23 @@ public enum IntSorter {
         public void sort(int[] a) {
             // touch array (minimal unitary operation):
             a[0] = 0;
+            a[a.length - 1] = 0;
+        }
+
+        @Override
+        public final boolean skipCheck() {
+            return true;
+        }
+    },
+    BASELINE_SUM {
+        @Override
+        public void sort(int[] a) {
+            // touch all array (sum):
+            int total = 0;
+            for (int i = 0; i < a.length; i++) {
+                total += a[i];
+            }
+            a[a.length - 1] = total;
         }
 
         @Override
@@ -47,10 +66,16 @@ public enum IntSorter {
             Arrays.sort(a, 0, a.length - 1);
         }
     },
-    NEW_DPQS_REF {
+    DPQS_2105_REF {
         @Override
         public void sort(int[] a) {
             edu.sorting.ref.Arrays.sort(a, 0, a.length - 1);
+        }
+    },
+    DPQS_2105_NEW {
+        @Override
+        public void sort(int[] a) {
+            edu.sorting.ref.ArraysNew.sort(a, 0, a.length - 1);
         }
     },
     DPQ_11 {
@@ -63,13 +88,13 @@ public enum IntSorter {
     DPQ_18_2 {
         @Override
         public void sort(int[] a) {
-            DualPivotQuicksort201802.INSTANCE.sort(a, 0, a.length - 1);
+            DualPivotQuicksort201802.HYBRID.sort(a, 0, a.length - 1);
         }
     },
     DPQ_18_11 {
         @Override
         public void sort(int[] a) {
-            DualPivotQuicksort201811.INSTANCE.sort(a, 0, a.length - 1);
+            DualPivotQuicksort201811.HYBRID.sort(a, 0, a.length - 1);
         }
     },
      */
@@ -151,6 +176,30 @@ public enum IntSorter {
             DualPivotQuicksort20210424.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
+    DPQ_21_05 {
+        @Override
+        public void sort(int[] a) {
+            DualPivotQuicksort202105.INSTANCE.sort(a, 0, a.length - 1);
+        }
+    },
+    DPQ_21_05_HYB {
+        @Override
+        public void sort(int[] a) {
+            DualPivotQuicksort202105InPlace.HYBRID.sort(a, 0, a.length - 1);
+        }
+    },
+    DPQ_21_05_IN {
+        @Override
+        public void sort(int[] a) {
+            DualPivotQuicksort202105InPlace.DPQS_ONLY.sort(a, 0, a.length - 1);
+        }
+    },
+    DPQ_21_05_RA {
+        @Override
+        public void sort(int[] a) {
+            DualPivotQuicksort202105InPlace.RADIX_ONLY.sort(a, 0, a.length - 1);
+        }
+    },
     RADIX {
         @Override
         public void sort(int[] a) {
@@ -171,60 +220,60 @@ public enum IntSorter {
     QSORTE {
         @Override
         public void sort(int[] a) {
-            Qsorte.INSTANCE.sort(a, 0, a.length - 1);
+            Qsorte.HYBRID.sort(a, 0, a.length - 1);
         }
     },
     DYN_PIVOT {
         @Override
         public void sort(int[] a) {
-            DynPivotSort.INSTANCE.sort(a, 0, a.length - 1);
+            DynPivotSort.HYBRID.sort(a, 0, a.length - 1);
         }
     },
     MERGE_TD {
-        private final Sorter INSTANCE = new TopDownMergesort(24, true);
+        private final Sorter HYBRID = new TopDownMergesort(24, true);
 
         @Override
         public void sort(int[] a) {
-            INSTANCE.sort(a, 0, a.length - 1);
+            HYBRID.sort(a, 0, a.length - 1);
         }
     },
     MERGE_BU {
-        private final Sorter INSTANCE = new BottomUpMergesort(24, true);
+        private final Sorter HYBRID = new BottomUpMergesort(24, true);
 
         @Override
         public void sort(int[] a) {
-            INSTANCE.sort(a, 0, a.length - 1);
+            HYBRID.sort(a, 0, a.length - 1);
         }
     },
     TIM_TROT {
         @Override
         public void sort(int[] a) {
-            TimsortTrot.INSTANCE.sort(a, 0, a.length - 1);
+            TimsortTrot.HYBRID.sort(a, 0, a.length - 1);
         }
     },
     TIM_SD {
         public void sort(int[] a) {
-            TimsortStrippedDown.INSTANCE.sort(a, 0, a.length - 1);
+            TimsortStrippedDown.HYBRID.sort(a, 0, a.length - 1);
         }
     },
     TIMSORT {
         public void sort(int[] a) {
-            Timsort.INSTANCE.sort(a, 0, a.length - 1);
+            Timsort.HYBRID.sort(a, 0, a.length - 1);
         }
     },
     PEEK_SORT {
-        private final Sorter INSTANCE = new PeekSort(24, false);
+        private final Sorter HYBRID = new PeekSort(24, false);
 
         @Override
         public void sort(int[] a) {
-            INSTANCE.sort(a, 0, a.length - 1);
+            HYBRID.sort(a, 0, a.length - 1);
         }
     },
     POWER_SORT {
-        private final Sorter INSTANCE = new PowerSort(true, false, 24);
+        private final Sorter HYBRID = new PowerSort(true, false, 24);
 
         public void sort(int[] a) {
-            INSTANCE.sort(a, 0, a.length - 1);
+            HYBRID.sort(a, 0, a.length - 1);
         }
     }
      */ // 2 arrays variants
@@ -232,7 +281,7 @@ public enum IntSorter {
     DPQ_18_2_E {
         @Override
         public void sort(int[] a) {
-            DualPivotQuicksort201802Ext.INSTANCE.sort(a, 0, a.length - 1);
+            DualPivotQuicksort201802Ext.HYBRID.sort(a, 0, a.length - 1);
         }
     }, */
     // Straight Insertion-Sort (very slow on large size)
@@ -247,7 +296,7 @@ public enum IntSorter {
     P_ISORT_E {
         @Override
         public void sort(int[] a) {
-            PairInsertionSortExt.INSTANCE.sort(a, 0, a.length - 1);
+            PairInsertionSortExt.HYBRID.sort(a, 0, a.length - 1);
         }
     },
      */

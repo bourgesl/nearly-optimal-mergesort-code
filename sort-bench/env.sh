@@ -1,5 +1,5 @@
 #!/bin/bash
 
 #SIZES="100,500,5000"
-SIZES="100k"
+SIZES="1k-1M"
 
