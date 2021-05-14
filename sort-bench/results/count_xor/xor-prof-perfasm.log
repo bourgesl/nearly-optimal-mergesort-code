@@ -1,0 +1,892 @@
+# JMH version: 1.31
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 10 iterations, 100 ms each
+# Measurement: 5 iterations, 1000 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: edu.sorting.bench.ArrayXorBenchmark.arrayAndOriginal
+# Parameters: (size = 1000000)
+
+# Run progress: 0,00% complete, ETA 00:00:24
+# Fork: 1 of 1
+# Preparing profilers: LinuxPerfAsmProfiler 
+# Profilers consume stdout and stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 1172592,122 ns/op
+# Warmup Iteration   2: 681096,061 ns/op
+# Warmup Iteration   3: 721141,532 ns/op
+# Warmup Iteration   4: 691174,924 ns/op
+# Warmup Iteration   5: 696380,807 ns/op
+# Warmup Iteration   6: 682822,517 ns/op
+# Warmup Iteration   7: 684658,238 ns/op
+# Warmup Iteration   8: 695238,297 ns/op
+# Warmup Iteration   9: 683971,680 ns/op
+# Warmup Iteration  10: 685025,745 ns/op
+Iteration   1: 683630,392 ns/op
+Iteration   2: 682681,915 ns/op
+Iteration   3: 683551,301 ns/op
+Iteration   4: 682625,368 ns/op
+Iteration   5: 682027,260 ns/op
+# Processing profiler results: LinuxPerfAsmProfiler 
+
+
+Result "edu.sorting.bench.ArrayXorBenchmark.arrayAndOriginal":
+  682903,247 ±(99.9%) 2613,244 ns/op [Average]
+  (min, avg, max) = (682027,260, 682903,247, 683630,392), stdev = 678,651
+  CI (99.9%): [680290,003, 685516,491] (assumes normal distribution)
+
+Secondary result "edu.sorting.bench.ArrayXorBenchmark.arrayAndOriginal:·asm":
+PrintAssembly processed: 50403 total address lines.
+Perf output processed (skipped 5,519 seconds):
+ Column 1: cycles (5129 events)
+
+Hottest code regions (>10,00% "cycles" events):
+
+....[Hottest Region 1]..............................................................................
+c2, level 4, edu.sorting.bench.ArrayXorBenchmark::arrayAndOriginal, version 672 (98 bytes) 
+
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayAndOriginal@56 (line 83)
+           0x00007fffe00a5510: 1844 3bd1 | 0f83 8201 | 0000 43ff 
+           0x00007fffe00a551c: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayAndOriginal@65 (line 83)
+           0x00007fffe00a551c: 4c91 1044 | 8bf5 4183 | c6fd 413b | ee45 0f4c | f541 83fe | 010f 8e6b | 0100 0041 | b801 0000 
+           0x00007fffe00a553c: ;*aload {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayAndOriginal@48 (line 83)
+           0x00007fffe00a553c: 0066 6690 | 468b 5487 | 1041 c1ea 
+           0x00007fffe00a5548: ;*iushr {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayAndOriginal@56 (line 83)
+           0x00007fffe00a5548: 1844 3bd1 | 0f83 0c01 | 0000 43ff 
+           0x00007fffe00a5554: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayAndOriginal@65 (line 83)
+           0x00007fffe00a5554: 4c91 1046 | 8b54 8714 
+  0,21%    0x00007fffe00a555c: ;*iushr {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayAndOriginal@56 (line 83)
+  0,21%    0x00007fffe00a555c: 41c1 ea18 | 443b d10f | 83e6 0000 | 0043 ff4c 
+           0x00007fffe00a556c: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayAndOriginal@65 (line 83)
+           0x00007fffe00a556c: 9110 468b | 5487 1841 
+           0x00007fffe00a5574: ;*iushr {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayAndOriginal@56 (line 83)
+           0x00007fffe00a5574: c1ea 1844 | 3bd1 660f | 1f44 0000 | 0f83 ce00 | 0000 43ff 
+           0x00007fffe00a5588: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayAndOriginal@65 (line 83)
+           0x00007fffe00a5588: 4c91 1046 | 8b54 871c 
+  0,99%    0x00007fffe00a5590: ;*iushr {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayAndOriginal@56 (line 83)
+  0,99%    0x00007fffe00a5590: 41c1 ea18 | 443b d10f | 83bd 0000 | 0043 ff4c 
+           0x00007fffe00a55a0: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayAndOriginal@65 (line 83)
+           0x00007fffe00a55a0: 9110 4183 
+           0x00007fffe00a55a4: ;*iinc {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayAndOriginal@66 (line 82)
+           0x00007fffe00a55a4: c004 453b 
+           0x00007fffe00a55a8: ;*if_icmpge {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayAndOriginal@45 (line 82)
+           0x00007fffe00a55a8: c67c 9544 
+           0x00007fffe00a55ac: ;*aload {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayAndOriginal@48 (line 83)
+           0x00007fffe00a55ac: 3bc5 7d23 | 468b 5487 | 1041 c1ea 
+           0x00007fffe00a55b8: ;*iushr {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayAndOriginal@56 (line 83)
+....................................................................................................
+ 95,87%  <total for region 1>
+
+....[Hottest Regions]...............................................................................
+ 95,87%         c2, level 4  edu.sorting.bench.ArrayXorBenchmark::arrayAndOriginal, version 672 (98 bytes) 
+  0,99%         c2, level 4  edu.sorting.bench.ArrayXorBenchmark$ThreadState::setUp, version 681 (91 bytes) 
+  0,53%              kernel  [unknown] (0 bytes) 
+  0,31%              kernel  [unknown] (0 bytes) 
+  0,21%           libjvm.so  SpinPause (0 bytes) 
+  0,10%           libjvm.so  ElfSymbolTable::lookup (28 bytes) 
+  0,08%              kernel  [unknown] (0 bytes) 
+  0,06%           libjvm.so  fileStream::write (25 bytes) 
+  0,04%              kernel  [unknown] (0 bytes) 
+  0,04%              kernel  [unknown] (24 bytes) 
+  0,04%              kernel  [unknown] (13 bytes) 
+  0,04%           libjvm.so  OopOopIterateDispatch<PCAdjustPointerClosure>::Table::oop_oop_iterate<InstanceKlass, narrowOop> (2 bytes) 
+  0,04%           libjvm.so  OopOopIterateDispatch<PCIterateMarkAndPushClosure>::Table::oop_oop_iterate<InstanceKlass, narrowOop> (0 bytes) 
+  0,04%           libjvm.so  ParCompactionManager::follow_marking_stacks (0 bytes) 
+  0,04%        libc-2.31.so  __memmove_sse2_unaligned_erms (17 bytes) 
+  0,04%        libc-2.31.so  __memset_avx2_erms (0 bytes) 
+  0,02%              kernel  [unknown] (0 bytes) 
+  0,02%              kernel  [unknown] (0 bytes) 
+  0,02%              kernel  [unknown] (0 bytes) 
+  0,02%              kernel  [unknown] (0 bytes) 
+  1,44%  <...other 74 warm regions...>
+....................................................................................................
+ 99,98%  <totals>
+
+....[Hottest Methods (after inlining)]..............................................................
+ 95,89%         c2, level 4  edu.sorting.bench.ArrayXorBenchmark::arrayAndOriginal, version 672 
+  1,50%              kernel  [unknown] 
+  0,99%         c2, level 4  edu.sorting.bench.ArrayXorBenchmark$ThreadState::setUp, version 681 
+  0,21%           libjvm.so  SpinPause 
+  0,14%           libjvm.so  OopOopIterateDispatch<PCIterateMarkAndPushClosure>::Table::oop_oop_iterate<InstanceKlass, narrowOop> 
+  0,10%           libjvm.so  ElfSymbolTable::lookup 
+  0,08%           libjvm.so  OopOopIterateDispatch<PCAdjustPointerClosure>::Table::oop_oop_iterate<InstanceKlass, narrowOop> 
+  0,06%           libjvm.so  fileStream::write 
+  0,06%        libc-2.31.so  __memmove_sse2_unaligned_erms 
+  0,06%           libjvm.so  ParMarkBitMap::mark_obj 
+  0,06%           libjvm.so  ParCompactionManager::follow_marking_stacks 
+  0,04%        libc-2.31.so  _IO_fwrite 
+  0,04%         interpreter  ifeq  153 ifeq  
+  0,04%        libc-2.31.so  __memmove_avx_unaligned_erms 
+  0,04%        libc-2.31.so  __memset_avx2_erms 
+  0,04%           libjvm.so  xmlStream::write_text 
+  0,04%           libjvm.so  OopOopIterateDispatch<PCIterateMarkAndPushClosure>::Table::oop_oop_iterate<InstanceMirrorKlass, narrowOop> 
+  0,02%           libjvm.so  OopOopIterateDispatch<PCAdjustPointerClosure>::Table::oop_oop_iterate<InstanceMirrorKlass, narrowOop> 
+  0,02%           libjvm.so  CompileTask::print 
+  0,02%           libjvm.so  MoveAndUpdateClosure::do_addr 
+  0,55%  <...other 28 warm methods...>
+....................................................................................................
+ 99,98%  <totals>
+
+....[Distribution by Source]........................................................................
+ 96,88%         c2, level 4
+  1,50%              kernel
+  1,19%           libjvm.so
+  0,23%        libc-2.31.so
+  0,08%         interpreter
+  0,04%  libpthread-2.31.so
+  0,02%                    
+  0,02%       libdl-2.31.so
+  0,02%    Unknown, level 0
+....................................................................................................
+ 99,98%  <totals>
+
+
+
+# JMH version: 1.31
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 10 iterations, 100 ms each
+# Measurement: 5 iterations, 1000 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: edu.sorting.bench.ArrayXorBenchmark.arrayXorOriginal
+# Parameters: (size = 1000000)
+
+# Run progress: 25,00% complete, ETA 00:00:40
+# Fork: 1 of 1
+# Preparing profilers: LinuxPerfAsmProfiler 
+# Profilers consume stdout and stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 1618266,169 ns/op
+# Warmup Iteration   2: 780145,465 ns/op
+# Warmup Iteration   3: 820334,382 ns/op
+# Warmup Iteration   4: 786983,313 ns/op
+# Warmup Iteration   5: 783186,739 ns/op
+# Warmup Iteration   6: 777226,496 ns/op
+# Warmup Iteration   7: 778072,465 ns/op
+# Warmup Iteration   8: 783793,102 ns/op
+# Warmup Iteration   9: 776769,651 ns/op
+# Warmup Iteration  10: 779363,374 ns/op
+Iteration   1: 777457,514 ns/op
+Iteration   2: 781727,623 ns/op
+Iteration   3: 783259,835 ns/op
+Iteration   4: 783327,843 ns/op
+Iteration   5: 780352,907 ns/op
+# Processing profiler results: LinuxPerfAsmProfiler 
+
+
+Result "edu.sorting.bench.ArrayXorBenchmark.arrayXorOriginal":
+  781225,145 ±(99.9%) 9386,735 ns/op [Average]
+  (min, avg, max) = (777457,514, 781225,145, 783327,843), stdev = 2437,705
+  CI (99.9%): [771838,410, 790611,879] (assumes normal distribution)
+
+Secondary result "edu.sorting.bench.ArrayXorBenchmark.arrayXorOriginal:·asm":
+PrintAssembly processed: 50468 total address lines.
+Perf output processed (skipped 5,475 seconds):
+ Column 1: cycles (5169 events)
+
+Hottest code regions (>10,00% "cycles" events):
+
+....[Hottest Region 1]..............................................................................
+c2, level 4, edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal, version 671 (514 bytes) 
+
+           0x00007fffe00a5914: 8000 0000 | 443b d10f | 1f44 0000 | 0f83 7e03 | 0000 43ff 
+           0x00007fffe00a5928: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@65 (line 111)
+           0x00007fffe00a5928: 4c91 1044 | 8bc5 4183 | c0f1 413b | e845 0f4c | c50f 1f80 | 0000 0000 | 4183 f801 | 0f8e 6203 
+           0x00007fffe00a5948: 0000 41bd 
+           0x00007fffe00a594c: ;*aload {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@48 (line 111)
+           0x00007fffe00a594c: 0100 0000 | 468b 54af | 1041 c1ea | 1841 81f2 
+           0x00007fffe00a595c: ;*ixor {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@60 (line 111)
+           0x00007fffe00a595c: 8000 0000 | 443b d10f | 83a9 0200 | 0043 ff4c 
+           0x00007fffe00a596c: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@65 (line 111)
+           0x00007fffe00a596c: 9110 468b | 54af 1441 | c1ea 1841 | 81f2 8000 
+           0x00007fffe00a597c: ;*ixor {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@60 (line 111)
+           0x00007fffe00a597c: 0000 6690 | 443b d10f | 8386 0200 | 0043 ff4c 
+           0x00007fffe00a598c: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@65 (line 111)
+           0x00007fffe00a598c: 9110 468b | 54af 1841 | c1ea 1841 | 81f2 8000 
+           0x00007fffe00a599c: ;*ixor {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@60 (line 111)
+           0x00007fffe00a599c: 0000 6690 | 443b d10f | 838f 0200 | 0043 ff4c 
+           0x00007fffe00a59ac: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@65 (line 111)
+           0x00007fffe00a59ac: 9110 468b | 54af 1c41 | c1ea 1841 | 81f2 8000 
+           0x00007fffe00a59bc: ;*ixor {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@60 (line 111)
+           0x00007fffe00a59bc: 0000 6690 | 443b d10f | 8375 0200 | 0043 ff4c 
+           0x00007fffe00a59cc: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@65 (line 111)
+           0x00007fffe00a59cc: 9110 468b | 54af 2041 | c1ea 1841 | 81f2 8000 
+           0x00007fffe00a59dc: ;*ixor {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@60 (line 111)
+           0x00007fffe00a59dc: 0000 6690 | 443b d10f | 835b 0200 | 0043 ff4c 
+           0x00007fffe00a59ec: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@65 (line 111)
+           0x00007fffe00a59ec: 9110 468b | 54af 2441 | c1ea 1841 | 81f2 8000 
+           0x00007fffe00a59fc: ;*ixor {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@60 (line 111)
+           0x00007fffe00a59fc: 0000 6690 | 443b d10f | 8341 0200 | 0043 ff4c 
+           0x00007fffe00a5a0c: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@65 (line 111)
+           0x00007fffe00a5a0c: 9110 468b | 54af 2841 | c1ea 1841 | 81f2 8000 
+           0x00007fffe00a5a1c: ;*ixor {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@60 (line 111)
+           0x00007fffe00a5a1c: 0000 6690 | 443b d10f | 8327 0200 | 0043 ff4c 
+           0x00007fffe00a5a2c: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@65 (line 111)
+           0x00007fffe00a5a2c: 9110 468b | 54af 2c41 | c1ea 1841 | 81f2 8000 
+           0x00007fffe00a5a3c: ;*ixor {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@60 (line 111)
+           0x00007fffe00a5a3c: 0000 6690 | 443b d10f | 830d 0200 | 0043 ff4c 
+           0x00007fffe00a5a4c: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@65 (line 111)
+           0x00007fffe00a5a4c: 9110 468b | 54af 3041 | c1ea 1841 | 81f2 8000 
+           0x00007fffe00a5a5c: ;*ixor {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@60 (line 111)
+           0x00007fffe00a5a5c: 0000 6690 | 443b d10f | 83f3 0100 | 0043 ff4c 
+           0x00007fffe00a5a6c: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@65 (line 111)
+           0x00007fffe00a5a6c: 9110 468b | 54af 3441 | c1ea 1841 | 81f2 8000 
+           0x00007fffe00a5a7c: ;*ixor {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@60 (line 111)
+           0x00007fffe00a5a7c: 0000 6690 | 443b d10f | 83d9 0100 | 0043 ff4c 
+           0x00007fffe00a5a8c: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@65 (line 111)
+           0x00007fffe00a5a8c: 9110 468b | 54af 3841 | c1ea 1841 | 81f2 8000 
+           0x00007fffe00a5a9c: ;*ixor {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@60 (line 111)
+           0x00007fffe00a5a9c: 0000 6690 | 443b d10f | 83bf 0100 | 0043 ff4c 
+           0x00007fffe00a5aac: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@65 (line 111)
+           0x00007fffe00a5aac: 9110 468b | 54af 3c41 | c1ea 1841 | 81f2 8000 
+           0x00007fffe00a5abc: ;*ixor {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@60 (line 111)
+           0x00007fffe00a5abc: 0000 6690 | 443b d10f | 83a5 0100 | 0043 ff4c 
+           0x00007fffe00a5acc: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@65 (line 111)
+           0x00007fffe00a5acc: 9110 468b | 54af 4041 | c1ea 1841 | 81f2 8000 
+           0x00007fffe00a5adc: ;*ixor {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@60 (line 111)
+           0x00007fffe00a5adc: 0000 6690 | 443b d10f | 838b 0100 | 0043 ff4c 
+           0x00007fffe00a5aec: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@65 (line 111)
+           0x00007fffe00a5aec: 9110 468b | 54af 4441 | c1ea 1841 | 81f2 8000 
+           0x00007fffe00a5afc: ;*ixor {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@60 (line 111)
+           0x00007fffe00a5afc: 0000 6690 | 443b d10f | 8371 0100 | 0043 ff4c 
+           0x00007fffe00a5b0c: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@65 (line 111)
+           0x00007fffe00a5b0c: 9110 468b | 54af 4841 | c1ea 1841 | 81f2 8000 
+           0x00007fffe00a5b1c: ;*ixor {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@60 (line 111)
+           0x00007fffe00a5b1c: 0000 6690 | 443b d10f | 8359 0100 | 0043 ff4c 
+           0x00007fffe00a5b2c: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@65 (line 111)
+           0x00007fffe00a5b2c: 9110 468b | 54af 4c41 | c1ea 1841 | 81f2 8000 
+           0x00007fffe00a5b3c: ;*ixor {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@60 (line 111)
+           0x00007fffe00a5b3c: 0000 6690 | 443b d10f | 833f 0100 | 0043 ff4c 
+           0x00007fffe00a5b4c: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@65 (line 111)
+           0x00007fffe00a5b4c: 9110 4183 
+           0x00007fffe00a5b50: ;*iinc {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@66 (line 110)
+           0x00007fffe00a5b50: c510 453b | e80f 8cf5 
+           0x00007fffe00a5b58: ;*if_icmpge {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@45 (line 110)
+           0x00007fffe00a5b58: fdff ff0f | 1f44 0000 | 443b ed7d 
+           0x00007fffe00a5b64: ;*aload {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@48 (line 111)
+           0x00007fffe00a5b64: 2e66 6690 | 468b 54af | 1041 c1ea | 1841 81f2 
+           0x00007fffe00a5b74: ;*ixor {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@60 (line 111)
+           0x00007fffe00a5b74: 8000 0000 | 443b d10f | 1f44 0000 | 0f83 8c00 | 0000 43ff 
+           0x00007fffe00a5b88: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal@65 (line 111)
+....................................................................................................
+ 94,76%  <total for region 1>
+
+....[Hottest Regions]...............................................................................
+ 94,76%   c2, level 4  edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal, version 671 (514 bytes) 
+  1,06%        kernel  [unknown] (0 bytes) 
+  1,03%   c2, level 4  edu.sorting.bench.ArrayXorBenchmark$ThreadState::setUp, version 680 (99 bytes) 
+  0,41%        kernel  [unknown] (0 bytes) 
+  0,35%        kernel  [unknown] (0 bytes) 
+  0,21%        kernel  [unknown] (5 bytes) 
+  0,12%     libjvm.so  ElfSymbolTable::lookup (28 bytes) 
+  0,10%     libjvm.so  SpinPause (0 bytes) 
+  0,08%     libjvm.so  fileStream::write (43 bytes) 
+  0,08%  libc-2.31.so  __memmove_avx_unaligned_erms (0 bytes) 
+  0,06%        kernel  [unknown] (0 bytes) 
+  0,06%        kernel  [unknown] (0 bytes) 
+  0,06%        kernel  [unknown] (0 bytes) 
+  0,04%        kernel  [unknown] (17 bytes) 
+  0,04%        kernel  [unknown] (0 bytes) 
+  0,04%        kernel  [unknown] (0 bytes) 
+  0,04%        kernel  [unknown] (1 bytes) 
+  0,04%        kernel  [unknown] (0 bytes) 
+  0,04%   c2, level 4  edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal, version 671 (20 bytes) 
+  0,04%  libc-2.31.so  _IO_default_xsputn (0 bytes) 
+  1,35%  <...other 69 warm regions...>
+....................................................................................................
+ 99,98%  <totals>
+
+....[Hottest Methods (after inlining)]..............................................................
+ 94,80%   c2, level 4  edu.sorting.bench.ArrayXorBenchmark::arrayXorOriginal, version 671 
+  2,79%        kernel  [unknown] 
+  1,03%   c2, level 4  edu.sorting.bench.ArrayXorBenchmark$ThreadState::setUp, version 680 
+  0,12%     libjvm.so  ElfSymbolTable::lookup 
+  0,10%     libjvm.so  OopOopIterateDispatch<PCIterateMarkAndPushClosure>::Table::oop_oop_iterate<InstanceKlass, narrowOop> 
+  0,10%     libjvm.so  SpinPause 
+  0,08%     libjvm.so  fileStream::write 
+  0,08%  libc-2.31.so  __memmove_avx_unaligned_erms 
+  0,06%  libc-2.31.so  _IO_default_xsputn 
+  0,06%     libjvm.so  ParMarkBitMap::mark_obj 
+  0,04%  libc-2.31.so  _IO_fwrite 
+  0,04%     libjvm.so  Compilation::compile_java_method 
+  0,04%     libjvm.so  ParMarkBitMap::iterate 
+  0,04%  libc-2.31.so  _IO_file_xsputn@@GLIBC_2.2.5 
+  0,04%  libc-2.31.so  __memset_avx2_erms 
+  0,04%     libjvm.so  xmlStream::write_text 
+  0,02%     libjvm.so  jio_print 
+  0,02%   interpreter  istore_1  60 istore_1  
+  0,02%  libc-2.31.so  _IO_str_init_static_internal 
+  0,02%     libjvm.so  MoveAndUpdateClosure::do_addr 
+  0,48%  <...other 25 warm methods...>
+....................................................................................................
+ 99,98%  <totals>
+
+....[Distribution by Source]........................................................................
+ 95,82%   c2, level 4
+  2,79%        kernel
+  0,95%     libjvm.so
+  0,33%  libc-2.31.so
+  0,10%   interpreter
+....................................................................................................
+ 99,98%  <totals>
+
+
+
+# JMH version: 1.31
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 10 iterations, 100 ms each
+# Measurement: 5 iterations, 1000 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: edu.sorting.bench.ArrayXorBenchmark.arrayXor_Masked
+# Parameters: (size = 1000000)
+
+# Run progress: 50,00% complete, ETA 00:00:25
+# Fork: 1 of 1
+# Preparing profilers: LinuxPerfAsmProfiler 
+# Profilers consume stdout and stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 1760020,667 ns/op
+# Warmup Iteration   2: 824248,074 ns/op
+# Warmup Iteration   3: 860472,060 ns/op
+# Warmup Iteration   4: 816837,122 ns/op
+# Warmup Iteration   5: 820734,304 ns/op
+# Warmup Iteration   6: 813237,218 ns/op
+# Warmup Iteration   7: 812994,581 ns/op
+# Warmup Iteration   8: 813137,056 ns/op
+# Warmup Iteration   9: 814413,556 ns/op
+# Warmup Iteration  10: 813676,274 ns/op
+Iteration   1: 814871,179 ns/op
+Iteration   2: 813399,990 ns/op
+Iteration   3: 812055,311 ns/op
+Iteration   4: 817362,895 ns/op
+Iteration   5: 818220,211 ns/op
+# Processing profiler results: LinuxPerfAsmProfiler 
+
+
+Result "edu.sorting.bench.ArrayXorBenchmark.arrayXor_Masked":
+  815181,917 ±(99.9%) 10010,819 ns/op [Average]
+  (min, avg, max) = (812055,311, 815181,917, 818220,211), stdev = 2599,778
+  CI (99.9%): [805171,098, 825192,736] (assumes normal distribution)
+
+Secondary result "edu.sorting.bench.ArrayXorBenchmark.arrayXor_Masked:·asm":
+PrintAssembly processed: 50502 total address lines.
+Perf output processed (skipped 5,502 seconds):
+ Column 1: cycles (5200 events)
+
+Hottest code regions (>10,00% "cycles" events):
+
+....[Hottest Region 1]..............................................................................
+c2, level 4, edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked, version 672 (560 bytes) 
+
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@64 (line 139)
+           0x00007fffe00a5a18: 450f b6d2 | 0f1f 4000 | 443b d10f | 83a7 0300 | 0043 ff4c 
+           0x00007fffe00a5a2c: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@69 (line 139)
+           0x00007fffe00a5a2c: 9110 448b | c541 83c0 | f141 3be8 | 450f 4cc5 | 0f1f 4000 | 4183 f801 | 0f8e 8e03 | 0000 41bd 
+           0x00007fffe00a5a4c: ;*aload {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@48 (line 139)
+           0x00007fffe00a5a4c: 0100 0000 | 468b 54af | 1041 c1ea | 1841 81f2 | 8000 0000 
+  0,29%    0x00007fffe00a5a60: ;*iand {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@64 (line 139)
+  0,29%    0x00007fffe00a5a60: 450f b6d2 | 443b d10f | 83d1 0200 | 0043 ff4c 
+           0x00007fffe00a5a70: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@69 (line 139)
+           0x00007fffe00a5a70: 9110 468b | 54af 1441 | c1ea 1841 | 81f2 8000 | 0000 450f 
+           0x00007fffe00a5a84: ;*iand {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@64 (line 139)
+           0x00007fffe00a5a84: b6d2 443b | d10f 83ac | 0200 0043 
+           0x00007fffe00a5a90: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@69 (line 139)
+           0x00007fffe00a5a90: ff4c 9110 | 468b 54af | 1841 c1ea | 1841 81f2 | 8000 0000 
+  0,25%    0x00007fffe00a5aa4: ;*iand {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@64 (line 139)
+  0,25%    0x00007fffe00a5aa4: 450f b6d2 | 443b d10f | 83b3 0200 | 0043 ff4c 
+           0x00007fffe00a5ab4: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@69 (line 139)
+           0x00007fffe00a5ab4: 9110 468b | 54af 1c41 | c1ea 1841 | 81f2 8000 | 0000 450f 
+           0x00007fffe00a5ac8: ;*iand {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@64 (line 139)
+           0x00007fffe00a5ac8: b6d2 443b | d10f 8397 | 0200 0043 
+           0x00007fffe00a5ad4: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@69 (line 139)
+           0x00007fffe00a5ad4: ff4c 9110 | 468b 54af | 2041 c1ea | 1841 81f2 | 8000 0000 
+  0,33%    0x00007fffe00a5ae8: ;*iand {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@64 (line 139)
+  0,33%    0x00007fffe00a5ae8: 450f b6d2 | 443b d10f | 837b 0200 | 0043 ff4c 
+           0x00007fffe00a5af8: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@69 (line 139)
+           0x00007fffe00a5af8: 9110 468b | 54af 2441 | c1ea 1841 | 81f2 8000 | 0000 450f 
+           0x00007fffe00a5b0c: ;*iand {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@64 (line 139)
+           0x00007fffe00a5b0c: b6d2 443b | d10f 835f | 0200 0043 
+           0x00007fffe00a5b18: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@69 (line 139)
+           0x00007fffe00a5b18: ff4c 9110 | 468b 54af | 2841 c1ea | 1841 81f2 | 8000 0000 
+  0,25%    0x00007fffe00a5b2c: ;*iand {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@64 (line 139)
+  0,25%    0x00007fffe00a5b2c: 450f b6d2 | 443b d10f | 8343 0200 | 0043 ff4c 
+           0x00007fffe00a5b3c: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@69 (line 139)
+           0x00007fffe00a5b3c: 9110 468b | 54af 2c41 | c1ea 1841 | 81f2 8000 | 0000 450f 
+           0x00007fffe00a5b50: ;*iand {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@64 (line 139)
+           0x00007fffe00a5b50: b6d2 443b | d10f 8327 | 0200 0043 
+           0x00007fffe00a5b5c: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@69 (line 139)
+           0x00007fffe00a5b5c: ff4c 9110 | 468b 54af | 3041 c1ea | 1841 81f2 | 8000 0000 
+  0,37%    0x00007fffe00a5b70: ;*iand {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@64 (line 139)
+  0,37%    0x00007fffe00a5b70: 450f b6d2 | 443b d10f | 830b 0200 | 0043 ff4c 
+           0x00007fffe00a5b80: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@69 (line 139)
+           0x00007fffe00a5b80: 9110 468b | 54af 3441 | c1ea 1841 | 81f2 8000 | 0000 450f 
+           0x00007fffe00a5b94: ;*iand {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@64 (line 139)
+           0x00007fffe00a5b94: b6d2 443b | d10f 83ef | 0100 0043 
+           0x00007fffe00a5ba0: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@69 (line 139)
+           0x00007fffe00a5ba0: ff4c 9110 | 468b 54af | 3841 c1ea | 1841 81f2 | 8000 0000 
+  0,23%    0x00007fffe00a5bb4: ;*iand {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@64 (line 139)
+  0,23%    0x00007fffe00a5bb4: 450f b6d2 | 443b d10f | 1f44 0000 | 0f83 ce01 | 0000 43ff 
+           0x00007fffe00a5bc8: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@69 (line 139)
+           0x00007fffe00a5bc8: 4c91 1046 | 8b54 af3c | 41c1 ea18 | 4181 f280 | 0000 0045 
+           0x00007fffe00a5bdc: ;*iand {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@64 (line 139)
+           0x00007fffe00a5bdc: 0fb6 d290 | 443b d10f | 83b1 0100 | 0043 ff4c 
+           0x00007fffe00a5bec: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@69 (line 139)
+           0x00007fffe00a5bec: 9110 468b | 54af 4041 | c1ea 1841 | 81f2 8000 | 0000 450f 
+           0x00007fffe00a5c00: ;*iand {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@64 (line 139)
+           0x00007fffe00a5c00: b6d2 443b | d10f 8397 | 0100 0043 
+           0x00007fffe00a5c0c: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@69 (line 139)
+           0x00007fffe00a5c0c: ff4c 9110 | 468b 54af | 4441 c1ea | 1841 81f2 | 8000 0000 
+  0,90%    0x00007fffe00a5c20: ;*iand {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@64 (line 139)
+  0,90%    0x00007fffe00a5c20: 450f b6d2 | 443b d10f | 837b 0100 | 0043 ff4c 
+           0x00007fffe00a5c30: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@69 (line 139)
+           0x00007fffe00a5c30: 9110 468b | 54af 4841 | c1ea 1841 | 81f2 8000 | 0000 450f 
+           0x00007fffe00a5c44: ;*iand {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@64 (line 139)
+           0x00007fffe00a5c44: b6d2 443b | d10f 835f | 0100 0043 
+           0x00007fffe00a5c50: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@69 (line 139)
+           0x00007fffe00a5c50: ff4c 9110 | 468b 54af | 4c41 c1ea | 1841 81f2 | 8000 0000 
+  1,15%    0x00007fffe00a5c64: ;*iand {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@64 (line 139)
+  1,15%    0x00007fffe00a5c64: 450f b6d2 | 443b d10f | 8343 0100 | 0043 ff4c 
+           0x00007fffe00a5c74: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@69 (line 139)
+           0x00007fffe00a5c74: 9110 4183 
+           0x00007fffe00a5c78: ;*iinc {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@70 (line 138)
+           0x00007fffe00a5c78: c510 660f | 1f44 0000 | 453b e80f | 8cc7 fdff 
+           0x00007fffe00a5c88: ;*if_icmpge {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@45 (line 138)
+           0x00007fffe00a5c88: ff44 3bed 
+           0x00007fffe00a5c8c: ;*aload {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@48 (line 139)
+           0x00007fffe00a5c8c: 7d2c 6690 | 468b 54af | 1041 c1ea | 1841 81f2 | 8000 0000 
+           0x00007fffe00a5ca0: ;*iand {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@64 (line 139)
+           0x00007fffe00a5ca0: 450f b6d2 | 443b d10f | 8391 0000 | 0043 ff4c 
+           0x00007fffe00a5cb0: ;*iastore {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked@69 (line 139)
+....................................................................................................
+ 94,25%  <total for region 1>
+
+....[Hottest Regions]...............................................................................
+ 94,25%         c2, level 4  edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked, version 672 (560 bytes) 
+  1,00%         c2, level 4  edu.sorting.bench.ArrayXorBenchmark$ThreadState::setUp, version 681 (39 bytes) 
+  0,88%              kernel  [unknown] (0 bytes) 
+  0,52%              kernel  [unknown] (0 bytes) 
+  0,52%           libjvm.so  SpinPause (9 bytes) 
+  0,48%              kernel  [unknown] (0 bytes) 
+  0,21%              kernel  [unknown] (0 bytes) 
+  0,13%           libjvm.so  ElfSymbolTable::lookup (49 bytes) 
+  0,10%              kernel  [unknown] (0 bytes) 
+  0,08%              kernel  [unknown] (0 bytes) 
+  0,06%           libjvm.so  ParallelCompactData::calc_new_pointer (10 bytes) 
+  0,04%         c2, level 4  edu.sorting.bench.ArrayXorBenchmark$ThreadState::setUp, version 681 (14 bytes) 
+  0,04%           libjvm.so  fileStream::write (0 bytes) 
+  0,04%           libjvm.so  OopOopIterateDispatch<PCIterateMarkAndPushClosure>::Table::oop_oop_iterate<InstanceKlass, narrowOop> (8 bytes) 
+  0,04%           libjvm.so  ParallelCompactData::add_obj (0 bytes) 
+  0,04%           libjvm.so  TaskTerminator::offer_termination (0 bytes) 
+  0,04%        libc-2.31.so  __strchr_avx2 (7 bytes) 
+  0,02%              kernel  [unknown] (0 bytes) 
+  0,02%              kernel  [unknown] (0 bytes) 
+  0,02%              kernel  [unknown] (0 bytes) 
+  1,46%  <...other 76 warm regions...>
+....................................................................................................
+ 99,98%  <totals>
+
+....[Hottest Methods (after inlining)]..............................................................
+ 94,25%         c2, level 4  edu.sorting.bench.ArrayXorBenchmark::arrayXor_Masked, version 672 
+  2,96%              kernel  [unknown] 
+  1,04%         c2, level 4  edu.sorting.bench.ArrayXorBenchmark$ThreadState::setUp, version 681 
+  0,52%           libjvm.so  SpinPause 
+  0,13%           libjvm.so  ElfSymbolTable::lookup 
+  0,10%           libjvm.so  OopOopIterateDispatch<PCIterateMarkAndPushClosure>::Table::oop_oop_iterate<InstanceKlass, narrowOop> 
+  0,08%           libjvm.so  ParallelCompactData::calc_new_pointer 
+  0,06%           libjvm.so  fileStream::write 
+  0,06%           libjvm.so  ParallelCompactData::add_obj 
+  0,06%        libc-2.31.so  __strchr_avx2 
+  0,04%           libjvm.so  nmethod::fix_oop_relocations 
+  0,04%           libjvm.so  steal_marking_work 
+  0,04%           libjvm.so  TaskTerminator::offer_termination 
+  0,04%           libjvm.so  OopOopIterateDispatch<PCAdjustPointerClosure>::Table::oop_oop_iterate<InstanceKlass, narrowOop> 
+  0,04%           libjvm.so  ParCompactionManager::follow_marking_stacks 
+  0,04%           libjvm.so  OopOopIterateDispatch<PCIterateMarkAndPushClosure>::Table::oop_oop_iterate<InstanceMirrorKlass, narrowOop> 
+  0,02%           libjvm.so  PSCardTable::scavenge_contents_parallel 
+  0,02%         interpreter  getstatic  178 getstatic  
+  0,02%        libc-2.31.so  _IO_fwrite 
+  0,02%        libc-2.31.so  syscall 
+  0,42%  <...other 22 warm methods...>
+....................................................................................................
+ 99,98%  <totals>
+
+....[Distribution by Source]........................................................................
+ 95,29%         c2, level 4
+  2,96%              kernel
+  1,56%           libjvm.so
+  0,12%        libc-2.31.so
+  0,04%         interpreter
+  0,02%  libpthread-2.31.so
+....................................................................................................
+ 99,98%  <totals>
+
+
+
+# JMH version: 1.31
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 10 iterations, 100 ms each
+# Measurement: 5 iterations, 1000 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: edu.sorting.bench.ArrayXorBenchmark.arrayXor_Unsafe
+# Parameters: (size = 1000000)
+
+# Run progress: 75,00% complete, ETA 00:00:12
+# Fork: 1 of 1
+# Preparing profilers: LinuxPerfAsmProfiler 
+# Profilers consume stdout and stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 2239706,077 ns/op
+# Warmup Iteration   2: 710313,641 ns/op
+# Warmup Iteration   3: 757966,805 ns/op
+# Warmup Iteration   4: 707065,711 ns/op
+# Warmup Iteration   5: 709539,052 ns/op
+# Warmup Iteration   6: 706163,866 ns/op
+# Warmup Iteration   7: 714971,539 ns/op
+# Warmup Iteration   8: 706326,754 ns/op
+# Warmup Iteration   9: 704890,308 ns/op
+# Warmup Iteration  10: 716415,950 ns/op
+Iteration   1: 710050,086 ns/op
+Iteration   2: 702906,056 ns/op
+Iteration   3: 707421,794 ns/op
+Iteration   4: 706604,777 ns/op
+Iteration   5: 704525,413 ns/op
+# Processing profiler results: LinuxPerfAsmProfiler 
+
+
+Result "edu.sorting.bench.ArrayXorBenchmark.arrayXor_Unsafe":
+  706301,625 ±(99.9%) 10559,905 ns/op [Average]
+  (min, avg, max) = (702906,056, 706301,625, 710050,086), stdev = 2742,374
+  CI (99.9%): [695741,720, 716861,531] (assumes normal distribution)
+
+Secondary result "edu.sorting.bench.ArrayXorBenchmark.arrayXor_Unsafe:·asm":
+PrintAssembly processed: 50610 total address lines.
+Perf output processed (skipped 5,488 seconds):
+ Column 1: cycles (5139 events)
+
+Hottest code regions (>10,00% "cycles" events):
+
+....[Hottest Region 1]..............................................................................
+c2, level 4, edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe, version 677 (339 bytes) 
+
+           0x00007fffe00a698c: 63fa ff4c 
+           0x00007fffe00a6990: ;*invokevirtual putInt {reexecute=0 rethrow=0 return_oop=0}
+                               ; - sun.misc.Unsafe::putInt@7 (line 189)
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@103 (line 175)
+           0x00007fffe00a6990: bb10 83fd | 010f 8e31 | 0200 00be 
+           0x00007fffe00a699c: ;*lload {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@66 (line 171)
+           0x00007fffe00a699c: 0100 0000 | 418b 7cb3 | 10c1 ef18 | 81f7 8000 | 0000 4863 
+           0x00007fffe00a69b0: ;*i2l {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@79 (line 171)
+           0x00007fffe00a69b0: ffff 4cbb 
+           0x00007fffe00a69b4: ;*invokevirtual putInt {reexecute=0 rethrow=0 return_oop=0}
+                               ; - sun.misc.Unsafe::putInt@7 (line 189)
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@103 (line 175)
+           0x00007fffe00a69b4: 1041 8b54 | b314 c1ea | 1881 f280 | 0000 0048 
+           0x00007fffe00a69c4: ;*i2l {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@79 (line 171)
+           0x00007fffe00a69c4: 63fa ff4c 
+           0x00007fffe00a69c8: ;*invokevirtual putInt {reexecute=0 rethrow=0 return_oop=0}
+                               ; - sun.misc.Unsafe::putInt@7 (line 189)
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@103 (line 175)
+           0x00007fffe00a69c8: bb10 418b | 54b3 18c1 | ea18 81f2 | 8000 0000 
+  0,93%    0x00007fffe00a69d8: ;*i2l {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@79 (line 171)
+  0,93%    0x00007fffe00a69d8: 4863 faff 
+           0x00007fffe00a69dc: ;*invokevirtual putInt {reexecute=0 rethrow=0 return_oop=0}
+                               ; - sun.misc.Unsafe::putInt@7 (line 189)
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@103 (line 175)
+           0x00007fffe00a69dc: 4cbb 1041 | 8b54 b31c | c1ea 1881 | f280 0000 
+           0x00007fffe00a69ec: ;*i2l {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@79 (line 171)
+           0x00007fffe00a69ec: 0048 63fa 
+  1,09%    0x00007fffe00a69f0: ;*invokevirtual putInt {reexecute=0 rethrow=0 return_oop=0}
+                               ; - sun.misc.Unsafe::putInt@7 (line 189)
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@103 (line 175)
+  1,09%    0x00007fffe00a69f0: ff4c bb10 | 418b 54b3 | 20c1 ea18 | 81f2 8000 | 0000 4863 
+           0x00007fffe00a6a04: ;*i2l {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@79 (line 171)
+           0x00007fffe00a6a04: faff 4cbb 
+           0x00007fffe00a6a08: ;*invokevirtual putInt {reexecute=0 rethrow=0 return_oop=0}
+                               ; - sun.misc.Unsafe::putInt@7 (line 189)
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@103 (line 175)
+           0x00007fffe00a6a08: 1041 8b54 | b324 c1ea | 1881 f280 | 0000 0048 
+           0x00007fffe00a6a18: ;*i2l {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@79 (line 171)
+           0x00007fffe00a6a18: 63fa ff4c 
+           0x00007fffe00a6a1c: ;*invokevirtual putInt {reexecute=0 rethrow=0 return_oop=0}
+                               ; - sun.misc.Unsafe::putInt@7 (line 189)
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@103 (line 175)
+           0x00007fffe00a6a1c: bb10 418b | 54b3 28c1 | ea18 81f2 | 8000 0000 
+  0,62%    0x00007fffe00a6a2c: ;*i2l {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@79 (line 171)
+  0,62%    0x00007fffe00a6a2c: 4863 faff 
+           0x00007fffe00a6a30: ;*invokevirtual putInt {reexecute=0 rethrow=0 return_oop=0}
+                               ; - sun.misc.Unsafe::putInt@7 (line 189)
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@103 (line 175)
+           0x00007fffe00a6a30: 4cbb 1041 | 8b54 b32c | c1ea 1881 | f280 0000 
+           0x00007fffe00a6a40: ;*i2l {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@79 (line 171)
+           0x00007fffe00a6a40: 0048 63fa 
+  0,82%    0x00007fffe00a6a44: ;*invokevirtual putInt {reexecute=0 rethrow=0 return_oop=0}
+                               ; - sun.misc.Unsafe::putInt@7 (line 189)
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@103 (line 175)
+  0,82%    0x00007fffe00a6a44: ff4c bb10 | 418b 54b3 | 30c1 ea18 | 81f2 8000 | 0000 4863 
+           0x00007fffe00a6a58: ;*i2l {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@79 (line 171)
+           0x00007fffe00a6a58: faff 4cbb 
+           0x00007fffe00a6a5c: ;*invokevirtual putInt {reexecute=0 rethrow=0 return_oop=0}
+                               ; - sun.misc.Unsafe::putInt@7 (line 189)
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@103 (line 175)
+           0x00007fffe00a6a5c: 1041 8b54 | b334 c1ea | 1881 f280 | 0000 0048 
+           0x00007fffe00a6a6c: ;*i2l {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@79 (line 171)
+           0x00007fffe00a6a6c: 63fa ff4c 
+           0x00007fffe00a6a70: ;*invokevirtual putInt {reexecute=0 rethrow=0 return_oop=0}
+                               ; - sun.misc.Unsafe::putInt@7 (line 189)
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@103 (line 175)
+           0x00007fffe00a6a70: bb10 418b | 54b3 38c1 | ea18 81f2 | 8000 0000 
+  0,64%    0x00007fffe00a6a80: ;*i2l {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@79 (line 171)
+  0,64%    0x00007fffe00a6a80: 4863 faff 
+           0x00007fffe00a6a84: ;*invokevirtual putInt {reexecute=0 rethrow=0 return_oop=0}
+                               ; - sun.misc.Unsafe::putInt@7 (line 189)
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@103 (line 175)
+           0x00007fffe00a6a84: 4cbb 1041 | 8b54 b33c | c1ea 1881 | f280 0000 
+           0x00007fffe00a6a94: ;*i2l {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@79 (line 171)
+           0x00007fffe00a6a94: 0048 63fa 
+  0,80%    0x00007fffe00a6a98: ;*invokevirtual putInt {reexecute=0 rethrow=0 return_oop=0}
+                               ; - sun.misc.Unsafe::putInt@7 (line 189)
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@103 (line 175)
+  0,80%    0x00007fffe00a6a98: ff4c bb10 | 418b 54b3 | 40c1 ea18 | 81f2 8000 | 0000 4863 
+           0x00007fffe00a6aac: ;*i2l {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@79 (line 171)
+           0x00007fffe00a6aac: faff 4cbb 
+           0x00007fffe00a6ab0: ;*invokevirtual putInt {reexecute=0 rethrow=0 return_oop=0}
+                               ; - sun.misc.Unsafe::putInt@7 (line 189)
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@103 (line 175)
+           0x00007fffe00a6ab0: 1041 8b54 | b344 c1ea | 1881 f280 | 0000 0048 
+           0x00007fffe00a6ac0: ;*i2l {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@79 (line 171)
+           0x00007fffe00a6ac0: 63fa ff4c 
+           0x00007fffe00a6ac4: ;*invokevirtual putInt {reexecute=0 rethrow=0 return_oop=0}
+                               ; - sun.misc.Unsafe::putInt@7 (line 189)
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@103 (line 175)
+           0x00007fffe00a6ac4: bb10 418b | 54b3 48c1 | ea18 81f2 | 8000 0000 
+  0,93%    0x00007fffe00a6ad4: ;*i2l {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@79 (line 171)
+  0,93%    0x00007fffe00a6ad4: 4863 faff 
+           0x00007fffe00a6ad8: ;*invokevirtual putInt {reexecute=0 rethrow=0 return_oop=0}
+                               ; - sun.misc.Unsafe::putInt@7 (line 189)
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@103 (line 175)
+           0x00007fffe00a6ad8: 4cbb 1041 | 8b54 b34c | c1ea 1881 | f280 0000 
+           0x00007fffe00a6ae8: ;*i2l {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@79 (line 171)
+           0x00007fffe00a6ae8: 0048 63fa 
+  0,80%    0x00007fffe00a6aec: ;*invokevirtual putInt {reexecute=0 rethrow=0 return_oop=0}
+                               ; - sun.misc.Unsafe::putInt@7 (line 189)
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@103 (line 175)
+  0,80%    0x00007fffe00a6aec: ff4c bb10 
+  3,00%    0x00007fffe00a6af0: ;*iinc {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@106 (line 170)
+  3,00%    0x00007fffe00a6af0: 83c6 103b | f50f 8ca5 
+           0x00007fffe00a6af8: ;*if_icmpge {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@63 (line 170)
+           0x00007fffe00a6af8: feff ff0f | 1f44 0000 | 413b f17d 
+           0x00007fffe00a6b04: ;*lload {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@66 (line 171)
+           0x00007fffe00a6b04: 2066 6690 | 418b 7cb3 | 10c1 ef18 | 81f7 8000 | 0000 4863 
+           0x00007fffe00a6b18: ;*i2l {reexecute=0 rethrow=0 return_oop=0}
+                               ; - edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe@79 (line 171)
+           0x00007fffe00a6b18: ffff 4cbb 
+           0x00007fffe00a6b1c: ;*invokevirtual putInt {reexecute=0 rethrow=0 return_oop=0}
+                               ; - sun.misc.Unsafe::putInt@7 (line 189)
+....................................................................................................
+ 95,70%  <total for region 1>
+
+....[Hottest Regions]...............................................................................
+ 95,70%   c2, level 4  edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe, version 677 (339 bytes) 
+  0,97%   c2, level 4  edu.sorting.bench.ArrayXorBenchmark$ThreadState::setUp, version 686 (60 bytes) 
+  0,78%        kernel  [unknown] (0 bytes) 
+  0,47%        kernel  [unknown] (1 bytes) 
+  0,12%     libjvm.so  ElfSymbolTable::lookup (37 bytes) 
+  0,12%     libjvm.so  SpinPause (7 bytes) 
+  0,12%     libjvm.so  ParallelCompactData::add_obj (2 bytes) 
+  0,06%        kernel  [unknown] (0 bytes) 
+  0,06%     libjvm.so  OopOopIterateDispatch<PCIterateMarkAndPushClosure>::Table::oop_oop_iterate<InstanceKlass, narrowOop> (0 bytes) 
+  0,04%        kernel  [unknown] (0 bytes) 
+  0,04%        kernel  [unknown] (11 bytes) 
+  0,04%     libjvm.so  UpdateOnlyClosure::do_addr (8 bytes) 
+  0,02%        kernel  [unknown] (0 bytes) 
+  0,02%        kernel  [unknown] (0 bytes) 
+  0,02%        kernel  [unknown] (0 bytes) 
+  0,02%        kernel  [unknown] (0 bytes) 
+  0,02%        kernel  [unknown] (0 bytes) 
+  0,02%        kernel  [unknown] (0 bytes) 
+  0,02%        kernel  [unknown] (0 bytes) 
+  0,02%        kernel  [unknown] (0 bytes) 
+  1,30%  <...other 67 warm regions...>
+....................................................................................................
+ 99,96%  <totals>
+
+....[Hottest Methods (after inlining)]..............................................................
+ 95,72%   c2, level 4  edu.sorting.bench.ArrayXorBenchmark::arrayXor_Unsafe, version 677 
+  1,97%        kernel  [unknown] 
+  0,99%   c2, level 4  edu.sorting.bench.ArrayXorBenchmark$ThreadState::setUp, version 686 
+  0,12%     libjvm.so  SpinPause 
+  0,12%     libjvm.so  ParallelCompactData::add_obj 
+  0,12%     libjvm.so  ElfSymbolTable::lookup 
+  0,10%     libjvm.so  OopOopIterateDispatch<PCIterateMarkAndPushClosure>::Table::oop_oop_iterate<InstanceKlass, narrowOop> 
+  0,06%     libjvm.so  ParMarkBitMap::mark_obj 
+  0,06%     libjvm.so  UpdateOnlyClosure::do_addr 
+  0,04%     libjvm.so  ParCompactionManager::follow_marking_stacks 
+  0,04%   interpreter  invokestatic  184 invokestatic  
+  0,02%  libjimage.so  ImageFileReader::verify_location 
+  0,02%     libjvm.so  SymbolTable::do_lookup 
+  0,02%     libjvm.so  ClassFileParser::verify_legal_method_name 
+  0,02%  libc-2.31.so  _IO_str_init_static_internal 
+  0,02%  libc-2.31.so  _IO_fwrite 
+  0,02%     libjvm.so  metaspace::Metachunk::allocate 
+  0,02%     libjvm.so  ClassFileParser::parse_constant_pool_entries 
+  0,02%     libjvm.so  Interval::add_use_pos 
+  0,02%  libc-2.31.so  __libc_enable_asynccancel 
+  0,47%  <...other 24 warm methods...>
+....................................................................................................
+ 99,96%  <totals>
+
+....[Distribution by Source]........................................................................
+ 96,73%   c2, level 4
+  1,97%        kernel
+  1,01%     libjvm.so
+  0,16%  libc-2.31.so
+  0,08%   interpreter
+  0,02%  libjimage.so
+....................................................................................................
+ 99,96%  <totals>
+
+
+
+# Run complete. Total time: 00:00:50
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+Benchmark                                 (size)  Mode  Cnt       Score       Error  Units
+ArrayXorBenchmark.arrayAndOriginal       1000000  avgt    5  682903,247 ±  2613,244  ns/op
+ArrayXorBenchmark.arrayAndOriginal:·asm  1000000  avgt              NaN                ---
+ArrayXorBenchmark.arrayXorOriginal       1000000  avgt    5  781225,145 ±  9386,735  ns/op
+ArrayXorBenchmark.arrayXorOriginal:·asm  1000000  avgt              NaN                ---
+ArrayXorBenchmark.arrayXor_Masked        1000000  avgt    5  815181,917 ± 10010,819  ns/op
+ArrayXorBenchmark.arrayXor_Masked:·asm   1000000  avgt              NaN                ---
+ArrayXorBenchmark.arrayXor_Unsafe        1000000  avgt    5  706301,625 ± 10559,905  ns/op
+ArrayXorBenchmark.arrayXor_Unsafe:·asm   1000000  avgt              NaN                ---

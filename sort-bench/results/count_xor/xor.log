@@ -1,0 +1,381 @@
+# JMH version: 1.31
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 10 iterations, 100 ms each
+# Measurement: 5 iterations, 1000 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: edu.sorting.bench.ArrayXorBenchmark.arrayAndOriginal
+# Parameters: (size = 1000000)
+
+# Run progress: 0,00% complete, ETA 00:01:36
+# Fork: 1 of 4
+# Warmup Iteration   1: 842257,225 ns/op
+# Warmup Iteration   2: 706531,444 ns/op
+# Warmup Iteration   3: 701538,671 ns/op
+# Warmup Iteration   4: 710804,489 ns/op
+# Warmup Iteration   5: 695660,021 ns/op
+# Warmup Iteration   6: 708588,141 ns/op
+# Warmup Iteration   7: 686523,429 ns/op
+# Warmup Iteration   8: 681220,845 ns/op
+# Warmup Iteration   9: 689274,712 ns/op
+# Warmup Iteration  10: 693049,207 ns/op
+Iteration   1: 688381,013 ns/op
+Iteration   2: 684185,268 ns/op
+Iteration   3: 683213,512 ns/op
+Iteration   4: 683087,079 ns/op
+Iteration   5: 684887,761 ns/op
+
+# Run progress: 6,25% complete, ETA 00:01:44
+# Fork: 2 of 4
+# Warmup Iteration   1: 835791,025 ns/op
+# Warmup Iteration   2: 687329,411 ns/op
+# Warmup Iteration   3: 684529,048 ns/op
+# Warmup Iteration   4: 686831,822 ns/op
+# Warmup Iteration   5: 682440,129 ns/op
+# Warmup Iteration   6: 685529,701 ns/op
+# Warmup Iteration   7: 685783,340 ns/op
+# Warmup Iteration   8: 685564,197 ns/op
+# Warmup Iteration   9: 684903,497 ns/op
+# Warmup Iteration  10: 684820,143 ns/op
+Iteration   1: 683331,408 ns/op
+Iteration   2: 681414,901 ns/op
+Iteration   3: 683108,762 ns/op
+Iteration   4: 683128,599 ns/op
+Iteration   5: 683535,795 ns/op
+
+# Run progress: 12,50% complete, ETA 00:01:36
+# Fork: 3 of 4
+# Warmup Iteration   1: 835399,628 ns/op
+# Warmup Iteration   2: 688699,253 ns/op
+# Warmup Iteration   3: 685919,122 ns/op
+# Warmup Iteration   4: 685181,925 ns/op
+# Warmup Iteration   5: 688375,747 ns/op
+# Warmup Iteration   6: 723148,050 ns/op
+# Warmup Iteration   7: 737603,540 ns/op
+# Warmup Iteration   8: 743201,066 ns/op
+# Warmup Iteration   9: 728444,225 ns/op
+# Warmup Iteration  10: 730287,315 ns/op
+Iteration   1: 690793,725 ns/op
+Iteration   2: 688617,426 ns/op
+Iteration   3: 682523,860 ns/op
+Iteration   4: 681964,682 ns/op
+Iteration   5: 681904,223 ns/op
+
+# Run progress: 18,75% complete, ETA 00:01:30
+# Fork: 4 of 4
+# Warmup Iteration   1: 844211,592 ns/op
+# Warmup Iteration   2: 691692,414 ns/op
+# Warmup Iteration   3: 688674,021 ns/op
+# Warmup Iteration   4: 682920,170 ns/op
+# Warmup Iteration   5: 684977,626 ns/op
+# Warmup Iteration   6: 690981,103 ns/op
+# Warmup Iteration   7: 686795,144 ns/op
+# Warmup Iteration   8: 683980,816 ns/op
+# Warmup Iteration   9: 686572,089 ns/op
+# Warmup Iteration  10: 681211,284 ns/op
+Iteration   1: 687484,122 ns/op
+Iteration   2: 684725,114 ns/op
+Iteration   3: 684696,082 ns/op
+Iteration   4: 684262,064 ns/op
+Iteration   5: 685993,615 ns/op
+
+
+Result "edu.sorting.bench.ArrayXorBenchmark.arrayAndOriginal":
+  684561,951 ±(99.9%) 2177,120 ns/op [Average]
+  (min, avg, max) = (681414,901, 684561,951, 690793,725), stdev = 2507,174
+  CI (99.9%): [682384,831, 686739,070] (assumes normal distribution)
+
+
+# JMH version: 1.31
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 10 iterations, 100 ms each
+# Measurement: 5 iterations, 1000 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: edu.sorting.bench.ArrayXorBenchmark.arrayXorOriginal
+# Parameters: (size = 1000000)
+
+# Run progress: 25,00% complete, ETA 00:01:22
+# Fork: 1 of 4
+# Warmup Iteration   1: 1024377,030 ns/op
+# Warmup Iteration   2: 774581,677 ns/op
+# Warmup Iteration   3: 782200,256 ns/op
+# Warmup Iteration   4: 776347,815 ns/op
+# Warmup Iteration   5: 783142,202 ns/op
+# Warmup Iteration   6: 787122,680 ns/op
+# Warmup Iteration   7: 775245,515 ns/op
+# Warmup Iteration   8: 777188,295 ns/op
+# Warmup Iteration   9: 786259,508 ns/op
+# Warmup Iteration  10: 789172,992 ns/op
+Iteration   1: 774249,472 ns/op
+Iteration   2: 778943,942 ns/op
+Iteration   3: 777248,834 ns/op
+Iteration   4: 775288,256 ns/op
+Iteration   5: 779711,996 ns/op
+
+# Run progress: 31,25% complete, ETA 00:01:16
+# Fork: 2 of 4
+# Warmup Iteration   1: 1016791,710 ns/op
+# Warmup Iteration   2: 776258,792 ns/op
+# Warmup Iteration   3: 802561,472 ns/op
+# Warmup Iteration   4: 777584,085 ns/op
+# Warmup Iteration   5: 782112,674 ns/op
+# Warmup Iteration   6: 781425,767 ns/op
+# Warmup Iteration   7: 778664,535 ns/op
+# Warmup Iteration   8: 780783,202 ns/op
+# Warmup Iteration   9: 785571,469 ns/op
+# Warmup Iteration  10: 777774,442 ns/op
+Iteration   1: 776304,627 ns/op
+Iteration   2: 774485,334 ns/op
+Iteration   3: 775410,440 ns/op
+Iteration   4: 776382,135 ns/op
+Iteration   5: 777777,601 ns/op
+
+# Run progress: 37,50% complete, ETA 00:01:09
+# Fork: 3 of 4
+# Warmup Iteration   1: 1021051,051 ns/op
+# Warmup Iteration   2: 787623,930 ns/op
+# Warmup Iteration   3: 783737,578 ns/op
+# Warmup Iteration   4: 776006,977 ns/op
+# Warmup Iteration   5: 780866,186 ns/op
+# Warmup Iteration   6: 776434,569 ns/op
+# Warmup Iteration   7: 784907,102 ns/op
+# Warmup Iteration   8: 776783,519 ns/op
+# Warmup Iteration   9: 783816,516 ns/op
+# Warmup Iteration  10: 781473,698 ns/op
+Iteration   1: 775167,322 ns/op
+Iteration   2: 779569,432 ns/op
+Iteration   3: 775233,846 ns/op
+Iteration   4: 776396,380 ns/op
+Iteration   5: 779668,496 ns/op
+
+# Run progress: 43,75% complete, ETA 00:01:02
+# Fork: 4 of 4
+# Warmup Iteration   1: 1015161,570 ns/op
+# Warmup Iteration   2: 786163,930 ns/op
+# Warmup Iteration   3: 802258,648 ns/op
+# Warmup Iteration   4: 780094,310 ns/op
+# Warmup Iteration   5: 792016,858 ns/op
+# Warmup Iteration   6: 779626,186 ns/op
+# Warmup Iteration   7: 780029,899 ns/op
+# Warmup Iteration   8: 787813,297 ns/op
+# Warmup Iteration   9: 777494,504 ns/op
+# Warmup Iteration  10: 780017,023 ns/op
+Iteration   1: 781194,014 ns/op
+Iteration   2: 779967,607 ns/op
+Iteration   3: 779011,421 ns/op
+Iteration   4: 775878,821 ns/op
+Iteration   5: 777219,325 ns/op
+
+
+Result "edu.sorting.bench.ArrayXorBenchmark.arrayXorOriginal":
+  777255,465 ±(99.9%) 1815,136 ns/op [Average]
+  (min, avg, max) = (774249,472, 777255,465, 781194,014), stdev = 2090,314
+  CI (99.9%): [775440,329, 779070,601] (assumes normal distribution)
+
+
+# JMH version: 1.31
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 10 iterations, 100 ms each
+# Measurement: 5 iterations, 1000 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: edu.sorting.bench.ArrayXorBenchmark.arrayXor_Masked
+# Parameters: (size = 1000000)
+
+# Run progress: 50,00% complete, ETA 00:00:55
+# Fork: 1 of 4
+# Warmup Iteration   1: 1071003,368 ns/op
+# Warmup Iteration   2: 811238,371 ns/op
+# Warmup Iteration   3: 820337,967 ns/op
+# Warmup Iteration   4: 815722,081 ns/op
+# Warmup Iteration   5: 812421,774 ns/op
+# Warmup Iteration   6: 818397,024 ns/op
+# Warmup Iteration   7: 821720,451 ns/op
+# Warmup Iteration   8: 821423,852 ns/op
+# Warmup Iteration   9: 818109,699 ns/op
+# Warmup Iteration  10: 817124,374 ns/op
+Iteration   1: 811928,403 ns/op
+Iteration   2: 808860,281 ns/op
+Iteration   3: 814150,085 ns/op
+Iteration   4: 816501,315 ns/op
+Iteration   5: 810331,770 ns/op
+
+# Run progress: 56,25% complete, ETA 00:00:48
+# Fork: 2 of 4
+# Warmup Iteration   1: 1075955,266 ns/op
+# Warmup Iteration   2: 817244,650 ns/op
+# Warmup Iteration   3: 824172,311 ns/op
+# Warmup Iteration   4: 824473,287 ns/op
+# Warmup Iteration   5: 821071,894 ns/op
+# Warmup Iteration   6: 817087,106 ns/op
+# Warmup Iteration   7: 820779,870 ns/op
+# Warmup Iteration   8: 818406,472 ns/op
+# Warmup Iteration   9: 823882,057 ns/op
+# Warmup Iteration  10: 813664,097 ns/op
+Iteration   1: 816842,758 ns/op
+Iteration   2: 814312,826 ns/op
+Iteration   3: 812368,126 ns/op
+Iteration   4: 815653,611 ns/op
+Iteration   5: 818696,751 ns/op
+
+# Run progress: 62,50% complete, ETA 00:00:41
+# Fork: 3 of 4
+# Warmup Iteration   1: 1068447,158 ns/op
+# Warmup Iteration   2: 820275,341 ns/op
+# Warmup Iteration   3: 830177,860 ns/op
+# Warmup Iteration   4: 817138,886 ns/op
+# Warmup Iteration   5: 812942,790 ns/op
+# Warmup Iteration   6: 818242,585 ns/op
+# Warmup Iteration   7: 819420,098 ns/op
+# Warmup Iteration   8: 817309,146 ns/op
+# Warmup Iteration   9: 809108,476 ns/op
+# Warmup Iteration  10: 814535,374 ns/op
+Iteration   1: 816668,463 ns/op
+Iteration   2: 814011,269 ns/op
+Iteration   3: 812209,944 ns/op
+Iteration   4: 810267,020 ns/op
+Iteration   5: 816420,500 ns/op
+
+# Run progress: 68,75% complete, ETA 00:00:34
+# Fork: 4 of 4
+# Warmup Iteration   1: 1093611,376 ns/op
+# Warmup Iteration   2: 817634,528 ns/op
+# Warmup Iteration   3: 825952,516 ns/op
+# Warmup Iteration   4: 820084,130 ns/op
+# Warmup Iteration   5: 819365,431 ns/op
+# Warmup Iteration   6: 821486,631 ns/op
+# Warmup Iteration   7: 812211,774 ns/op
+# Warmup Iteration   8: 815864,455 ns/op
+# Warmup Iteration   9: 817151,228 ns/op
+# Warmup Iteration  10: 821006,707 ns/op
+Iteration   1: 819929,620 ns/op
+Iteration   2: 817735,235 ns/op
+Iteration   3: 810766,150 ns/op
+Iteration   4: 813490,300 ns/op
+Iteration   5: 812123,116 ns/op
+
+
+Result "edu.sorting.bench.ArrayXorBenchmark.arrayXor_Masked":
+  814163,377 ±(99.9%) 2665,436 ns/op [Average]
+  (min, avg, max) = (808860,281, 814163,377, 819929,620), stdev = 3069,521
+  CI (99.9%): [811497,941, 816828,814] (assumes normal distribution)
+
+
+# JMH version: 1.31
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 10 iterations, 100 ms each
+# Measurement: 5 iterations, 1000 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: edu.sorting.bench.ArrayXorBenchmark.arrayXor_Unsafe
+# Parameters: (size = 1000000)
+
+# Run progress: 75,00% complete, ETA 00:00:27
+# Fork: 1 of 4
+# Warmup Iteration   1: 981386,252 ns/op
+# Warmup Iteration   2: 704134,217 ns/op
+# Warmup Iteration   3: 712031,943 ns/op
+# Warmup Iteration   4: 708383,324 ns/op
+# Warmup Iteration   5: 713927,872 ns/op
+# Warmup Iteration   6: 713813,809 ns/op
+# Warmup Iteration   7: 712861,837 ns/op
+# Warmup Iteration   8: 712875,191 ns/op
+# Warmup Iteration   9: 709830,134 ns/op
+# Warmup Iteration  10: 709627,979 ns/op
+Iteration   1: 703667,022 ns/op
+Iteration   2: 715542,489 ns/op
+Iteration   3: 707811,123 ns/op
+Iteration   4: 711219,273 ns/op
+Iteration   5: 702664,508 ns/op
+
+# Run progress: 81,25% complete, ETA 00:00:20
+# Fork: 2 of 4
+# Warmup Iteration   1: 1003107,416 ns/op
+# Warmup Iteration   2: 709833,754 ns/op
+# Warmup Iteration   3: 719205,064 ns/op
+# Warmup Iteration   4: 709050,183 ns/op
+# Warmup Iteration   5: 708005,817 ns/op
+# Warmup Iteration   6: 708184,979 ns/op
+# Warmup Iteration   7: 713215,248 ns/op
+# Warmup Iteration   8: 713624,582 ns/op
+# Warmup Iteration   9: 717391,279 ns/op
+# Warmup Iteration  10: 705388,853 ns/op
+Iteration   1: 702862,942 ns/op
+Iteration   2: 707406,001 ns/op
+Iteration   3: 703207,495 ns/op
+Iteration   4: 709622,672 ns/op
+Iteration   5: 705301,307 ns/op
+
+# Run progress: 87,50% complete, ETA 00:00:13
+# Fork: 3 of 4
+# Warmup Iteration   1: 985183,913 ns/op
+# Warmup Iteration   2: 704838,867 ns/op
+# Warmup Iteration   3: 716839,793 ns/op
+# Warmup Iteration   4: 706947,359 ns/op
+# Warmup Iteration   5: 713076,511 ns/op
+# Warmup Iteration   6: 708569,042 ns/op
+# Warmup Iteration   7: 706156,211 ns/op
+# Warmup Iteration   8: 710691,865 ns/op
+# Warmup Iteration   9: 706579,141 ns/op
+# Warmup Iteration  10: 716208,707 ns/op
+Iteration   1: 706575,497 ns/op
+Iteration   2: 709696,617 ns/op
+Iteration   3: 703894,624 ns/op
+Iteration   4: 705028,980 ns/op
+Iteration   5: 710688,868 ns/op
+
+# Run progress: 93,75% complete, ETA 00:00:06
+# Fork: 4 of 4
+# Warmup Iteration   1: 973173,596 ns/op
+# Warmup Iteration   2: 703956,462 ns/op
+# Warmup Iteration   3: 708544,246 ns/op
+# Warmup Iteration   4: 699884,160 ns/op
+# Warmup Iteration   5: 712871,468 ns/op
+# Warmup Iteration   6: 711682,106 ns/op
+# Warmup Iteration   7: 716292,571 ns/op
+# Warmup Iteration   8: 700719,035 ns/op
+# Warmup Iteration   9: 709833,085 ns/op
+# Warmup Iteration  10: 699555,576 ns/op
+Iteration   1: 703647,164 ns/op
+Iteration   2: 709005,836 ns/op
+Iteration   3: 709155,513 ns/op
+Iteration   4: 708988,916 ns/op
+Iteration   5: 709491,604 ns/op
+
+
+Result "edu.sorting.bench.ArrayXorBenchmark.arrayXor_Unsafe":
+  707273,922 ±(99.9%) 2994,380 ns/op [Average]
+  (min, avg, max) = (702664,508, 707273,922, 715542,489), stdev = 3448,333
+  CI (99.9%): [704279,542, 710268,303] (assumes normal distribution)
+
+
+# Run complete. Total time: 00:01:50
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+Benchmark                            (size)  Mode  Cnt       Score      Error  Units
+ArrayXorBenchmark.arrayAndOriginal  1000000  avgt   20  684561,951 ± 2177,120  ns/op
+ArrayXorBenchmark.arrayXorOriginal  1000000  avgt   20  777255,465 ± 1815,136  ns/op
+ArrayXorBenchmark.arrayXor_Masked   1000000  avgt   20  814163,377 ± 2665,436  ns/op
+ArrayXorBenchmark.arrayXor_Unsafe   1000000  avgt   20  707273,922 ± 2994,380  ns/op

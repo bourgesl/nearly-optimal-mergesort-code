@@ -1,0 +1,905 @@
+# JMH version: 1.31
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 10 iterations, 100 ms each
+# Measurement: 5 iterations, 1000 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: edu.sorting.bench.ArrayXorBenchmark.arrayAndOriginal
+# Parameters: (size = 1000000)
+
+# Run progress: 0,00% complete, ETA 00:01:36
+# Fork: 1 of 4
+# Preparing profilers: LinuxPerfProfiler 
+# Profilers consume stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 872172,643 ns/op
+# Warmup Iteration   2: 687791,815 ns/op
+# Warmup Iteration   3: 685710,605 ns/op
+# Warmup Iteration   4: 687379,466 ns/op
+# Warmup Iteration   5: 683907,714 ns/op
+# Warmup Iteration   6: 688481,651 ns/op
+# Warmup Iteration   7: 689701,445 ns/op
+# Warmup Iteration   8: 685969,299 ns/op
+# Warmup Iteration   9: 691383,993 ns/op
+# Warmup Iteration  10: 686409,061 ns/op
+Iteration   1: 683074,160 ns/op
+Iteration   2: 685391,758 ns/op
+Iteration   3: 687712,431 ns/op
+Iteration   4: 684844,051 ns/op
+Iteration   5: 689128,060 ns/op
+# Processing profiler results: LinuxPerfProfiler 
+
+# Run progress: 6,25% complete, ETA 00:01:49
+# Fork: 2 of 4
+# Preparing profilers: LinuxPerfProfiler 
+# Profilers consume stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 839929,008 ns/op
+# Warmup Iteration   2: 685427,095 ns/op
+# Warmup Iteration   3: 687037,014 ns/op
+# Warmup Iteration   4: 686686,870 ns/op
+# Warmup Iteration   5: 685405,136 ns/op
+# Warmup Iteration   6: 684019,721 ns/op
+# Warmup Iteration   7: 686745,274 ns/op
+# Warmup Iteration   8: 684128,823 ns/op
+# Warmup Iteration   9: 685551,585 ns/op
+# Warmup Iteration  10: 687811,493 ns/op
+Iteration   1: 689247,818 ns/op
+Iteration   2: 686856,308 ns/op
+Iteration   3: 685050,138 ns/op
+Iteration   4: 684767,042 ns/op
+Iteration   5: 687834,422 ns/op
+# Processing profiler results: LinuxPerfProfiler 
+
+# Run progress: 12,50% complete, ETA 00:01:41
+# Fork: 3 of 4
+# Preparing profilers: LinuxPerfProfiler 
+# Profilers consume stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 847292,807 ns/op
+# Warmup Iteration   2: 688045,493 ns/op
+# Warmup Iteration   3: 685446,395 ns/op
+# Warmup Iteration   4: 684865,905 ns/op
+# Warmup Iteration   5: 684873,735 ns/op
+# Warmup Iteration   6: 690865,438 ns/op
+# Warmup Iteration   7: 687491,048 ns/op
+# Warmup Iteration   8: 686271,479 ns/op
+# Warmup Iteration   9: 689568,500 ns/op
+# Warmup Iteration  10: 685522,041 ns/op
+Iteration   1: 688265,706 ns/op
+Iteration   2: 684553,739 ns/op
+Iteration   3: 685737,367 ns/op
+Iteration   4: 684303,329 ns/op
+Iteration   5: 683021,082 ns/op
+# Processing profiler results: LinuxPerfProfiler 
+
+# Run progress: 18,75% complete, ETA 00:01:33
+# Fork: 4 of 4
+# Preparing profilers: LinuxPerfProfiler 
+# Profilers consume stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 840019,092 ns/op
+# Warmup Iteration   2: 687099,856 ns/op
+# Warmup Iteration   3: 682686,633 ns/op
+# Warmup Iteration   4: 684926,361 ns/op
+# Warmup Iteration   5: 684441,517 ns/op
+# Warmup Iteration   6: 683465,429 ns/op
+# Warmup Iteration   7: 694610,241 ns/op
+# Warmup Iteration   8: 688464,370 ns/op
+# Warmup Iteration   9: 684130,415 ns/op
+# Warmup Iteration  10: 694740,662 ns/op
+Iteration   1: 684298,236 ns/op
+Iteration   2: 683417,848 ns/op
+Iteration   3: 683446,992 ns/op
+Iteration   4: 686911,602 ns/op
+Iteration   5: 688567,489 ns/op
+# Processing profiler results: LinuxPerfProfiler 
+
+
+Result "edu.sorting.bench.ArrayXorBenchmark.arrayAndOriginal":
+  685821,479 ±(99.9%) 1803,598 ns/op [Average]
+  (min, avg, max) = (683021,082, 685821,479, 689247,818), stdev = 2077,026
+  CI (99.9%): [684017,881, 687625,077] (assumes normal distribution)
+
+Secondary result "edu.sorting.bench.ArrayXorBenchmark.arrayAndOriginal:·perf":
+Perf stats:
+--------------------------------------------------
+
+          5 158,15 msec task-clock                #    0,722 CPUs utilized          
+               495      context-switches          #    0,096 K/sec                  
+                82      cpu-migrations            #    0,016 K/sec                  
+               102      page-faults               #    0,020 K/sec                  
+    13 863 518 711      cycles                    #    2,688 GHz                      (60,99%)
+    44 278 684 358      instructions              #    3,19  insn per cycle           (68,92%)
+     9 187 202 432      branches                  # 1781,103 M/sec                    (69,15%)
+         1 684 671      branch-misses             #    0,02% of all branches          (69,49%)
+    14 744 590 786      L1-dcache-loads           # 2858,501 M/sec                    (69,51%)
+       466 549 320      L1-dcache-load-misses     #    3,16% of all L1-dcache hits    (69,57%)
+        11 490 501      LLC-loads                 #    2,228 M/sec                    (69,60%)
+           500 984      LLC-load-misses           #    4,36% of all LL-cache hits     (69,66%)
+   <not supported>      L1-icache-loads                                             
+         4 319 457      L1-icache-load-misses                                         (69,78%)
+    14 727 998 105      dTLB-loads                # 2855,285 M/sec                    (69,44%)
+            45 580      dTLB-load-misses          #    0,00% of all dTLB cache hits   (61,25%)
+             5 240      iTLB-loads                #    0,001 M/sec                    (60,85%)
+             8 098      iTLB-load-misses          #  154,54% of all iTLB cache hits   (60,71%)
+   <not supported>      L1-dcache-prefetches                                        
+   <not supported>      L1-dcache-prefetch-misses                                   
+
+       7,144811480 seconds time elapsed
+
+       6,968998000 seconds user
+       0,180687000 seconds sys
+
+
+
+          5 084,94 msec task-clock                #    0,719 CPUs utilized          
+               517      context-switches          #    0,102 K/sec                  
+                69      cpu-migrations            #    0,014 K/sec                  
+               122      page-faults               #    0,024 K/sec                  
+    13 666 420 442      cycles                    #    2,688 GHz                      (61,30%)
+    43 678 765 187      instructions              #    3,20  insn per cycle           (69,28%)
+     9 065 174 150      branches                  # 1782,749 M/sec                    (69,27%)
+         1 420 654      branch-misses             #    0,02% of all branches          (69,37%)
+    14 526 343 039      L1-dcache-loads           # 2856,737 M/sec                    (69,37%)
+       458 557 990      L1-dcache-load-misses     #    3,16% of all L1-dcache hits    (69,39%)
+        11 032 256      LLC-loads                 #    2,170 M/sec                    (69,45%)
+           435 392      LLC-load-misses           #    3,95% of all LL-cache hits     (69,46%)
+   <not supported>      L1-icache-loads                                             
+         4 185 629      L1-icache-load-misses                                         (69,51%)
+    14 562 622 615      dTLB-loads                # 2863,872 M/sec                    (69,32%)
+            31 872      dTLB-load-misses          #    0,00% of all dTLB cache hits   (61,28%)
+             4 027      iTLB-loads                #    0,792 K/sec                    (61,17%)
+             8 696      iTLB-load-misses          #  215,94% of all iTLB cache hits   (61,12%)
+   <not supported>      L1-dcache-prefetches                                        
+   <not supported>      L1-dcache-prefetch-misses                                   
+
+       7,074206558 seconds time elapsed
+
+       6,986696000 seconds user
+       0,183421000 seconds sys
+
+
+
+          5 097,19 msec task-clock                #    0,719 CPUs utilized          
+               442      context-switches          #    0,087 K/sec                  
+                73      cpu-migrations            #    0,014 K/sec                  
+               101      page-faults               #    0,020 K/sec                  
+    13 703 713 475      cycles                    #    2,688 GHz                      (61,00%)
+    43 850 449 232      instructions              #    3,20  insn per cycle           (69,14%)
+     9 109 492 909      branches                  # 1787,158 M/sec                    (69,37%)
+         1 510 022      branch-misses             #    0,02% of all branches          (69,51%)
+    14 585 677 060      L1-dcache-loads           # 2861,511 M/sec                    (69,48%)
+       460 176 338      L1-dcache-load-misses     #    3,15% of all L1-dcache hits    (69,58%)
+        11 334 359      LLC-loads                 #    2,224 M/sec                    (69,57%)
+           448 915      LLC-load-misses           #    3,96% of all LL-cache hits     (69,57%)
+   <not supported>      L1-icache-loads                                             
+         4 168 693      L1-icache-load-misses                                         (69,69%)
+    14 642 427 767      dTLB-loads                # 2872,645 M/sec                    (69,42%)
+            23 693      dTLB-load-misses          #    0,00% of all dTLB cache hits   (61,06%)
+             3 200      iTLB-loads                #    0,628 K/sec                    (60,93%)
+             4 724      iTLB-load-misses          #  147,62% of all iTLB cache hits   (60,83%)
+   <not supported>      L1-dcache-prefetches                                        
+   <not supported>      L1-dcache-prefetch-misses                                   
+
+       7,085272316 seconds time elapsed
+
+       7,031627000 seconds user
+       0,151619000 seconds sys
+
+
+
+          5 074,59 msec task-clock                #    0,718 CPUs utilized          
+               504      context-switches          #    0,099 K/sec                  
+                70      cpu-migrations            #    0,014 K/sec                  
+               118      page-faults               #    0,023 K/sec                  
+    13 640 578 331      cycles                    #    2,688 GHz                      (61,23%)
+    43 768 409 509      instructions              #    3,21  insn per cycle           (69,10%)
+     9 074 176 457      branches                  # 1788,158 M/sec                    (69,34%)
+         1 543 590      branch-misses             #    0,02% of all branches          (69,42%)
+    14 542 564 032      L1-dcache-loads           # 2865,759 M/sec                    (69,52%)
+       460 124 732      L1-dcache-load-misses     #    3,16% of all L1-dcache hits    (69,52%)
+        11 026 094      LLC-loads                 #    2,173 M/sec                    (69,47%)
+           432 763      LLC-load-misses           #    3,92% of all LL-cache hits     (69,50%)
+   <not supported>      L1-icache-loads                                             
+         4 043 579      L1-icache-load-misses                                         (69,61%)
+    14 600 246 171      dTLB-loads                # 2877,126 M/sec                    (69,25%)
+            30 365      dTLB-load-misses          #    0,00% of all dTLB cache hits   (61,19%)
+             9 069      iTLB-loads                #    0,002 M/sec                    (61,08%)
+             7 185      iTLB-load-misses          #   79,23% of all iTLB cache hits   (60,88%)
+   <not supported>      L1-dcache-prefetches                                        
+   <not supported>      L1-dcache-prefetch-misses                                   
+
+       7,069108748 seconds time elapsed
+
+       6,955065000 seconds user
+       0,214401000 seconds sys
+
+
+
+
+# JMH version: 1.31
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 10 iterations, 100 ms each
+# Measurement: 5 iterations, 1000 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: edu.sorting.bench.ArrayXorBenchmark.arrayXorOriginal
+# Parameters: (size = 1000000)
+
+# Run progress: 25,00% complete, ETA 00:01:26
+# Fork: 1 of 4
+# Preparing profilers: LinuxPerfProfiler 
+# Profilers consume stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 1017692,828 ns/op
+# Warmup Iteration   2: 778885,504 ns/op
+# Warmup Iteration   3: 786140,867 ns/op
+# Warmup Iteration   4: 782287,395 ns/op
+# Warmup Iteration   5: 778411,654 ns/op
+# Warmup Iteration   6: 786439,359 ns/op
+# Warmup Iteration   7: 774005,785 ns/op
+# Warmup Iteration   8: 777498,395 ns/op
+# Warmup Iteration   9: 776279,577 ns/op
+# Warmup Iteration  10: 782805,898 ns/op
+Iteration   1: 778831,754 ns/op
+Iteration   2: 777604,332 ns/op
+Iteration   3: 781048,696 ns/op
+Iteration   4: 782120,000 ns/op
+Iteration   5: 779385,371 ns/op
+# Processing profiler results: LinuxPerfProfiler 
+
+# Run progress: 31,25% complete, ETA 00:01:19
+# Fork: 2 of 4
+# Preparing profilers: LinuxPerfProfiler 
+# Profilers consume stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 1023726,232 ns/op
+# Warmup Iteration   2: 779731,752 ns/op
+# Warmup Iteration   3: 780842,341 ns/op
+# Warmup Iteration   4: 782523,884 ns/op
+# Warmup Iteration   5: 789948,023 ns/op
+# Warmup Iteration   6: 776273,554 ns/op
+# Warmup Iteration   7: 802262,817 ns/op
+# Warmup Iteration   8: 777148,822 ns/op
+# Warmup Iteration   9: 779222,922 ns/op
+# Warmup Iteration  10: 772976,969 ns/op
+Iteration   1: 778369,137 ns/op
+Iteration   2: 778269,000 ns/op
+Iteration   3: 778413,011 ns/op
+Iteration   4: 781986,805 ns/op
+Iteration   5: 775906,616 ns/op
+# Processing profiler results: LinuxPerfProfiler 
+
+# Run progress: 37,50% complete, ETA 00:01:12
+# Fork: 3 of 4
+# Preparing profilers: LinuxPerfProfiler 
+# Profilers consume stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 1024040,333 ns/op
+# Warmup Iteration   2: 779120,984 ns/op
+# Warmup Iteration   3: 787916,781 ns/op
+# Warmup Iteration   4: 776499,860 ns/op
+# Warmup Iteration   5: 793753,189 ns/op
+# Warmup Iteration   6: 785397,555 ns/op
+# Warmup Iteration   7: 816307,984 ns/op
+# Warmup Iteration   8: 777390,713 ns/op
+# Warmup Iteration   9: 775795,377 ns/op
+# Warmup Iteration  10: 777895,659 ns/op
+Iteration   1: 779858,122 ns/op
+Iteration   2: 785138,632 ns/op
+Iteration   3: 778607,644 ns/op
+Iteration   4: 784748,348 ns/op
+Iteration   5: 776222,544 ns/op
+# Processing profiler results: LinuxPerfProfiler 
+
+# Run progress: 43,75% complete, ETA 00:01:05
+# Fork: 4 of 4
+# Preparing profilers: LinuxPerfProfiler 
+# Profilers consume stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 1019845,010 ns/op
+# Warmup Iteration   2: 780209,047 ns/op
+# Warmup Iteration   3: 785278,805 ns/op
+# Warmup Iteration   4: 776950,233 ns/op
+# Warmup Iteration   5: 789025,367 ns/op
+# Warmup Iteration   6: 788097,156 ns/op
+# Warmup Iteration   7: 777204,426 ns/op
+# Warmup Iteration   8: 776290,169 ns/op
+# Warmup Iteration   9: 780363,450 ns/op
+# Warmup Iteration  10: 778000,543 ns/op
+Iteration   1: 784649,883 ns/op
+Iteration   2: 781486,283 ns/op
+Iteration   3: 782763,435 ns/op
+Iteration   4: 786149,214 ns/op
+Iteration   5: 781858,250 ns/op
+# Processing profiler results: LinuxPerfProfiler 
+
+
+Result "edu.sorting.bench.ArrayXorBenchmark.arrayXorOriginal":
+  780670,854 ±(99.9%) 2604,048 ns/op [Average]
+  (min, avg, max) = (775906,616, 780670,854, 786149,214), stdev = 2998,825
+  CI (99.9%): [778066,806, 783274,902] (assumes normal distribution)
+
+Secondary result "edu.sorting.bench.ArrayXorBenchmark.arrayXorOriginal:·perf":
+Perf stats:
+--------------------------------------------------
+
+          5 087,77 msec task-clock                #    0,717 CPUs utilized          
+               697      context-switches          #    0,137 K/sec                  
+                69      cpu-migrations            #    0,014 K/sec                  
+               120      page-faults               #    0,024 K/sec                  
+    13 675 214 353      cycles                    #    2,688 GHz                      (60,62%)
+    46 052 112 424      instructions              #    3,37  insn per cycle           (68,48%)
+     6 850 234 751      branches                  # 1346,412 M/sec                    (68,80%)
+         1 282 330      branch-misses             #    0,02% of all branches          (69,34%)
+    12 819 945 630      L1-dcache-loads           # 2519,757 M/sec                    (69,71%)
+       405 174 142      L1-dcache-load-misses     #    3,16% of all L1-dcache hits    (69,79%)
+         9 605 158      LLC-loads                 #    1,888 M/sec                    (69,83%)
+           471 037      LLC-load-misses           #    4,90% of all LL-cache hits     (69,86%)
+   <not supported>      L1-icache-loads                                             
+         4 234 375      L1-icache-load-misses                                         (69,90%)
+    12 846 910 074      dTLB-loads                # 2525,057 M/sec                    (69,58%)
+            54 952      dTLB-load-misses          #    0,00% of all dTLB cache hits   (61,37%)
+            11 461      iTLB-loads                #    0,002 M/sec                    (60,81%)
+             7 465      iTLB-load-misses          #   65,13% of all iTLB cache hits   (60,40%)
+   <not supported>      L1-dcache-prefetches                                        
+   <not supported>      L1-dcache-prefetch-misses                                   
+
+       7,091319649 seconds time elapsed
+
+       7,005551000 seconds user
+       0,164662000 seconds sys
+
+
+
+          5 094,63 msec task-clock                #    0,719 CPUs utilized          
+               418      context-switches          #    0,082 K/sec                  
+                73      cpu-migrations            #    0,014 K/sec                  
+                97      page-faults               #    0,019 K/sec                  
+    13 691 437 185      cycles                    #    2,687 GHz                      (61,09%)
+    45 826 271 986      instructions              #    3,35  insn per cycle           (69,08%)
+     6 839 366 003      branches                  # 1342,466 M/sec                    (69,14%)
+         1 516 906      branch-misses             #    0,02% of all branches          (69,22%)
+    12 861 742 432      L1-dcache-loads           # 2524,568 M/sec                    (69,35%)
+       405 811 570      L1-dcache-load-misses     #    3,16% of all L1-dcache hits    (69,51%)
+         9 165 062      LLC-loads                 #    1,799 M/sec                    (69,63%)
+           396 888      LLC-load-misses           #    4,33% of all LL-cache hits     (69,70%)
+   <not supported>      L1-icache-loads                                             
+         4 045 774      L1-icache-load-misses                                         (69,78%)
+    12 936 259 910      dTLB-loads                # 2539,195 M/sec                    (69,40%)
+            37 146      dTLB-load-misses          #    0,00% of all dTLB cache hits   (61,24%)
+            10 896      iTLB-loads                #    0,002 M/sec                    (61,08%)
+             6 850      iTLB-load-misses          #   62,87% of all iTLB cache hits   (60,87%)
+   <not supported>      L1-dcache-prefetches                                        
+   <not supported>      L1-dcache-prefetch-misses                                   
+
+       7,084666659 seconds time elapsed
+
+       6,935686000 seconds user
+       0,235276000 seconds sys
+
+
+
+          5 091,54 msec task-clock                #    0,720 CPUs utilized          
+               362      context-switches          #    0,071 K/sec                  
+                77      cpu-migrations            #    0,015 K/sec                  
+                98      page-faults               #    0,019 K/sec                  
+    13 685 102 849      cycles                    #    2,688 GHz                      (61,18%)
+    45 806 546 597      instructions              #    3,35  insn per cycle           (69,02%)
+     6 805 837 123      branches                  # 1336,696 M/sec                    (69,34%)
+         1 512 471      branch-misses             #    0,02% of all branches          (69,49%)
+    12 746 444 125      L1-dcache-loads           # 2503,457 M/sec                    (69,54%)
+       402 794 947      L1-dcache-load-misses     #    3,16% of all L1-dcache hits    (69,53%)
+         9 367 349      LLC-loads                 #    1,840 M/sec                    (69,64%)
+           504 518      LLC-load-misses           #    5,39% of all LL-cache hits     (69,71%)
+   <not supported>      L1-icache-loads                                             
+         3 824 651      L1-icache-load-misses                                         (69,78%)
+    12 861 619 221      dTLB-loads                # 2526,078 M/sec                    (69,30%)
+            32 784      dTLB-load-misses          #    0,00% of all dTLB cache hits   (61,03%)
+            10 240      iTLB-loads                #    0,002 M/sec                    (60,81%)
+             5 622      iTLB-load-misses          #   54,90% of all iTLB cache hits   (60,68%)
+   <not supported>      L1-dcache-prefetches                                        
+   <not supported>      L1-dcache-prefetch-misses                                   
+
+       7,073998434 seconds time elapsed
+
+       7,016991000 seconds user
+       0,160814000 seconds sys
+
+
+
+          5 076,54 msec task-clock                #    0,718 CPUs utilized          
+               727      context-switches          #    0,143 K/sec                  
+                57      cpu-migrations            #    0,011 K/sec                  
+               107      page-faults               #    0,021 K/sec                  
+    13 641 419 331      cycles                    #    2,687 GHz                      (61,81%)
+    45 405 845 333      instructions              #    3,33  insn per cycle           (69,69%)
+     6 768 672 731      branches                  # 1333,325 M/sec                    (69,69%)
+         1 541 100      branch-misses             #    0,02% of all branches          (69,63%)
+    12 743 198 954      L1-dcache-loads           # 2510,214 M/sec                    (69,54%)
+       402 619 946      L1-dcache-load-misses     #    3,16% of all L1-dcache hits    (69,50%)
+         9 427 179      LLC-loads                 #    1,857 M/sec                    (69,33%)
+           484 867      LLC-load-misses           #    5,14% of all LL-cache hits     (69,34%)
+   <not supported>      L1-icache-loads                                             
+         4 444 843      L1-icache-load-misses                                         (69,47%)
+    12 879 652 900      dTLB-loads                # 2537,094 M/sec                    (68,69%)
+            29 175      dTLB-load-misses          #    0,00% of all dTLB cache hits   (60,98%)
+             5 231      iTLB-loads                #    0,001 M/sec                    (61,04%)
+             5 657      iTLB-load-misses          #  108,14% of all iTLB cache hits   (60,99%)
+   <not supported>      L1-dcache-prefetches                                        
+   <not supported>      L1-dcache-prefetch-misses                                   
+
+       7,074844965 seconds time elapsed
+
+       6,991029000 seconds user
+       0,187900000 seconds sys
+
+
+
+
+# JMH version: 1.31
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 10 iterations, 100 ms each
+# Measurement: 5 iterations, 1000 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: edu.sorting.bench.ArrayXorBenchmark.arrayXor_Masked
+# Parameters: (size = 1000000)
+
+# Run progress: 50,00% complete, ETA 00:00:57
+# Fork: 1 of 4
+# Preparing profilers: LinuxPerfProfiler 
+# Profilers consume stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 1066331,347 ns/op
+# Warmup Iteration   2: 814277,274 ns/op
+# Warmup Iteration   3: 821606,508 ns/op
+# Warmup Iteration   4: 822187,598 ns/op
+# Warmup Iteration   5: 817879,846 ns/op
+# Warmup Iteration   6: 817159,016 ns/op
+# Warmup Iteration   7: 814383,114 ns/op
+# Warmup Iteration   8: 816071,423 ns/op
+# Warmup Iteration   9: 820054,528 ns/op
+# Warmup Iteration  10: 813887,823 ns/op
+Iteration   1: 814567,171 ns/op
+Iteration   2: 815276,413 ns/op
+Iteration   3: 814955,125 ns/op
+Iteration   4: 820707,804 ns/op
+Iteration   5: 820601,179 ns/op
+# Processing profiler results: LinuxPerfProfiler 
+
+# Run progress: 56,25% complete, ETA 00:00:50
+# Fork: 2 of 4
+# Preparing profilers: LinuxPerfProfiler 
+# Profilers consume stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 1084086,656 ns/op
+# Warmup Iteration   2: 817732,634 ns/op
+# Warmup Iteration   3: 832355,281 ns/op
+# Warmup Iteration   4: 812081,613 ns/op
+# Warmup Iteration   5: 815746,403 ns/op
+# Warmup Iteration   6: 818280,894 ns/op
+# Warmup Iteration   7: 821585,852 ns/op
+# Warmup Iteration   8: 814349,398 ns/op
+# Warmup Iteration   9: 817032,472 ns/op
+# Warmup Iteration  10: 821466,344 ns/op
+Iteration   1: 815886,397 ns/op
+Iteration   2: 818956,193 ns/op
+Iteration   3: 819874,634 ns/op
+Iteration   4: 816027,440 ns/op
+Iteration   5: 814345,168 ns/op
+# Processing profiler results: LinuxPerfProfiler 
+
+# Run progress: 62,50% complete, ETA 00:00:43
+# Fork: 3 of 4
+# Preparing profilers: LinuxPerfProfiler 
+# Profilers consume stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 1076730,628 ns/op
+# Warmup Iteration   2: 812422,000 ns/op
+# Warmup Iteration   3: 820986,415 ns/op
+# Warmup Iteration   4: 814701,374 ns/op
+# Warmup Iteration   5: 828010,713 ns/op
+# Warmup Iteration   6: 826354,262 ns/op
+# Warmup Iteration   7: 815776,512 ns/op
+# Warmup Iteration   8: 812811,242 ns/op
+# Warmup Iteration   9: 815120,106 ns/op
+# Warmup Iteration  10: 812362,161 ns/op
+Iteration   1: 817588,726 ns/op
+Iteration   2: 816718,030 ns/op
+Iteration   3: 821369,241 ns/op
+Iteration   4: 820436,627 ns/op
+Iteration   5: 819430,717 ns/op
+# Processing profiler results: LinuxPerfProfiler 
+
+# Run progress: 68,75% complete, ETA 00:00:36
+# Fork: 4 of 4
+# Preparing profilers: LinuxPerfProfiler 
+# Profilers consume stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 1075670,011 ns/op
+# Warmup Iteration   2: 813817,710 ns/op
+# Warmup Iteration   3: 820365,463 ns/op
+# Warmup Iteration   4: 810529,968 ns/op
+# Warmup Iteration   5: 814479,347 ns/op
+# Warmup Iteration   6: 815042,350 ns/op
+# Warmup Iteration   7: 825405,508 ns/op
+# Warmup Iteration   8: 825206,246 ns/op
+# Warmup Iteration   9: 812519,242 ns/op
+# Warmup Iteration  10: 814179,532 ns/op
+Iteration   1: 817824,758 ns/op
+Iteration   2: 819788,634 ns/op
+Iteration   3: 821261,540 ns/op
+Iteration   4: 834373,193 ns/op
+Iteration   5: 828503,774 ns/op
+# Processing profiler results: LinuxPerfProfiler 
+
+
+Result "edu.sorting.bench.ArrayXorBenchmark.arrayXor_Masked":
+  819424,638 ±(99.9%) 4186,119 ns/op [Average]
+  (min, avg, max) = (814345,168, 819424,638, 834373,193), stdev = 4820,741
+  CI (99.9%): [815238,519, 823610,758] (assumes normal distribution)
+
+Secondary result "edu.sorting.bench.ArrayXorBenchmark.arrayXor_Masked:·perf":
+Perf stats:
+--------------------------------------------------
+
+          5 088,44 msec task-clock                #    0,719 CPUs utilized          
+               498      context-switches          #    0,098 K/sec                  
+                68      cpu-migrations            #    0,013 K/sec                  
+               127      page-faults               #    0,025 K/sec                  
+    13 677 232 940      cycles                    #    2,688 GHz                      (60,88%)
+    45 320 882 784      instructions              #    3,31  insn per cycle           (68,97%)
+     6 513 374 725      branches                  # 1280,034 M/sec                    (69,32%)
+         1 491 256      branch-misses             #    0,02% of all branches          (69,60%)
+    12 210 611 053      L1-dcache-loads           # 2399,677 M/sec                    (69,70%)
+       385 278 939      L1-dcache-load-misses     #    3,16% of all L1-dcache hits    (69,69%)
+         8 591 625      LLC-loads                 #    1,688 M/sec                    (69,71%)
+           432 192      LLC-load-misses           #    5,03% of all LL-cache hits     (69,71%)
+   <not supported>      L1-icache-loads                                             
+         4 209 951      L1-icache-load-misses                                         (69,73%)
+    12 283 626 997      dTLB-loads                # 2414,026 M/sec                    (69,43%)
+            35 768      dTLB-load-misses          #    0,00% of all dTLB cache hits   (60,97%)
+             6 895      iTLB-loads                #    0,001 M/sec                    (60,69%)
+             5 933      iTLB-load-misses          #   86,05% of all iTLB cache hits   (60,58%)
+   <not supported>      L1-dcache-prefetches                                        
+   <not supported>      L1-dcache-prefetch-misses                                   
+
+       7,079411502 seconds time elapsed
+
+       6,991176000 seconds user
+       0,198566000 seconds sys
+
+
+
+          5 070,03 msec task-clock                #    0,718 CPUs utilized          
+               420      context-switches          #    0,083 K/sec                  
+                67      cpu-migrations            #    0,013 K/sec                  
+               120      page-faults               #    0,024 K/sec                  
+    13 626 800 492      cycles                    #    2,688 GHz                      (61,09%)
+    45 084 193 150      instructions              #    3,31  insn per cycle           (69,05%)
+     6 495 016 303      branches                  # 1281,062 M/sec                    (69,30%)
+         1 408 007      branch-misses             #    0,02% of all branches          (69,49%)
+    12 215 292 061      L1-dcache-loads           # 2409,316 M/sec                    (69,61%)
+       385 309 063      L1-dcache-load-misses     #    3,15% of all L1-dcache hits    (69,69%)
+         8 583 855      LLC-loads                 #    1,693 M/sec                    (69,71%)
+           446 892      LLC-load-misses           #    5,21% of all LL-cache hits     (69,73%)
+   <not supported>      L1-icache-loads                                             
+         4 145 939      L1-icache-load-misses                                         (69,76%)
+    12 256 932 170      dTLB-loads                # 2417,529 M/sec                    (69,22%)
+            31 974      dTLB-load-misses          #    0,00% of all dTLB cache hits   (61,00%)
+             6 473      iTLB-loads                #    0,001 M/sec                    (60,79%)
+             5 568      iTLB-load-misses          #   86,02% of all iTLB cache hits   (60,63%)
+   <not supported>      L1-dcache-prefetches                                        
+   <not supported>      L1-dcache-prefetch-misses                                   
+
+       7,058271893 seconds time elapsed
+
+       6,942992000 seconds user
+       0,228490000 seconds sys
+
+
+
+          5 068,30 msec task-clock                #    0,717 CPUs utilized          
+               588      context-switches          #    0,116 K/sec                  
+                76      cpu-migrations            #    0,015 K/sec                  
+               109      page-faults               #    0,022 K/sec                  
+    13 621 419 109      cycles                    #    2,688 GHz                      (61,06%)
+    45 017 122 868      instructions              #    3,30  insn per cycle           (68,95%)
+     6 476 568 090      branches                  # 1277,859 M/sec                    (69,11%)
+         1 343 921      branch-misses             #    0,02% of all branches          (69,24%)
+    12 197 793 188      L1-dcache-loads           # 2406,685 M/sec                    (69,27%)
+       385 497 949      L1-dcache-load-misses     #    3,16% of all L1-dcache hits    (69,39%)
+         8 797 258      LLC-loads                 #    1,736 M/sec                    (69,46%)
+           449 868      LLC-load-misses           #    5,11% of all LL-cache hits     (69,52%)
+   <not supported>      L1-icache-loads                                             
+         4 354 284      L1-icache-load-misses                                         (69,66%)
+    12 195 257 410      dTLB-loads                # 2406,184 M/sec                    (69,55%)
+            53 302      dTLB-load-misses          #    0,00% of all dTLB cache hits   (61,43%)
+             5 810      iTLB-loads                #    0,001 M/sec                    (61,24%)
+             8 275      iTLB-load-misses          #  142,43% of all iTLB cache hits   (61,07%)
+   <not supported>      L1-dcache-prefetches                                        
+   <not supported>      L1-dcache-prefetch-misses                                   
+
+       7,065402558 seconds time elapsed
+
+       6,858529000 seconds user
+       0,303932000 seconds sys
+
+
+
+          5 059,75 msec task-clock                #    0,717 CPUs utilized          
+               564      context-switches          #    0,111 K/sec                  
+                66      cpu-migrations            #    0,013 K/sec                  
+               120      page-faults               #    0,024 K/sec                  
+    13 595 743 592      cycles                    #    2,687 GHz                      (61,11%)
+    44 509 109 631      instructions              #    3,27  insn per cycle           (69,24%)
+     6 417 987 984      branches                  # 1268,441 M/sec                    (69,48%)
+         1 517 759      branch-misses             #    0,02% of all branches          (69,65%)
+    12 077 893 252      L1-dcache-loads           # 2387,055 M/sec                    (69,71%)
+       381 745 860      L1-dcache-load-misses     #    3,16% of all L1-dcache hits    (69,72%)
+         8 618 404      LLC-loads                 #    1,703 M/sec                    (69,73%)
+           616 999      LLC-load-misses           #    7,16% of all LL-cache hits     (69,72%)
+   <not supported>      L1-icache-loads                                             
+         4 319 541      L1-icache-load-misses                                         (69,73%)
+    12 156 851 143      dTLB-loads                # 2402,660 M/sec                    (69,17%)
+            43 451      dTLB-load-misses          #    0,00% of all dTLB cache hits   (60,80%)
+             7 509      iTLB-loads                #    0,001 M/sec                    (60,63%)
+             4 732      iTLB-load-misses          #   63,02% of all iTLB cache hits   (60,56%)
+   <not supported>      L1-dcache-prefetches                                        
+   <not supported>      L1-dcache-prefetch-misses                                   
+
+       7,059007634 seconds time elapsed
+
+       6,860193000 seconds user
+       0,302850000 seconds sys
+
+
+
+
+# JMH version: 1.31
+# VM version: JDK 16, OpenJDK 64-Bit Server VM, 16+36
+# VM invoker: /home/bourgesl/apps/jdk-16/bin/java
+# VM options: -Xms1g -Xmx1g -XX:+UseParallelGC -XX:-BackgroundCompilation
+# Blackhole mode: full + dont-inline hint
+# Warmup: 10 iterations, 100 ms each
+# Measurement: 5 iterations, 1000 ms each
+# Timeout: 10 min per iteration
+# Threads: 1 thread, will synchronize iterations
+# Benchmark mode: Average time, time/op
+# Benchmark: edu.sorting.bench.ArrayXorBenchmark.arrayXor_Unsafe
+# Parameters: (size = 1000000)
+
+# Run progress: 75,00% complete, ETA 00:00:28
+# Fork: 1 of 4
+# Preparing profilers: LinuxPerfProfiler 
+# Profilers consume stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 1000791,584 ns/op
+# Warmup Iteration   2: 729375,428 ns/op
+# Warmup Iteration   3: 720382,529 ns/op
+# Warmup Iteration   4: 723316,863 ns/op
+# Warmup Iteration   5: 720260,657 ns/op
+# Warmup Iteration   6: 714246,369 ns/op
+# Warmup Iteration   7: 712774,709 ns/op
+# Warmup Iteration   8: 708536,338 ns/op
+# Warmup Iteration   9: 716274,714 ns/op
+# Warmup Iteration  10: 712289,461 ns/op
+Iteration   1: 719578,350 ns/op
+Iteration   2: 723466,472 ns/op
+Iteration   3: 755443,357 ns/op
+Iteration   4: 718417,567 ns/op
+Iteration   5: 716994,824 ns/op
+# Processing profiler results: LinuxPerfProfiler 
+
+# Run progress: 81,25% complete, ETA 00:00:21
+# Fork: 2 of 4
+# Preparing profilers: LinuxPerfProfiler 
+# Profilers consume stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 998896,277 ns/op
+# Warmup Iteration   2: 718141,250 ns/op
+# Warmup Iteration   3: 715995,807 ns/op
+# Warmup Iteration   4: 717624,121 ns/op
+# Warmup Iteration   5: 708133,401 ns/op
+# Warmup Iteration   6: 717191,800 ns/op
+# Warmup Iteration   7: 720706,093 ns/op
+# Warmup Iteration   8: 710722,718 ns/op
+# Warmup Iteration   9: 708868,782 ns/op
+# Warmup Iteration  10: 718921,150 ns/op
+Iteration   1: 714312,306 ns/op
+Iteration   2: 713118,891 ns/op
+Iteration   3: 709789,865 ns/op
+Iteration   4: 716589,217 ns/op
+Iteration   5: 726886,182 ns/op
+# Processing profiler results: LinuxPerfProfiler 
+
+# Run progress: 87,50% complete, ETA 00:00:14
+# Fork: 3 of 4
+# Preparing profilers: LinuxPerfProfiler 
+# Profilers consume stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 1002269,802 ns/op
+# Warmup Iteration   2: 722418,165 ns/op
+# Warmup Iteration   3: 724320,640 ns/op
+# Warmup Iteration   4: 710607,858 ns/op
+# Warmup Iteration   5: 714270,291 ns/op
+# Warmup Iteration   6: 707875,155 ns/op
+# Warmup Iteration   7: 723506,165 ns/op
+# Warmup Iteration   8: 723078,058 ns/op
+# Warmup Iteration   9: 721689,784 ns/op
+# Warmup Iteration  10: 725006,216 ns/op
+Iteration   1: 720670,436 ns/op
+Iteration   2: 711252,133 ns/op
+Iteration   3: 719813,433 ns/op
+Iteration   4: 732261,839 ns/op
+Iteration   5: 716921,409 ns/op
+# Processing profiler results: LinuxPerfProfiler 
+
+# Run progress: 93,75% complete, ETA 00:00:07
+# Fork: 4 of 4
+# Preparing profilers: LinuxPerfProfiler 
+# Profilers consume stderr from target VM, use -v EXTRA to copy to console
+# Warmup Iteration   1: 992616,539 ns/op
+# Warmup Iteration   2: 717619,821 ns/op
+# Warmup Iteration   3: 722097,173 ns/op
+# Warmup Iteration   4: 704137,329 ns/op
+# Warmup Iteration   5: 710838,246 ns/op
+# Warmup Iteration   6: 709897,162 ns/op
+# Warmup Iteration   7: 717901,336 ns/op
+# Warmup Iteration   8: 713526,433 ns/op
+# Warmup Iteration   9: 713505,766 ns/op
+# Warmup Iteration  10: 714685,638 ns/op
+Iteration   1: 712857,073 ns/op
+Iteration   2: 715343,863 ns/op
+Iteration   3: 726094,192 ns/op
+Iteration   4: 716718,029 ns/op
+Iteration   5: 709754,919 ns/op
+# Processing profiler results: LinuxPerfProfiler 
+
+
+Result "edu.sorting.bench.ArrayXorBenchmark.arrayXor_Unsafe":
+  719814,218 ±(99.9%) 8874,963 ns/op [Average]
+  (min, avg, max) = (709754,919, 719814,218, 755443,357), stdev = 10220,421
+  CI (99.9%): [710939,255, 728689,181] (assumes normal distribution)
+
+Secondary result "edu.sorting.bench.ArrayXorBenchmark.arrayXor_Unsafe:·perf":
+Perf stats:
+--------------------------------------------------
+
+          5 070,33 msec task-clock                #    0,713 CPUs utilized          
+             1 144      context-switches          #    0,226 K/sec                  
+                68      cpu-migrations            #    0,013 K/sec                  
+               124      page-faults               #    0,024 K/sec                  
+    13 625 564 001      cycles                    #    2,687 GHz                      (60,63%)
+    36 115 871 481      instructions              #    2,65  insn per cycle           (68,85%)
+       476 459 038      branches                  #   93,970 M/sec                    (69,25%)
+         1 369 451      branch-misses             #    0,29% of all branches          (69,41%)
+    13 783 461 614      L1-dcache-loads           # 2718,455 M/sec                    (69,52%)
+       434 257 010      L1-dcache-load-misses     #    3,15% of all L1-dcache hits    (69,73%)
+         9 766 873      LLC-loads                 #    1,926 M/sec                    (69,82%)
+           810 735      LLC-load-misses           #    8,30% of all LL-cache hits     (69,87%)
+   <not supported>      L1-icache-loads                                             
+         4 865 939      L1-icache-load-misses                                         (70,02%)
+    13 791 129 627      dTLB-loads                # 2719,968 M/sec                    (69,64%)
+           100 067      dTLB-load-misses          #    0,00% of all dTLB cache hits   (60,93%)
+            23 017      iTLB-loads                #    0,005 M/sec                    (60,72%)
+            14 003      iTLB-load-misses          #   60,84% of all iTLB cache hits   (60,47%)
+   <not supported>      L1-dcache-prefetches                                        
+   <not supported>      L1-dcache-prefetch-misses                                   
+
+       7,115016139 seconds time elapsed
+
+       6,743311000 seconds user
+       0,386996000 seconds sys
+
+
+
+          5 087,77 msec task-clock                #    0,718 CPUs utilized          
+               769      context-switches          #    0,151 K/sec                  
+                59      cpu-migrations            #    0,012 K/sec                  
+                98      page-faults               #    0,019 K/sec                  
+    13 670 520 201      cycles                    #    2,687 GHz                      (61,02%)
+    36 485 160 514      instructions              #    2,67  insn per cycle           (68,96%)
+       485 548 884      branches                  #   95,434 M/sec                    (69,29%)
+         1 419 164      branch-misses             #    0,29% of all branches          (69,33%)
+    13 901 427 365      L1-dcache-loads           # 2732,321 M/sec                    (69,56%)
+       439 367 847      L1-dcache-load-misses     #    3,16% of all L1-dcache hits    (69,71%)
+        10 254 664      LLC-loads                 #    2,016 M/sec                    (69,79%)
+           534 673      LLC-load-misses           #    5,21% of all LL-cache hits     (69,85%)
+   <not supported>      L1-icache-loads                                             
+         4 613 978      L1-icache-load-misses                                         (69,87%)
+    13 985 952 506      dTLB-loads                # 2748,934 M/sec                    (69,28%)
+            35 177      dTLB-load-misses          #    0,00% of all dTLB cache hits   (60,92%)
+             7 411      iTLB-loads                #    0,001 M/sec                    (60,82%)
+             6 434      iTLB-load-misses          #   86,82% of all iTLB cache hits   (60,58%)
+   <not supported>      L1-dcache-prefetches                                        
+   <not supported>      L1-dcache-prefetch-misses                                   
+
+       7,086343344 seconds time elapsed
+
+       6,831290000 seconds user
+       0,330648000 seconds sys
+
+
+
+          5 088,16 msec task-clock                #    0,718 CPUs utilized          
+               621      context-switches          #    0,122 K/sec                  
+                82      cpu-migrations            #    0,016 K/sec                  
+               124      page-faults               #    0,024 K/sec                  
+    13 671 626 952      cycles                    #    2,687 GHz                      (60,99%)
+    36 129 922 205      instructions              #    2,64  insn per cycle           (69,01%)
+       480 913 839      branches                  #   94,516 M/sec                    (69,16%)
+         1 397 509      branch-misses             #    0,29% of all branches          (69,35%)
+    13 934 947 723      L1-dcache-loads           # 2738,703 M/sec                    (69,39%)
+       438 294 169      L1-dcache-load-misses     #    3,15% of all L1-dcache hits    (69,52%)
+         9 859 897      LLC-loads                 #    1,938 M/sec                    (69,78%)
+           709 090      LLC-load-misses           #    7,19% of all LL-cache hits     (69,82%)
+   <not supported>      L1-icache-loads                                             
+         4 369 656      L1-icache-load-misses                                         (69,91%)
+    13 947 469 898      dTLB-loads                # 2741,164 M/sec                    (69,50%)
+            57 594      dTLB-load-misses          #    0,00% of all dTLB cache hits   (61,07%)
+             7 789      iTLB-loads                #    0,002 M/sec                    (60,84%)
+             8 648      iTLB-load-misses          #  111,03% of all iTLB cache hits   (60,70%)
+   <not supported>      L1-dcache-prefetches                                        
+   <not supported>      L1-dcache-prefetch-misses                                   
+
+       7,089464929 seconds time elapsed
+
+       6,971268000 seconds user
+       0,180275000 seconds sys
+
+
+
+          5 085,62 msec task-clock                #    0,719 CPUs utilized          
+               350      context-switches          #    0,069 K/sec                  
+                68      cpu-migrations            #    0,013 K/sec                  
+               118      page-faults               #    0,023 K/sec                  
+    13 669 159 738      cycles                    #    2,688 GHz                      (61,18%)
+    36 331 610 914      instructions              #    2,66  insn per cycle           (69,05%)
+       487 156 612      branches                  #   95,791 M/sec                    (69,40%)
+         1 520 850      branch-misses             #    0,31% of all branches          (69,47%)
+    13 912 179 357      L1-dcache-loads           # 2735,592 M/sec                    (69,45%)
+       439 136 073      L1-dcache-load-misses     #    3,16% of all L1-dcache hits    (69,47%)
+        10 188 614      LLC-loads                 #    2,003 M/sec                    (69,47%)
+           810 795      LLC-load-misses           #    7,96% of all LL-cache hits     (69,48%)
+   <not supported>      L1-icache-loads                                             
+         3 300 382      L1-icache-load-misses                                         (69,65%)
+    13 974 067 971      dTLB-loads                # 2747,761 M/sec                    (69,35%)
+            23 953      dTLB-load-misses          #    0,00% of all dTLB cache hits   (61,13%)
+            20 727      iTLB-loads                #    0,004 M/sec                    (61,06%)
+            14 453      iTLB-load-misses          #   69,73% of all iTLB cache hits   (60,90%)
+   <not supported>      L1-dcache-prefetches                                        
+   <not supported>      L1-dcache-prefetch-misses                                   
+
+       7,070307993 seconds time elapsed
+
+       6,987723000 seconds user
+       0,196985000 seconds sys
+
+
+
+
+# Run complete. Total time: 00:01:55
+
+REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
+why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
+experiments, perform baseline and negative tests that provide experimental control, make sure
+the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
+Do not assume the numbers tell you what you want them to tell.
+
+Benchmark                                  (size)  Mode  Cnt       Score      Error      Units
+ArrayXorBenchmark.arrayAndOriginal        1000000  avgt   20  685821,479 ± 1803,598      ns/op
+ArrayXorBenchmark.arrayAndOriginal:·cpi   1000000  avgt            0,313             clks/insn
+ArrayXorBenchmark.arrayAndOriginal:·ipc   1000000  avgt            3,200             insns/clk
+ArrayXorBenchmark.arrayAndOriginal:·perf  1000000  avgt              NaN                   ---
+ArrayXorBenchmark.arrayXorOriginal        1000000  avgt   20  780670,854 ± 2604,048      ns/op
+ArrayXorBenchmark.arrayXorOriginal:·cpi   1000000  avgt            0,299             clks/insn
+ArrayXorBenchmark.arrayXorOriginal:·ipc   1000000  avgt            3,348             insns/clk
+ArrayXorBenchmark.arrayXorOriginal:·perf  1000000  avgt              NaN                   ---
+ArrayXorBenchmark.arrayXor_Masked         1000000  avgt   20  819424,638 ± 4186,119      ns/op
+ArrayXorBenchmark.arrayXor_Masked:·cpi    1000000  avgt            0,303             clks/insn
+ArrayXorBenchmark.arrayXor_Masked:·ipc    1000000  avgt            3,300             insns/clk
+ArrayXorBenchmark.arrayXor_Masked:·perf   1000000  avgt              NaN                   ---
+ArrayXorBenchmark.arrayXor_Unsafe         1000000  avgt   20  719814,218 ± 8874,963      ns/op
+ArrayXorBenchmark.arrayXor_Unsafe:·cpi    1000000  avgt            0,377             clks/insn
+ArrayXorBenchmark.arrayXor_Unsafe:·ipc    1000000  avgt            2,655             insns/clk
+ArrayXorBenchmark.arrayXor_Unsafe:·perf   1000000  avgt              NaN                   ---
