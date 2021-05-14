@@ -26,6 +26,7 @@ package edu.sorting.test;
 
 import edu.sorting.DualPivotQuickSort2011;
 import edu.sorting.DualPivotQuicksort20210424;
+import edu.sorting.DualPivotQuicksort202105;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Random;
@@ -107,6 +108,16 @@ public final class MainInt {
             DualPivotQuicksort20210424.INSTANCE.sort(a, LEFT + off, RIGHT + off); // inclusive
         }
     };
+    private final static Sortable SORT_DPQS_21_05_NEW = new Sortable() {
+        public final void sortArray(final int[] a, int off) {
+            DualPivotQuicksort202105.INSTANCE.sort(a, LEFT + off, RIGHT + off); // inclusive
+        }
+    };
+    private final static Sortable SORT_DPQS_21_05_RADIX_NEW = new Sortable() {
+        public final void sortArray(final int[] a, int off) {
+            DualPivotQuicksort202105.RADIX_NEW.sort(a, LEFT + off, RIGHT + off); // inclusive
+        }
+    };
 
     private static void doIteration(final String testName) {
         time1 = -1.0;
@@ -114,12 +125,18 @@ public final class MainInt {
         time3 = -1.0;
 
         doSort(testName, "none", SORT_NONE);
+
         if (true) {
-            doSort(testName, "jdk", SORT_JDK);
-            doSort(testName, "dpqsNew", SORT_NEW_DPQS_REF);
+            doSort(testName, "dpqs2105", SORT_DPQS_21_05_NEW);
+            doSort(testName, "radixNew", SORT_DPQS_21_05_RADIX_NEW);
         } else {
-            doSort(testName, "dpqs11", SORT_DPQS_11);
-            doSort(testName, "dpqs21", SORT_DPQS_21_04);
+            if (true) {
+                doSort(testName, "jdk", SORT_JDK);
+                doSort(testName, "dpqsNew", SORT_NEW_DPQS_REF);
+            } else {
+                doSort(testName, "dpqs11", SORT_DPQS_11);
+                doSort(testName, "dpqs21", SORT_DPQS_21_04);
+            }
         }
 
         if (WARMUP) {

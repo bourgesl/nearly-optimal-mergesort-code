@@ -182,19 +182,31 @@ public enum IntSorter {
             DualPivotQuicksort202105.INSTANCE.sort(a, 0, a.length - 1);
         }
     },
-    DPQ_21_05_HYB {
+    DPQ_21_05_RA {
+        @Override
+        public void sort(int[] a) {
+            DualPivotQuicksort202105.RADIX_ORIG.sort(a, 0, a.length - 1);
+        }
+    },
+    DPQ_21_05_RA2 {
+        @Override
+        public void sort(int[] a) {
+            DualPivotQuicksort202105.RADIX_NEW.sort(a, 0, a.length - 1);
+        }
+    },
+    DPQ_21_05I_HYB {
         @Override
         public void sort(int[] a) {
             DualPivotQuicksort202105InPlace.HYBRID.sort(a, 0, a.length - 1);
         }
     },
-    DPQ_21_05_IN {
+    DPQ_21_05I_IN {
         @Override
         public void sort(int[] a) {
             DualPivotQuicksort202105InPlace.DPQS_ONLY.sort(a, 0, a.length - 1);
         }
     },
-    DPQ_21_05_RA {
+    DPQ_21_05I_RA {
         @Override
         public void sort(int[] a) {
             DualPivotQuicksort202105InPlace.RADIX_ONLY.sort(a, 0, a.length - 1);

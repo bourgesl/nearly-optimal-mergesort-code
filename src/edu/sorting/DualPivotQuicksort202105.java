@@ -25,7 +25,9 @@
 package edu.sorting;
 // package java.util; // TODO
 
+import java.lang.reflect.Field;
 import java.util.Arrays; // TODO
+import sun.misc.Unsafe;
 // import java.util.concurrent.CountedCompleter;
 // import java.util.concurrent.RecursiveTask;
 
@@ -56,6 +58,34 @@ public final class DualPivotQuicksort202105 implements wildinter.net.mergesort.S
     private final static boolean TRACE_ALLOC = false;
 
     public final static wildinter.net.mergesort.Sorter INSTANCE = new DualPivotQuicksort202105();
+    
+    public final static wildinter.net.mergesort.Sorter RADIX_ORIG = new wildinter.net.mergesort.Sorter() {
+
+        // avoid alloc
+        private final DualPivotQuicksort202105 INSTANCE = new DualPivotQuicksort202105();
+    
+        @Override
+        public void sort(final int[] A, final int low, final int high) {
+            // preallocation of temporary arrays into custom Sorter class
+            INSTANCE.sorter.initBuffers(high - low + 1, low);
+
+            DualPivotQuicksort202105.radixSort(INSTANCE.sorter, A, low, high + 1); // exclusive
+        }
+    };
+    
+    public final static wildinter.net.mergesort.Sorter RADIX_NEW = new wildinter.net.mergesort.Sorter() {
+
+        // avoid alloc
+        private final DualPivotQuicksort202105 INSTANCE = new DualPivotQuicksort202105();
+    
+        @Override
+        public void sort(final int[] A, final int low, final int high) {
+            // preallocation of temporary arrays into custom Sorter class
+            INSTANCE.sorter.initBuffers(high - low + 1, low);
+
+            DualPivotQuicksort202105.radixSortNew(INSTANCE.sorter, A, low, high + 1); // exclusive
+        }
+    };
 
     /**
      * Prevents instantiation.
@@ -64,7 +94,7 @@ public final class DualPivotQuicksort202105 implements wildinter.net.mergesort.S
     }
 
     // avoid alloc
-    private final Sorter sorter = new Sorter();
+    final Sorter sorter = new Sorter();
 
     @Override
     public void sort(final int[] A, final int low, final int high) {
@@ -266,8 +296,9 @@ public final class DualPivotQuicksort202105 implements wildinter.net.mergesort.S
                  * Invoke radix sort on large array.
                  */
                 // LBO: use radixSort for sequential sort (no parallelism):
-                if ((true /* || sorter == null*/ || bits > MIN_RADIX_SORT_DEPTH) && size > MIN_RADIX_SORT_SIZE) {
-                    radixSort(sorter, a, low, high);
+                if ((true /* || sorter == null*/ || bits > MIN_RADIX_SORT_DEPTH) && size > MIN_RADIX_SORT_SIZE
+//                        && radixSort(sorter, a, low, high)) {
+                        && radixSortNew(sorter, a, low, high)) {                        
                     return;
                 }
 
@@ -728,6 +759,173 @@ public final class DualPivotQuicksort202105 implements wildinter.net.mergesort.S
             } else {
                 for (int i = low; i < high; ++i) {
                     b[count4[(a[i] >>> 24) ^ 0x80]++ - offset] = a[i];
+                }
+            }
+        }
+
+        if (passLevel1 ^ passLevel2 ^ passLevel3 ^ passLevel4) {
+            System.arraycopy(b, low - offset, a, low, high - low);
+        }
+        return true;
+    }
+
+    // unsafe reference
+    private final static Unsafe UNSAFE;
+
+    static {
+        Unsafe ref = null;
+        try {
+            final Field field = Unsafe.class.getDeclaredField("theUnsafe");
+            field.setAccessible(true);
+            ref = (Unsafe) field.get(null);
+        } catch (Exception e) {
+            throw new InternalError("Unable to get sun.misc.Unsafe instance", e);
+        }    
+        UNSAFE = ref;
+    }
+
+    /**
+     * Sorts the specified range of the array using radix sort.
+     *
+     * @param a the array to be sorted
+     * @param low the index of the first element, inclusive, to be sorted
+     * @param high the index of the last element, exclusive, to be sorted
+     * @return true if finally sorted, false otherwise
+     */
+    static boolean radixSortNew(Sorter sorter, int[] a, int low, int high) {
+        if (TRACE) {
+            System.out.println("radixSort[" + a.length + "] in [" + low + " - " + high + "]");
+        }
+        int[] b; int offset = low;
+
+        if (sorter == null || (b = sorter.b) == null) {
+            if (TRACE_ALLOC) {
+                System.out.println("radixSort: alloc b: " + (high - low));
+            }
+            b = (int[]) tryAllocate(a, high - low);
+
+            if (b == null) {
+                return false;
+            }
+        } else {
+            offset = sorter.offset;
+        }
+
+        int start = low - offset;
+        int last = high - offset;
+
+        final int[] count1; final int[] count2;
+        final int[] count3; final int[] count4;
+
+        if (sorter != null) {
+            sorter.resetRadixBuffers();
+            count1 = sorter.count1;
+            count2 = sorter.count2;
+            count3 = sorter.count3;
+            count4 = sorter.count4;
+        } else {
+            if (TRACE_ALLOC) {
+                System.out.println("radixSort: alloc buffers (4x256)");
+            }
+            count1 = new int[256];
+            count2 = new int[256];
+            count3 = new int[256];
+            count4 = new int[256];
+        }
+        
+        final Unsafe U = UNSAFE;
+        final long off0 = Unsafe.ARRAY_INT_BASE_OFFSET;
+        final long scale = Unsafe.ARRAY_INT_INDEX_SCALE;
+
+        for (int i = low; i < high; ++i) {
+            long coff = off0 + (a[i] & 0xFF) * scale;
+//            count1[ a[i]         & 0xFF]--;
+            U.putInt(count1, coff, U.getInt(count1, coff) - 1);            
+            
+            coff = off0 + ((a[i] >>>  8) & 0xFF) * scale;
+//            count2[(a[i] >>>  8) & 0xFF]--;
+            U.putInt(count2, coff, U.getInt(count2, coff) - 1);            
+
+            coff = off0 + ((a[i] >>>  16) & 0xFF) * scale;
+//            count3[(a[i] >>> 16) & 0xFF]--;
+            U.putInt(count3, coff, U.getInt(count3, coff) - 1);            
+
+            coff = off0 + ((a[i] >>> 24) ^ 0x80) * scale;
+//            count4[(a[i] >>> 24) ^ 0x80]--;
+            U.putInt(count4, coff, U.getInt(count4, coff) - 1);            
+        }
+
+        boolean passLevel4 = passLevel(count4, 255, low - high, high);
+        boolean passLevel3 = passLevel(count3, 255, low - high, high);
+        boolean passLevel2 = passLevel(count2, 255, low - high, high);
+        boolean passLevel1 = passLevel(count1, 255, low - high, high);
+
+        if (passLevel1) {
+            for (int i = low; i < high; ++i) {
+                // b[count1[a[i] & 0xFF]++ - offset] = a[i];
+                final long coff = off0 + (a[i] & 0xFF) * scale;
+                final int rank = U.getInt(count1, coff);
+                U.putInt(count1, coff, rank + 1);
+                b[rank - offset] = a[i];
+            }
+        }
+
+        if (passLevel2) {
+            if (passLevel1) {
+                for (int i = start; i < last; ++i) {
+                    // a[count2[(b[i] >>> 8) & 0xFF]++] = b[i];
+                    final long coff = off0 + ((b[i] >>> 8) & 0xFF) * scale;
+                    final int rank = U.getInt(count2, coff);
+                    U.putInt(count2, coff, rank + 1);
+                    a[rank] = b[i];
+                }
+            } else {
+                for (int i = low; i < high; ++i) {
+                    // b[count2[(a[i] >>> 8) & 0xFF]++ - offset] = a[i];
+                    final long coff = off0 + ((a[i] >>> 8) & 0xFF) * scale;
+                    final int rank = U.getInt(count2, coff);
+                    U.putInt(count2, coff, rank + 1);
+                    b[rank - offset] = a[i];
+                }
+            }
+        }
+
+        if (passLevel3) {
+            if (passLevel1 ^ passLevel2) {
+                for (int i = start; i < last; ++i) {
+                    // a[count3[(b[i] >>> 16) & 0xFF]++] = b[i];
+                    final long coff = off0 + ((b[i] >>> 16) & 0xFF) * scale;
+                    final int rank = U.getInt(count3, coff);
+                    U.putInt(count3, coff, rank + 1);
+                    a[rank] = b[i];
+                }
+            } else {
+                for (int i = low; i < high; ++i) {
+                    // b[count3[(a[i] >>> 16) & 0xFF]++ - offset] = a[i];
+                    final long coff = off0 + ((a[i] >>> 16) & 0xFF) * scale;
+                    final int rank = U.getInt(count3, coff);
+                    U.putInt(count3, coff, rank + 1);
+                    b[rank - offset] = a[i];
+                }
+            }
+        }
+
+        if (passLevel4) {
+            if (passLevel1 ^ passLevel2 ^ passLevel3) {
+                for (int i = start; i < last; ++i) {
+                    // a[count4[(b[i] >>> 24) ^ 0x80]++] = b[i];
+                    final long coff = off0 + ((b[i] >>> 24) ^ 0x80) * scale;
+                    final int rank = U.getInt(count4, coff);
+                    U.putInt(count4, coff, rank + 1);
+                    a[rank] = b[i];
+                }
+            } else {
+                for (int i = low; i < high; ++i) {
+                    // b[count4[(a[i] >>> 24) ^ 0x80]++ - offset] = a[i];
+                    final long coff = off0 + ((a[i] >>> 24) ^ 0x80) * scale;
+                    final int rank = U.getInt(count4, coff);
+                    U.putInt(count4, coff, rank + 1);
+                    b[rank - offset] = a[i];
                 }
             }
         }

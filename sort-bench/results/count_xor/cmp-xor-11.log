@@ -1,4 +1,4 @@
-# Run complete. Total time: 00:01:52
+# Run complete. Total time: 00:04:41
 
 REMEMBER: The numbers below are just data. To gain reusable insights, you need to follow up on
 why the numbers are the way they are. Use profilers (see -prof, -lprof), design factorial
@@ -6,9 +6,17 @@ experiments, perform baseline and negative tests that provide experimental contr
 the benchmarking environment is safe on JVM/OS/HW level, ask for reviews from the domain experts.
 Do not assume the numbers tell you what you want them to tell.
 
-Benchmark                            (size)  Mode  Cnt       Score      Error  Units
-ArrayXorBenchmark.arrayAndOriginal  1000000  avgt   20  767318,961 ± 3033,361  ns/op
-ArrayXorBenchmark.arrayXorOriginal  1000000  avgt   20  769882,770 ± 3211,327  ns/op
-ArrayXorBenchmark.arrayXor_Masked   1000000  avgt   20  790677,164 ± 2450,570  ns/op
-ArrayXorBenchmark.arrayXor_Unsafe   1000000  avgt   20  707984,102 ± 3215,609  ns/op
+Benchmark                             (size)  Mode  Cnt     Score   Error  Units
+ArrayXorBenchmark.array4_Unsafe      1000000  avgt   20  2529,271 ± 6,205  us/op
+ArrayXorBenchmark.array4_Unsafe2     1000000  avgt   20  2530,286 ± 3,425  us/op
+
+ArrayXorBenchmark.arrayAndOriginal   1000000  avgt   20   766,955 ± 2,311  us/op
+ArrayXorBenchmark.arrayAnd_Unsafe    1000000  avgt   20   636,657 ± 2,819  us/op
+
+ArrayXorBenchmark.arrayXorOriginal   1000000  avgt   20   767,707 ± 1,949  us/op
+ArrayXorBenchmark.arrayXor_Masked    1000000  avgt   20   792,865 ± 1,621  us/op
+ArrayXorBenchmark.arrayXor_Masked_2  1000000  avgt   20   768,444 ± 1,535  us/op
+ArrayXorBenchmark.arrayXor_Masked_3  1000000  avgt   20   769,482 ± 1,172  us/op
+ArrayXorBenchmark.arrayXor_Masked_4  1000000  avgt   20   790,472 ± 2,405  us/op
+ArrayXorBenchmark.arrayXor_Unsafe    1000000  avgt   20   705,735 ± 3,093  us/op
 
