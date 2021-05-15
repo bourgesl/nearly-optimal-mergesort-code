@@ -49,13 +49,13 @@ import java.util.concurrent.RecursiveTask;
  *
  * @since 1.7 * 14 & 17
  */
-/* Vladimir's version: final DualPivotQuicksort_7_2.java (2021.05.13) */
-final class DualPivotQuicksortRef210513 {
+/* Vladimir's version: final DualPivotQuicksort_7B_2.java (2021.05.15) */
+final class DualPivotQuicksortRef210515 {
 
     /**
      * Prevents instantiation.
      */
-    private DualPivotQuicksortRef210513() {}
+    private DualPivotQuicksortRef210515() {}
 
     /**
      * Max array size to use mixed insertion sort.
@@ -245,17 +245,6 @@ final class DualPivotQuicksortRef210513 {
             int a3 = a[e3];
 
             /*
-             * Invoke radix sort on large array.
-             */
-            if (a[e1] != a[e3] && a[e3] != a[e5]
-                && (sorter == null || bits > MIN_RADIX_SORT_DEPTH)
-                && size > MIN_RADIX_SORT_SIZE
-                && radixSort(sorter, a, low, high)
-            ) {
-                return;
-            }
-
-            /*
              * Sort these elements in place by the combination
              * of 4-element sorting network and insertion sort.
              *
@@ -273,6 +262,17 @@ final class DualPivotQuicksortRef210513 {
             if (a[e2] < a[e1]) { int t = a[e2]; a[e2] = a[e1]; a[e1] = t; }
             if (a[e4] < a[e2]) { int t = a[e4]; a[e4] = a[e2]; a[e2] = t; }
 
+                /*
+                 * Invoke radix sort on large array.
+                 */
+            if (size > MIN_RADIX_SORT_SIZE
+                    && (sorter == null || bits > MIN_RADIX_SORT_DEPTH)
+                    && a[e1] < a[e2] && a[e2] < a[e4] && a[e4] < a[e5]
+                    && tryRadixSort(sorter, a, low, high)) {
+                return;
+            }
+
+            // todo
             if (a3 < a[e2]) {
                 if (a3 < a[e1]) {
                     a[e3] = a[e2]; a[e2] = a[e1]; a[e1] = a3;
@@ -286,7 +286,6 @@ final class DualPivotQuicksortRef210513 {
                     a[e3] = a[e4]; a[e4] = a3;
                 }
             }
-
 
             // Pointers
             int lower = low; // The index of the last element of the left part
@@ -645,16 +644,17 @@ final class DualPivotQuicksortRef210513 {
     /**
      * Sorts the specified range of the array using radix sort.
      *
+     * @param sorter parallel context
      * @param a the array to be sorted
      * @param low the index of the first element, inclusive, to be sorted
      * @param high the index of the last element, exclusive, to be sorted
      * @return true if finally sorted, false otherwise
      */
-    static boolean radixSort(Sorter sorter, int[] a, int low, int high) {
-        int[] b; int offset = low;
+    static boolean tryRadixSort(Sorter sorter, int[] a, int low, int high) {
+        int[] b; int offset = low, size = high - low;
 
         if (sorter == null || (b = (int[]) sorter.b) == null) {
-            b = (int[]) tryAllocate(a, high - low);
+            b = (int[]) tryAllocate(a, size);
 
             if (b == null) {
                 return false;
@@ -678,10 +678,10 @@ final class DualPivotQuicksortRef210513 {
             count4[(a[i] >>> 24) ^ 0x80]--;
         }
 
-        boolean passLevel4 = passLevel(count4, 255, low - high, high);
-        boolean passLevel3 = passLevel(count3, 255, low - high, high);
-        boolean passLevel2 = passLevel(count2, 255, low - high, high);
-        boolean passLevel1 = passLevel(count1, 255, low - high, high);
+        boolean passLevel1 = passLevel(count1, 255, -size, high);
+        boolean passLevel2 = passLevel(count2, 255, -size, high);
+        boolean passLevel3 = passLevel(count3, 255, -size, high);
+        boolean passLevel4 = passLevel(count4, 255, -size, high);
 
         if (passLevel1) {
             for (int i = low; i < high; ++i) {
@@ -726,7 +726,7 @@ final class DualPivotQuicksortRef210513 {
         }
 
         if (passLevel1 ^ passLevel2 ^ passLevel3 ^ passLevel4) {
-            System.arraycopy(b, low - offset, a, low, high - low);
+            System.arraycopy(b, low - offset, a, low, size);
         }
         return true;
     }
@@ -735,17 +735,17 @@ final class DualPivotQuicksortRef210513 {
      * Scans count array and creates histogram.
      *
      * @param count the count array
-     * @param last the index of the last count
-     * @param size the array size
+     * @param last the last index of count
+     * @param total the total number of elements
      * @param high the index of the last element, exclusive
      * @return false if the level can be skipped, true otherwise
      */
-    private static boolean passLevel(int[] count, int last, int size, int high) {
+    private static boolean passLevel(int[] count, int last, int total, int high) {
         for (int c : count) {
             if (c == 0) {
                 continue;
             }
-            if (c == size) { // All elements are equal
+            if (c == total) { // All elements are equal
                 return false;
             }
             break;

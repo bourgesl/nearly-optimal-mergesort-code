@@ -277,7 +277,7 @@ public class ArraySortBenchmark2 {
 
                 builder.param(PARAM_SORTER, new String[]{
 //                    "BASELINE", 
-                    "SYSTEM", "DPQS_2105_REF", "DPQS_2105_NEW"
+                    "SYSTEM", "DPQ_11", "DPQS_2105_REF", "DPQS_2105_NEW"
 //                    "DPQ_21_05_HYB", "DPQ_21_05_IN", "DPQ_21_05_RA"
 //                              "RADIX",
 //                    "DPQ_11", "DPQ_19_11_12", "DPQ_21_04_24", "RADIX",
